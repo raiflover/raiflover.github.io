@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Everything Tracker</title>
+    <link rel="stylesheet" href="background/styles2.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #14141f;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        #background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #14141f !important;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        #fadeOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #14141f;
+            opacity: 0.001;
+            z-index: 2;
+            pointer-events: none;
+            transition: opacity 2.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: opacity;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform: translate3d(0, 0, 0);
+            -webkit-transform: translate3d(0, 0, 0);
+            -moz-transform: translate3d(0, 0, 0);
+        }
+
+        @media (max-width: 768px) {
+            #fadeOverlay {
+                transition: opacity 2.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            }
+        }
+
+        .container {
+            background: #20232c;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+            position: relative;
+            z-index: 100;
+        }
+
+        .form-content {
+            padding: 40px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .page.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #DFE4EB;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 1em;
+            color: #EDBFE7;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.95em;
+            color: #a0a0a0;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input {
+            padding: 12px;
+            background: #20232c;
+            border: 2px solid #595959;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #F4E3B3;
+        }
+
+        input[type="password"]:focus,
+        input[type="date"]:focus {
+            outline: none;
+            border-color: #F4E3B3;
+        }
+
+        .error {
+            color: #E48BA6;
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+            justify-content: space-between;
+        }
+
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #20232c 0%, #14141f 100%);
+            color: rgb(0, 0, 0);
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #20232c;
+            color: #DFE4EB;
+        }
+
+        .btn-secondary:hover {
+            background: #30333c;
+        }
+
+        .page-indicator {
+            text-align: center;
+            color: #a0a0a0;
+            font-size: 0.9em;
+            margin-top: 20px;
+        }
+
+        .empty-page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            color: #a0a0a0;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="background" id="background"></div>
+    <div id="fadeOverlay"></div>
+    <div class="container">
+        <div class="form-content">
+            <!-- Page 1: Login Page -->
+            <div class="page active" id="page1">
+                <h1>Everything Tracker</h1>
+                <p class="subtitle">˚.✦ ⵢ₊˚.₍ᐢ..ᐢ₎⊹ ˓𓄹 ָ࣪ ⸰</p>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <input type="password" id="password" name="password" placeholder="Enter password" required>
+                        <div class="error" id="passwordError">You're not Rie. This tracker is not for you.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="date" id="date" name="date" required>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn-primary" onclick="validateAndProceed()">Continue</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Page 2: Mediacation -->
+            <div class="page" id="page2">
+                <div class="empty-page">
+                    Page 2 - Coming soon
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn-secondary" onclick="goToPage(1)">Back</button>
+                    <button type="button" class="btn-primary" onclick="goToPage(3)">Next</button>
+                </div>
+            </div>
+
+            <!-- Page 3: Empty -->
+            <div class="page" id="page3">
+                <div class="empty-page">
+                    Page 3 - Coming soon
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn-secondary" onclick="goToPage(2)">Back</button>
+                    <button type="button" class="btn-primary" onclick="goToPage(4)">Next</button>
+                </div>
+            </div>
+
+            <!-- Page 4: Empty -->
+            <div class="page" id="page4">
+                <div class="empty-page">
+                    Page 4 - Coming soon
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn-secondary" onclick="goToPage(3)">Back</button>
+                    <button type="button" class="btn-primary" onclick="goToPage(5)">Next</button>
+                </div>
+            </div>
+
+            <!-- Page 5: Empty -->
+            <div class="page" id="page5">
+                <div class="empty-page">
+                    Page 5 - Coming soon
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn-secondary" onclick="goToPage(4)">Back</button>
+                    <button type="button" class="btn-primary" onclick="goToPage(1)">Start Over</button>
+                </div>
+            </div>
+
+            <div class="page-indicator" id="pageIndicator"></div>
+        </div>
+    </div>
+
+    <script>
+        // Change this password to your desired password
+        const CORRECT_PASSWORD = "collision13";
+        let currentPage = 1;
+
+        // Set today's date on page load
+        function initializeDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const dateString = `${year}-${month}-${day}`;
+            
+            document.getElementById('date').value = dateString;
+        }
+
+        function validateAndProceed() {
+            const password = document.getElementById('password').value;
+            const passwordError = document.getElementById('passwordError');
+            
+            if (password === CORRECT_PASSWORD) {
+                passwordError.classList.remove('show');
+                // Wait for overlay to almost fully fade in before redirecting
+                setTimeout(() => {
+                    goToPage(2);
+                }, 2100);
+            } else {
+                passwordError.classList.add('show');
+                document.getElementById('password').focus();
+            }
+        }
+
+        function goToPage(pageNumber) {
+            if (pageNumber < 1 || pageNumber > 5) return;
+
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show/hide background based on page
+            const backgroundEl = document.getElementById('background');
+            const fadeOverlay = document.getElementById('fadeOverlay');
+            
+            if (pageNumber === 1) {
+                backgroundEl.style.display = 'block';
+                backgroundEl.style.transition = 'opacity 0s';
+                backgroundEl.style.opacity = 1;
+                // Reset fade overlay
+                fadeOverlay.style.opacity = '0.001';
+                // Clear password field
+                document.getElementById('password').value = '';
+                if (currentPage > 1) {
+                    window.resumeWordCreation();
+                }
+            } else if (pageNumber === 2) {
+                // Hide background on page 2 - keep fade transition smooth
+                backgroundEl.style.display = 'none';
+            } else if (pageNumber === 5) {
+                backgroundEl.style.display = 'block';
+                backgroundEl.style.transition = 'opacity 0s';
+                backgroundEl.style.opacity = 1;
+                // Reset fade overlay
+                fadeOverlay.style.opacity = '0.001';
+                if (currentPage !== 5) {
+                    window.resumeWordCreation();
+                }
+            } else {
+                backgroundEl.style.display = 'none';
+            }
+
+            // Show selected page
+            document.getElementById(`page${pageNumber}`).classList.add('active');
+            currentPage = pageNumber;
+            updatePageIndicator();
+        }
+
+        function updatePageIndicator() {
+            document.getElementById('pageIndicator').textContent = `Page ${currentPage} of 5`;
+        }
+
+        // Allow Enter key to submit password
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDate();
+            updatePageIndicator();
+
+            const passwordInput = document.getElementById('password');
+            
+            // Start fade animation when correct password is entered
+            passwordInput.addEventListener('input', function(e) {
+                if (this.value === CORRECT_PASSWORD) {
+                    window.speedUpAndFadeWords();
+                    const fadeOverlay = document.getElementById('fadeOverlay');
+                    fadeOverlay.style.opacity = '1';
+                }
+            });
+
+            passwordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    validateAndProceed();
+                }
+            });
+
+            // Initialize background visibility (should be visible on page 1)
+            const backgroundEl = document.getElementById('background');
+            backgroundEl.style.display = 'block';
+        });
+    </script>
+    <script src="background/script2.js"></script>
+</body>
+</html>
