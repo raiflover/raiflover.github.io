@@ -13,7 +13,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Helvetica, sans-serif;
             background: #14141f;
             min-height: 100vh;
             display: flex;
@@ -28,7 +28,7 @@
             left: 0;
             width: 100%;
             height: 100vh;
-            background-color: #14141f !important;
+            background-color: #101024 !important;
             z-index: 1;
             pointer-events: none;
         }
@@ -132,7 +132,7 @@
         }
 
         h1 {
-            font-size: 2.5em;
+            font-size: 2.0em;
             color: #DFE4EB;
             margin-bottom: 10px;
             text-align: center;
@@ -154,7 +154,7 @@
 
         label {
             font-size: 0.95em;
-            color: #a0a0a0;
+            color: #EDBFE7;
             margin-bottom: 8px;
             font-weight: 500;
         }
@@ -208,7 +208,7 @@
             border: none;
             border-radius: 5px;
             font-size: 1em;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.3s;
         }
@@ -216,7 +216,7 @@
         .btn-primary {
             flex: 1;
             background: linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,255,255,0.006));
-            color: #0b1020;
+            color: #EDBFE7;
             border: 1px solid rgba(255,255,255,0.04);
             border-radius: 8px;
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
@@ -235,7 +235,7 @@
 
         .btn-secondary {
             background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.004));
-            color: #E8ECF8;
+            color: #EDBFE7;
             border: 1px solid rgba(255,255,255,0.03);
             border-radius: 8px;
         }
@@ -244,11 +244,36 @@
             transform: translateY(-1px);
         }
 
-        .page-indicator {
-            text-align: center;
-            color: #a0a0a0;
-            font-size: 0.9em;
+
+        .progress-container {
             margin-top: 20px;
+            display: block;
+            width: 100%;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 999px;
+            border: 1px solid rgba(255,255,255,0.03);
+            overflow: hidden;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, rgba(218, 173, 192, 0.12), rgba(180,200,255,0.12));
+            transition: width 360ms cubic-bezier(.2,.9,.2,1);
+            transform-origin: left center;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+        }
+
+        .progress-text {
+            color: #EDBFE7;
+            font-size: 0.9em;
+            white-space: nowrap;
         }
 
         .empty-page {
@@ -282,7 +307,7 @@
                     </div>
 
                     <div class="button-group">
-                        <button type="button" class="btn-primary" onclick="validateAndProceed()">Continue</button>
+                        <button type="button" class="btn-primary" onclick="validateAndProceed()">LETS GO!</button>
                     </div>
                 </form>
             </div>
@@ -290,7 +315,7 @@
             <!-- Page 2: Mediacation -->
             <div class="page" id="page2">
                 <div class="empty-page">
-                    Page 2 - Coming soon
+                    eepy or not eepy? (sleep + coffee + nic)
                 </div>
                 <div class="button-group">
                     <button type="button" class="btn-secondary" onclick="goToPage(1)">Back</button>
@@ -301,7 +326,7 @@
             <!-- Page 3: Empty -->
             <div class="page" id="page3">
                 <div class="empty-page">
-                    Page 3 - Coming soon
+                    take your meds bipalor girl
                 </div>
                 <div class="button-group">
                     <button type="button" class="btn-secondary" onclick="goToPage(2)">Back</button>
@@ -312,7 +337,7 @@
             <!-- Page 4: Empty -->
             <div class="page" id="page4">
                 <div class="empty-page">
-                    Page 4 - Coming soon
+                    how crazy are we today
                 </div>
                 <div class="button-group">
                     <button type="button" class="btn-secondary" onclick="goToPage(3)">Back</button>
@@ -323,7 +348,7 @@
             <!-- Page 5: Empty -->
             <div class="page" id="page5">
                 <div class="empty-page">
-                    Page 5 - Coming soon
+                    suicide letter of the day
                 </div>
                 <div class="button-group">
                     <button type="button" class="btn-secondary" onclick="goToPage(4)">Back</button>
@@ -331,7 +356,11 @@
                 </div>
             </div>
 
-            <div class="page-indicator" id="pageIndicator"></div>
+            <div class="progress-container" aria-hidden="false">
+                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                    <div class="progress-fill" id="pageIndicatorFill"></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -413,7 +442,20 @@
         }
 
         function updatePageIndicator() {
-            document.getElementById('pageIndicator').textContent = `Page ${currentPage} of 5`;
+            const total = 5;
+            const fillEl = document.getElementById('pageIndicatorFill');
+            const barEl = document.querySelector('.progress-bar');
+
+            // Map page 1..total to 0..100% so page 1 == 0% and page total == 100%
+            const percentage = total > 1 ? Math.round(((currentPage - 1) / (total - 1)) * 100) : 100;
+
+            if (fillEl) {
+                fillEl.style.width = `${percentage}%`;
+            }
+
+            if (barEl) {
+                barEl.setAttribute('aria-valuenow', String(percentage));
+            }
         }
 
         // Allow Enter key to submit password
@@ -446,3 +488,4 @@
     <script src="background/script2.js"></script>
 </body>
 </html>
+
