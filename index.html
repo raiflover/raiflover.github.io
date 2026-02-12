@@ -747,6 +747,10 @@
                 padding: 8px 10px;
                 min-height: 80px;
             }
+            .note-file-input {
+                font-size: 0.85em;
+                padding: 8px 10px;
+            }
             .tracker-section {
                 margin-bottom: 16px;
             }
@@ -1006,44 +1010,26 @@
                 page.classList.remove('active');
             });
 
-            // Show/hide background based on page
+            // Show background on all pages (no transitions)
             const backgroundEl = document.getElementById('background');
             const fadeOverlay = document.getElementById('fadeOverlay');
+            backgroundEl.style.display = 'block';
+            backgroundEl.style.opacity = 1;
+            fadeOverlay.style.opacity = '0.001';
             
             if (pageNumber === 1) {
-                backgroundEl.style.display = 'block';
-                backgroundEl.style.transition = 'opacity 0s';
-                backgroundEl.style.opacity = 1;
-                fadeOverlay.style.opacity = '0.001';
                 document.getElementById('password').value = '';
-            if (currentPage > 1) {
-                window.resumeWordCreation();
+                if (currentPage > 1) {
+                    window.resumeWordCreation();
                 }
-
             } else if (pageNumber === 2) {
-                backgroundEl.style.display = 'none';
                 initSleepTracker(); // ✅ correct hook
-
             } else if (pageNumber === 5) {
-                backgroundEl.style.display = 'block';
-                backgroundEl.style.transition = 'opacity 0s';
-                backgroundEl.style.opacity = 1;
-                fadeOverlay.style.opacity = '0.001';
                 if (currentPage !== 5) {
-                window.resumeWordCreation();
+                    window.resumeWordCreation();
                 }
-
-                } else {
-                    backgroundEl.style.display = 'none';
-                }
-                // Show selected page
-                document.getElementById(`page${pageNumber}`).classList.add('active');
-                currentPage = pageNumber;
-                updatePageIndicator();
             }
 
-        function updatePageIndicator() {
-            const total = 5;
             const fillEl = document.getElementById('pageIndicatorFill');
             const barEl = document.querySelector('.progress-bar');
 
