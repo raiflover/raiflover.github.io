@@ -1,0 +1,37 @@
+.sleep-tracker h2 {
+  color: #DFE4EB;
+  margin-bottom: 12px;
+  text-align: center;
+  font-size: 1.1em;
+}
+
+.sleep-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.sleep-time {
+  display: none;
+}
+
+.sleep-slot {
+  aspect-ratio: 1;
+  min-width: 28px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.006));
+  border: 1px solid rgba(255,255,255,0.035);
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+}
+
+.sleep-slot:hover {
+  transform: scale(1.05);
+}
+
+.sleep-slot.asleep {
+  background: linear-gradient(180deg, rgba(180,200,255,0.4), rgba(180,200,255,0.25));
+  border-color: rgba(180,200,255,0.3);
+}
