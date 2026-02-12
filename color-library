@@ -1,0 +1,102 @@
+{
+  "colors": [
+
+    {
+      "id": 1,
+      "name": "Neutral Gray",
+      "hex": "#5a5a6c",
+      "rgb": "rgb(90, 90, 108)",
+      "usage": "Neutral text, borders, dividers"
+    },
+    {
+      "id": 2,
+      "name": "Dark Gray",
+      "hex": "#4b4b58",
+      "rgb": "rgb(75, 75, 88)",
+      "usage": "Backgrounds, light elements"
+    },
+    {
+      "id": 3,
+      "name": "Light Shadow",
+      "hex": "#20232c",
+      "rgb": "rgb(32, 35, 44)",
+      "usage": "Input borders, secondary text"
+    },
+    {
+      "id": 4,
+      "name": "Medium Shadow",
+      "hex": "#191a24",
+      "rgb": "rgb(25, 26, 36)",
+      "usage": "Card backgrounds, container backgrounds"
+    },
+    {
+      "id": 5,
+      "name": "Deep Shadow",
+      "hex": "#14141f",
+      "rgb": "rgb(20, 20, 31)",
+      "usage": "Page background, main background"
+    },
+    {
+      "id": 6,
+      "name": "Light Text",
+      "hex": "#DFE4EB",
+      "rgb": "rgb(223, 228, 235)",
+      "usage": "Primary text, headings"
+    },
+    {
+      "id": 7,
+      "name": "Pink Orchid",
+      "hex": "#EDBFE7",
+      "rgb": "rgb(237, 191, 231)",
+      "usage": "Secondary text, links, accents"
+    },
+    {
+      "id": 8,
+      "name": "Bubblegum Blush",
+      "hex": "#E48BA6",
+      "rgb": "rgb(228, 139, 166)",
+      "usage": "Primary accent color, warnings, backgrounds"
+    },
+    {
+      "id": 9,
+      "name": "Lavender Haze",
+      "hex": "#C3A5F3",
+      "rgb": "rgb(195, 165, 243)",
+      "usage": "Secondary accent color, backgrounds"
+    },
+    {
+      "id": 10,
+      "name": "Periwinkle Mist",
+      "hex": "#B7BEFA",
+      "rgb": "rgb(184, 194, 224)",
+      "usage": "Backgrounds, subtle accents"
+    },
+    {
+      "id": 11,
+      "name": "Pearl Aqua",
+      "hex": "#A8E6D9",
+      "rgb": "rgb(168, 230, 217)",
+      "usage": "Success messages, positive accents, backgrounds"
+    },
+    {
+      "id": 12,
+      "name": "Milky Matcha",
+      "hex": "#C5E6A8",
+      "rgb": "rgb(197, 230, 168)",
+      "usage": "Backgrounds, subtle accents"
+    },
+    {
+      "id": 13,
+      "name": "Lemon Sorbet",
+      "hex": "#F4E3B3",
+      "rgb": "rgb(244, 227, 179)",
+      "usage": "Accents, highlights, backgrounds"
+    },
+    {      "id": 14,
+      "name": "Peachy Keen",
+      "hex": "#EDB68C",
+      "rgb": "rgb(237, 182, 140)",
+      "usage": "Accents, highlights, backgrounds"
+    }
+  ]
+}
