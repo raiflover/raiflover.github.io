@@ -21,6 +21,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            flex-wrap: wrap;
         }
 
         #background {
@@ -69,7 +70,9 @@
             border-radius: 14px;
             width: 100%;
             max-width: 500px;
-            overflow: hidden;
+            overflow-y: auto;
+            overflow-x: hidden;
+            max-height: 90vh;
             position: relative;
             z-index: 100;
             transform: translateZ(0);
@@ -108,7 +111,7 @@
 
         .form-content {
             padding: 40px;
-            min-height: 400px;
+            min-height: auto;
             display: flex;
             flex-direction: column;
         }
@@ -133,9 +136,11 @@
         @media (max-width: 480px) {
             body {
                 padding: 12px;
+                align-items: flex-start;
             }
             .container {
                 border-radius: 10px;
+                max-height: none;
             }
             .form-content {
                 padding: 16px;
