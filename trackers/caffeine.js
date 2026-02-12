@@ -2,6 +2,7 @@
 
 let caffeineScore = 0;
 const maxCaffeine = 1000; // Maximum mg displayed on mug
+let isLiquidPink = false; // Track if liquid is pink
 
 function addCaffeine(amount) {
     if (caffeineScore < maxCaffeine) {
@@ -14,9 +15,15 @@ function addCaffeine(amount) {
 
 function resetCaffeine() {
     caffeineScore = 0;
+    isLiquidPink = false;
     document.getElementById('scoreValue').innerText = caffeineScore;
     document.getElementById('finalScoreInput').value = '';
     updateMugFill();
+    // Reset liquid color to blue
+    const mugLiquid = document.querySelector('.mug-liquid');
+    if (mugLiquid) {
+        mugLiquid.style.fill = '#8DB8DC';
+    }
 }
 
 function saveCaffeine() {
@@ -25,6 +32,12 @@ function saveCaffeine() {
         caffeineScore = parseInt(finalScore);
         document.getElementById('scoreValue').innerText = caffeineScore;
         updateMugFill();
+        // Change liquid to pink
+        isLiquidPink = true;
+        const mugLiquid = document.querySelector('.mug-liquid');
+        if (mugLiquid) {
+            mugLiquid.style.fill = '#EDBFE7';
+        }
         // TODO: Save score to database or localStorage
         console.log('Caffeine score saved:', caffeineScore);
     }
@@ -32,11 +45,9 @@ function saveCaffeine() {
 
 function updateMugFill() {
     const fillPercentage = (caffeineScore / maxCaffeine) * 100;
-    const mugMask = document.getElementById('mugClipRect');
-    if (mugMask) {
-        // inset(top right bottom left) - we want to clip from top, so top = (100% - fillPercentage)
+    const mugLiquid = document.querySelector('.mug-liquid');
+    if (mugLiquid) {
         const insetTop = 100 - fillPercentage;
-        const mugLiquid = document.querySelector('.mug-liquid');
         mugLiquid.style.clipPath = `inset(${insetTop}% 0 0 0)`;
     }
 }

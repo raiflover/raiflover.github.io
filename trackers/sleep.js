@@ -5,8 +5,8 @@ let sleepData = [];
 
 function formatTime(index) {
   const hours = String(Math.floor(index / 2)).padStart(2, "0");
-  const minutes = index % 2 === 0 ? "00" : "30";
-  return `${hours}:${minutes}`;
+  const minutes = (index % 2) * 30; // 0, 30 minutes
+  return `${hours}:${String(minutes).padStart(2, "0")}`;
 }
 
 function initSleepTracker() {
@@ -16,11 +16,18 @@ function initSleepTracker() {
   const sleepGrid = document.getElementById("sleepGrid");
   if (!sleepGrid) return;
 
-  sleepData = new Array(48).fill(false);
+  sleepData = new Array(48).fill(false); // 24 hours * 2 slots per hour (30-min intervals)
 
+  // Create slots
   for (let i = 0; i < 48; i++) {
     const slot = document.createElement("div");
     slot.className = "sleep-slot";
+    
+    const timeLabel = document.createElement("span");
+    timeLabel.className = "sleep-slot-time";
+    timeLabel.textContent = formatTime(i);
+    
+    slot.appendChild(timeLabel);
     slot.title = formatTime(i);
 
     slot.addEventListener("click", () => {
