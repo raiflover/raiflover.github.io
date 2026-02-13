@@ -21,7 +21,6 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            flex-wrap: wrap;
         }
 
         #background {
@@ -33,8 +32,6 @@
             background-color: #0f161d !important;
             z-index: 1;
             pointer-events: none;
-            display: block;
-            overflow: hidden;
         }
 
         #fadeOverlay {
@@ -72,9 +69,7 @@
             border-radius: 14px;
             width: 100%;
             max-width: 500px;
-            overflow-y: auto;
-            overflow-x: hidden;
-            max-height: 90vh;
+            overflow: hidden;
             position: relative;
             z-index: 100;
             transform: translateZ(0);
@@ -113,84 +108,9 @@
 
         .form-content {
             padding: 40px;
-            min-height: auto;
+            min-height: 400px;
             display: flex;
             flex-direction: column;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                max-width: 100%;
-                border-radius: 12px;
-            }
-            h1 {
-                font-size: 1.6em;
-            }
-            .button-group {
-                gap: 8px;
-            }
-            button {
-                font-size: 0.9em;
-                padding: 8px 16px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 12px;
-                align-items: flex-start;
-            }
-            .container {
-                border-radius: 10px;
-                max-height: none;
-            }
-            .form-content {
-                padding: 16px;
-                min-height: auto;
-            }
-            h1 {
-                font-size: 1.4em;
-                margin-bottom: 6px;
-            }
-            .subtitle {
-                font-size: 0.85em;
-                margin-bottom: 20px;
-            }
-            label {
-                font-size: 0.9em;
-                margin-bottom: 6px;
-            }
-            input[type="password"],
-            input[type="date"] {
-                font-size: 1em; /* Prevent zoom on iOS */
-                padding: 10px;
-                height: 40px;
-            }
-            button {
-                font-size: 0.9em;
-                padding: 8px 16px;
-                height: 36px;
-            }
-            .button-group,
-            .button-group-nav {
-                gap: 6px;
-            }
-            .progress-bar {
-                height: 8px;
-            }
-            .mug-container {
-                height: 120px;
-                margin: 16px 0;
-            }
-            .caffeine-header {
-                gap: 8px;
-            }
-            .caffeine-header h2 {
-                font-size: 1em;
-            }
-            .caffeine-score-inline .score-value {
-                font-size: 1.1em;
-            }
         }
 
         .page {
@@ -299,7 +219,7 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s;
-            height: 36px;
+            height: 44px;
         }
 
         .btn-primary {
@@ -366,27 +286,15 @@
             border: 1px solid rgba(255,255,255,0.03);
             overflow: hidden;
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
-            position: relative;
         }
 
         .progress-fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, rgba(237, 191, 231, 0.4), rgba(180,200,255,0.35));
+            background: linear-gradient(90deg, rgba(218, 173, 192, 0.12), rgba(180,200,255,0.12));
             transition: width 360ms cubic-bezier(.2,.9,.2,1);
             transform-origin: left center;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 0 12px rgba(237, 191, 231, 0.6);
-            animation: progressGlow 2s ease-in-out infinite alternate;
-            border-radius: 999px;
-        }
-
-        @keyframes progressGlow {
-            from {
-                box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 0 8px rgba(237, 191, 231, 0.5);
-            }
-            to {
-                box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 0 16px rgba(237, 191, 231, 0.8);
-            }
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
         }
 
         .progress-text {
@@ -408,18 +316,6 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
-        }
-
-        .caffeine-tracker h2 {
-            color: #DFE4EB;
-            font-size: 1.1em;
-            margin: 0;
-        }
-
-        @media (max-width: 480px) {
-            .caffeine-tracker {
-                gap: 12px;
-            }
         }
 
         .caffeine-header {
@@ -460,87 +356,19 @@
             gap: 12px;
             height: 140px;
             margin: 20px 0;
-            position: relative;
         }
 
         .mug-svg {
-            width: 200px;
+            width: 70px;
             height: auto;
             flex-shrink: 0;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-8px);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .mug-svg {
-                width: 180px;
-            }
         }
 
         .mug-liquid {
             clip-path: inset(100% 0 0 0);
-            transition: clip-path 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), fill 0.5s ease;
-            fill: #EDBFE7;
-            opacity: 0.85;
-        }
-
-        .mug-liquid.done {
-            fill: #F4E3B3;
-        }
-
-        .floating-stars {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-        }
-
-        .floating-star {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="2 2 20 20"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="%23B4C8FF"/></svg>') center/contain no-repeat;
-            animation: floatStar 4s ease-in-out infinite;
-            filter: drop-shadow(0 0 8px rgba(180, 200, 255, 0.8));
-            border-radius: 6px;
-            transition: background 0.5s ease, filter 0.5s ease;
-        }
-
-        .floating-star.done {
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="2 2 20 20"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="%23F4E3B3"/></svg>') center/contain no-repeat;
-            filter: drop-shadow(0 0 12px rgba(244, 227, 179, 1));
-        }
-
-        .floating-star.big {
-            width: 26px;
-            height: 26px;
-            border-radius: 8px;
-            filter: drop-shadow(0 0 10px rgba(180, 200, 255, 0.9));
-        }
-
-        .floating-star.big.done {
-            filter: drop-shadow(0 0 14px rgba(244, 227, 179, 1));
-        }
-
-        @keyframes floatStar {
-            0%, 100% {
-                transform: translateY(0) scale(1);
-                opacity: 0.6;
-            }
-            50% {
-                transform: translateY(-12px) scale(1.1);
-                opacity: 1;
-            }
+            transition: clip-path 0.3s ease;
+            fill: #8DB8DC;
+            opacity: 0.8;
         }
 
         .mug-outline {
@@ -549,12 +377,6 @@
 
         .mug-detail {
             fill: #E8F0FB;
-        }
-        
-        .mug-svg {
-            width: 200px;
-            height: auto;
-            flex-shrink: 0;
         }
 
         .score-display {
@@ -579,7 +401,6 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 8px;
-            margin-bottom: 16px;
         }
 
         .caffeine-btn {
@@ -631,220 +452,10 @@
             border-color: rgba(244,227,179,0.7);
         }
 
-        @media (max-width: 480px) {
-            .caffeine-actions {
-                margin-bottom: 20px;
-            }
-        }
-
         .caffeine-actions {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
-            margin-bottom: 24px;
-        }
-
-        /* Slider Styles */
-        .tracker-section {
-            margin-bottom: 20px;
-        }
-
-        .tracker-section h2 {
-            color: #DFE4EB;
-            font-size: 1.1em;
-            margin-bottom: 12px;
-        }
-
-        .slider-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .slider-row {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .slider-label {
-            font-size: 0.85em;
-            color: #EDBFE7;
-            font-weight: 500;
-        }
-
-        .slider-input {
-            width: 100%;
-            height: 8px;
-            border-radius: 8px;
-            background: linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
-            border: none;
-            outline: none;
-            -webkit-appearance: none;
-            appearance: none;
-            cursor: pointer;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3), inset 0 -1px 2px rgba(255,255,255,0.05);
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        /* Default pink star - Webkit */
-        .slider-input::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 24px;
-            height: 24px;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="2 2 20 20"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="%23EDBFE7"/></svg>') 0/24px 24px no-repeat;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .slider-input::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-            filter: drop-shadow(0 2px 8px rgba(237, 191, 231, 0.5));
-        }
-
-        /* Default pink star - Firefox */
-        .slider-input::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="2 2 20 20"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="%23EDBFE7"/></svg>') 0/24px 24px no-repeat;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .slider-input::-moz-range-thumb:hover {
-            transform: scale(1.2);
-            filter: drop-shadow(0 2px 8px rgba(237, 191, 231, 0.5));
-        }
-
-        /* Track styling */
-        .slider-input::-webkit-slider-runnable-track {
-            background: linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
-            height: 8px;
-            border-radius: 8px;
-            border: none;
-        }
-
-        .slider-input::-moz-range-track {
-            background: transparent;
-            border: none;
-            height: 8px;
-        }
-
-        .slider-input::-moz-range-progress {
-            background: linear-gradient(90deg, rgba(237, 191, 231, 0.15), rgba(244, 227, 179, 0.1));
-            height: 8px;
-            border-radius: 8px;
-        }
-
-        /* ACTIVE STATE - YELLOW STAR & BRIGHT GRADIENT */
-        .slider-input.active {
-            background: linear-gradient(90deg, rgba(237, 191, 231, 0.35), rgba(244, 227, 179, 0.25)) !important;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2), inset 0 0 16px rgba(244, 227, 179, 0.25), 0 0 12px rgba(244, 227, 179, 0.3) !important;
-        }
-
-        .slider-input.active::-webkit-slider-thumb {
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="2 2 20 20"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="%23F4E3B3"/></svg>') 0/24px 24px no-repeat !important;
-            filter: drop-shadow(0 0 8px rgba(244, 227, 179, 0.8)) !important;
-            transform: scale(1.1) !important;
-        }
-
-        .slider-input.active::-moz-range-thumb {
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="2 2 20 20"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="%23F4E3B3"/></svg>') 0/24px 24px no-repeat !important;
-            filter: drop-shadow(0 0 8px rgba(244, 227, 179, 0.8)) !important;
-            transform: scale(1.1) !important;
-        }
-
-        .slider-input.active::-webkit-slider-runnable-track {
-            background: linear-gradient(90deg, rgba(237, 191, 231, 0.35), rgba(244, 227, 179, 0.25));
-        }
-
-        .slider-input.active::-moz-range-progress {
-            background: linear-gradient(90deg, rgba(237, 191, 231, 0.3), rgba(244, 227, 179, 0.2));
-        }
-
-        @media (max-width: 480px) {
-            .slider-input {
-                height: 7px;
-            }
-            .slider-input::-webkit-slider-thumb,
-            .slider-input::-moz-range-thumb {
-                width: 16px;
-                height: 16px;
-            }
-            .slider-row {
-                gap: 4px;
-            }
-            .slider-label {
-                font-size: 0.8em;
-            }
-        }
-
-        .note-textarea {
-            width: 100%;
-            padding: 10px 12px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.006));
-            border: 1px solid rgba(255,255,255,0.035);
-            color: #EEF2FF;
-            border-radius: 10px;
-            font-size: 0.9em;
-            font-family: inherit;
-            resize: vertical;
-            transition: border-color 0.18s;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
-        }
-
-        .note-textarea:focus {
-            outline: none;
-            border-color: rgba(244,227,179,0.7);
-        }
-
-        @media (max-width: 480px) {
-            .note-textarea {
-                font-size: 0.85em;
-                padding: 8px 10px;
-                min-height: 80px;
-            }
-            .note-file-input {
-                font-size: 0.85em;
-                padding: 8px 10px;
-            }
-            .tracker-section {
-                margin-bottom: 16px;
-            }
-            .tracker-section h2 {
-                font-size: 1em;
-                margin-bottom: 10px;
-            }
-        }
-
-        .note-file-input {
-            padding: 8px 12px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.006));
-            border: 1px solid rgba(255,255,255,0.035);
-            color: #EEF2FF;
-            border-radius: 10px;
-            font-size: 0.9em;
-            cursor: pointer;
-            transition: border-color 0.18s;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
-        }
-
-        .note-file-input:focus {
-            outline: none;
-            border-color: rgba(244,227,179,0.7);
-        }
-
-        .btn-secondary {
-            background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.004));
-            color: #EDBFE7;
-            border: 1px solid rgba(255,255,255,0.03);
-        }
-
-        .btn-secondary:hover {
-            transform: translateY(-1px);
         }
     </style>
 </head>
@@ -912,13 +523,6 @@
                             <!-- Liquid fill with clip-path -->
                             <path class="mug-liquid" d="M 546.326 852.093 C 530.930 868.930, 524.779 876.496, 517.479 887.578 C 489.481 930.080, 474.778 985.379, 468.978 1070 C 468.393 1078.525, 467.652 1104.625, 467.330 1128 C 466.123 1215.586, 471.032 1298.319, 483.055 1393 C 513.160 1630.091, 583.404 1767.074, 714.951 1845.226 C 743.932 1862.443, 779.288 1876.283, 829.158 1889.930 C 886.088 1905.509, 964.234 1919.554, 1019 1924.050 C 1039.907 1925.766, 1123.808 1926.422, 1152.558 1925.094 C 1209.150 1922.480, 1239.109 1918.433, 1283.500 1907.406 C 1404.364 1877.382, 1503.876 1818.361, 1564.117 1740.973 C 1574.443 1727.707, 1582.761 1714.978, 1593.110 1696.602 C 1601.638 1681.459, 1608.040 1673.065, 1613.028 1670.486 C 1618.746 1667.529, 1626.428 1666.799, 1660.500 1665.978 C 1697.038 1665.098, 1711.074 1663.832, 1732.739 1659.462 C 1758.436 1654.278, 1785.993 1643.111, 1811.419 1627.576 C 1845.858 1606.535, 1877.139 1575.420, 1898.456 1541 C 1911.815 1519.429, 1925.931 1487.537, 1933.864 1461 C 1943.307 1429.412, 1948.285 1403.873, 1952.577 1365 C 1954.734 1345.464, 1955.640 1286.103, 1954.083 1266.335 C 1950.663 1222.916, 1944.640 1200.179, 1927.505 1166 C 1909.763 1130.611, 1890.457 1104.785, 1864.925 1082.287 C 1842.669 1062.675, 1825.287 1051.123, 1797.500 1037.474 C 1774.756 1026.303, 1762.687 1021.733, 1729 1011.541 C 1688.942 999.421, 1685.049 997.010, 1681.105 981.880 C 1677.936 969.724, 1674.502 960.179, 1668.920 948.019 C 1649.737 906.224, 1616.129 858.591, 1598.738 848.546 C 1590.912 844.026, 1590.986 843.830, 1591.147 868.717 C 1591.269 887.585, 1590.993 891.956, 1589.083 901.379 C 1577.005 960.974, 1541.364 1002.015, 1471 1037.353 C 1386.282 1079.901, 1271.728 1102.329, 1115 1107.055 C 964.687 1111.587, 806.538 1091.238, 709 1054.815 C 660.926 1036.863, 629.711 1017.991, 603.897 991.272 C 588.701 975.543, 578.833 960.111, 569.397 937.321 C 561.599 918.485, 560.866 913.330, 560.121 872.093 L 559.500 837.687 546.326 852.093 M 1688.225 1252.660 C 1684.219 1254.634, 1675.940 1263.523, 1670.973 1271.182 C 1661.595 1285.643, 1655.705 1314.185, 1651.923 1363.500 C 1648.782 1404.449, 1656.176 1430.667, 1672.893 1437.859 C 1684.830 1442.994, 1703.231 1442.864, 1718.903 1437.533 C 1728.956 1434.114, 1733.919 1431.021, 1742.629 1422.748 C 1772.147 1394.708, 1783.769 1338.675, 1768.306 1298.944 C 1760.930 1279.993, 1747.924 1267.909, 1724.721 1258.449 C 1707.664 1251.495, 1694.745 1249.446, 1688.225 1252.660" fill-rule="evenodd" clip-path="url(#mugClip)"/>
                         </svg>
-                        <div class="floating-stars" id="floatingStars">
-                            <div class="floating-star" style="left: 25%; top: 15%; animation-delay: 0s; rotate: 25deg;"></div>
-                            <div class="floating-star big" style="right: 22%; top: 18%; animation-delay: 0.5s; rotate: -45deg;"></div>
-                            <div class="floating-star" style="right: 32%; bottom: 15%; animation-delay: 1s; rotate: 70deg;"></div>
-                            <div class="floating-star" style="left: 28%; bottom: 12%; animation-delay: 1.5s; rotate: -20deg;"></div>
-                            <div class="floating-star" style="left: 32%; top: 28%; animation-delay: 2s; rotate: 50deg;"></div>
-                        </div>
                     </div>
 
                     <div class="caffeine-buttons">
@@ -938,94 +542,31 @@
                     </div>
                 </div>
 
-            <div class="button-group button-group-nav" style="margin-top: 12px;">
+                <div class="button-group button-group-nav">
                     <button type="button" class="btn-back" onclick="goToPage(2)">←</button>
                     <button type="button" class="btn-next" onclick="goToPage(4)">→</button>
                 </div>
             </div>
 
-            <!-- Page 4: Energy, Mood, Anxiety, Irritability -->
+            <!-- Page 4: Empty -->
             <div class="page" id="page4">
-                <div class="form-content" style="padding: 20px;">
-                    <!-- Energy Section -->
-                    <div class="tracker-section">
-                        <h2>Energy</h2>
-                        <div class="slider-group">
-                            <div class="slider-row">
-                                <label class="slider-label">Highest</label>
-                                <input type="range" class="slider-input" id="energyHighest" min="1" max="7" value="4" data-default="4">
-                            </div>
-                            <div class="slider-row">
-                                <label class="slider-label">Lowest</label>
-                                <input type="range" class="slider-input" id="energyLowest" min="1" max="7" value="4" data-default="4">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Mood Section -->
-                    <div class="tracker-section">
-                        <h2>Mood</h2>
-                        <div class="slider-group">
-                            <div class="slider-row">
-                                <label class="slider-label">Highest</label>
-                                <input type="range" class="slider-input" id="moodHighest" min="1" max="7" value="4" data-default="4">
-                            </div>
-                            <div class="slider-row">
-                                <label class="slider-label">Lowest</label>
-                                <input type="range" class="slider-input" id="moodLowest" min="1" max="7" value="4" data-default="4">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Anxiety Section -->
-                    <div class="tracker-section">
-                        <h2>Anxiety</h2>
-                        <div class="slider-group">
-                            <div class="slider-row">
-                                <input type="range" class="slider-input" id="anxiety" min="1" max="7" value="4" data-default="4">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Irritability Section -->
-                    <div class="tracker-section">
-                        <h2>Irritability</h2>
-                        <div class="slider-group">
-                            <div class="slider-row">
-                                <input type="range" class="slider-input" id="irritability" min="1" max="7" value="4" data-default="4">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="flex: 1;"></div>
+                <div class="empty-page">
+                    how crazy are we today
                 </div>
-
                 <div class="button-group button-group-nav">
                     <button type="button" class="btn-back" onclick="goToPage(3)">←</button>
                     <button type="button" class="btn-next" onclick="goToPage(5)">→</button>
                 </div>
             </div>
 
-            <!-- Page 5: Note -->
+            <!-- Page 5: Empty -->
             <div class="page" id="page5">
-                <div class="form-content" style="padding: 20px;">
-                    <div class="tracker-section">
-                        <h2>Note</h2>
-                        <div class="form-group">
-                            <label class="slider-label">Text</label>
-                            <textarea class="note-textarea" id="noteText" placeholder="Write your note here..." rows="6"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="slider-label">Image</label>
-                            <input type="file" class="note-file-input" id="noteImage" accept="image/*">
-                        </div>
-                    </div>
-                    <div style="flex: 1;"></div>
+                <div class="empty-page">
+                    suicide letter of the day
                 </div>
-
                 <div class="button-group button-group-nav">
                     <button type="button" class="btn-back" onclick="goToPage(4)">←</button>
-                    <button type="button" class="btn-primary" onclick="submitAllData()" style="flex: 1;">Submit</button>
+                    <button type="button" class="btn-next" onclick="goToPage(1)">→</button>
                 </div>
             </div>
 
@@ -1041,7 +582,6 @@
         // Change this password to your desired password
         const CORRECT_PASSWORD = "collision13";
         let currentPage = 1;
-        const total = 5;
 
         // Set today's date on page load
         function initializeDate() {
@@ -1054,52 +594,13 @@
             document.getElementById('date').value = dateString;
         }
 
-        function initializeSliders() {
-            const sliders = document.querySelectorAll('.slider-input');
-            
-            sliders.forEach(slider => {
-                const defaultValue = parseInt(slider.dataset.default, 10);
-                
-                // Check initial state
-                if (parseInt(slider.value, 10) !== defaultValue) {
-                    slider.classList.add('active');
-                }
-                
-                // Add event listener for real-time changes
-                slider.addEventListener('input', function(e) {
-                    const currentValue = parseInt(this.value, 10);
-                    
-                    if (currentValue !== defaultValue) {
-                        this.classList.add('active');
-                    } else {
-                        this.classList.remove('active');
-                    }
-                }, { passive: true });
-                
-                // Add change listener for final state
-                slider.addEventListener('change', function(e) {
-                    const currentValue = parseInt(this.value, 10);
-                    
-                    if (currentValue !== defaultValue) {
-                        this.classList.add('active');
-                    } else {
-                        this.classList.remove('active');
-                    }
-                }, { passive: true });
-            });
-        }
-
         function validateAndProceed() {
             const password = document.getElementById('password').value;
             const passwordError = document.getElementById('passwordError');
-            const fadeOverlay = document.getElementById('fadeOverlay');
             
             if (password === CORRECT_PASSWORD) {
                 passwordError.classList.remove('show');
-                // Ensure overlay is fading in
-                fadeOverlay.style.opacity = '1';
-                window.speedUpAndFadeWords();
-                // Wait for overlay to fade in before redirecting
+                // Wait for overlay to almost fully fade in before redirecting
                 setTimeout(() => {
                     goToPage(2);
                 }, 2100);
@@ -1117,43 +618,49 @@
                 page.classList.remove('active');
             });
 
-            // Show background on all pages (no transitions)
+            // Show/hide background based on page
             const backgroundEl = document.getElementById('background');
             const fadeOverlay = document.getElementById('fadeOverlay');
-            backgroundEl.style.display = 'block';
-            backgroundEl.style.opacity = 1;
             
-            // Overlay logic: fade to 0.001 on page 5, stay at 1 on pages 2-4
-            if (pageNumber === 5) {
-                fadeOverlay.style.opacity = '0.001';
-                if (currentPage !== 5) {
-                    window.resumeWordCreation();
-                }
-            } else if (pageNumber === 1) {
+            if (pageNumber === 1) {
+                backgroundEl.style.display = 'block';
+                backgroundEl.style.transition = 'opacity 0s';
+                backgroundEl.style.opacity = 1;
                 fadeOverlay.style.opacity = '0.001';
                 document.getElementById('password').value = '';
-                if (currentPage > 1) {
-                    window.resumeWordCreation();
+            if (currentPage > 1) {
+                window.resumeWordCreation();
                 }
+
             } else if (pageNumber === 2) {
-                initSleepTracker();
-                // Keep overlay at current state (maintain 1 if already faded in)
-            } else if (pageNumber === 4) {
-                // Initialize sliders when going to page 4
-                setTimeout(() => {
-                    initializeSliders();
-                }, 50);
+                backgroundEl.style.display = 'none';
+                initSleepTracker(); // ✅ correct hook
+
+            } else if (pageNumber === 5) {
+                backgroundEl.style.display = 'block';
+                backgroundEl.style.transition = 'opacity 0s';
+                backgroundEl.style.opacity = 1;
+                fadeOverlay.style.opacity = '0.001';
+                if (currentPage !== 5) {
+                window.resumeWordCreation();
+                }
+
+            } else {
+                backgroundEl.style.display = 'none';
             }
-            
-            // Show the new page
+            // Show selected page
             document.getElementById(`page${pageNumber}`).classList.add('active');
             currentPage = pageNumber;
+            updatePageIndicator();
+            }
 
+        function updatePageIndicator() {
+            const total = 5;
             const fillEl = document.getElementById('pageIndicatorFill');
             const barEl = document.querySelector('.progress-bar');
 
             // Map page 1..total to 0..100% so page 1 == 0% and page total == 100%
-            const percentage = total > 1 ? Math.round(((pageNumber - 1) / (total - 1)) * 100) : 100;
+            const percentage = total > 1 ? Math.round(((currentPage - 1) / (total - 1)) * 100) : 100;
 
             if (fillEl) {
                 fillEl.style.width = `${percentage}%`;
@@ -1189,35 +696,7 @@
             // Initialize background visibility (should be visible on page 1)
             const backgroundEl = document.getElementById('background');
             backgroundEl.style.display = 'block';
-
-            // Initialize sliders on page load
-            initializeSliders();
         });
-
-        function submitAllData() {
-            // Collect all form data
-            const formData = {
-                date: document.getElementById('date').value,
-                sleep: sleepData || [],
-                caffeine: caffeineScore || 0,
-                energy: {
-                    highest: document.getElementById('energyHighest').value,
-                    lowest: document.getElementById('energyLowest').value
-                },
-                mood: {
-                    highest: document.getElementById('moodHighest').value,
-                    lowest: document.getElementById('moodLowest').value
-                },
-                anxiety: document.getElementById('anxiety').value,
-                irritability: document.getElementById('irritability').value,
-                note: document.getElementById('noteText').value,
-                image: document.getElementById('noteImage').files[0] || null
-            };
-
-            console.log('Form Data:', formData);
-            // TODO: Send to backend or Google Sheets API
-            alert('Data submitted! (Check console for data)');
-        }
     </script>
     <script src="background/script2.js"></script>
     <script src="trackers/sleep.js"></script>
