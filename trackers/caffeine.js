@@ -19,11 +19,16 @@ function resetCaffeine() {
     document.getElementById('scoreValue').innerText = caffeineScore;
     document.getElementById('finalScoreInput').value = '';
     updateMugFill();
-    // Reset liquid color to blue
+    
+    // Reset liquid and stars to pink (remove done class)
     const mugLiquid = document.querySelector('.mug-liquid');
+    const floatingStars = document.querySelectorAll('.floating-star');
     if (mugLiquid) {
-        mugLiquid.style.fill = '#8DB8DC';
+        mugLiquid.classList.remove('done');
     }
+    floatingStars.forEach(star => {
+        star.classList.remove('done');
+    });
 }
 
 function saveCaffeine() {
@@ -32,12 +37,17 @@ function saveCaffeine() {
         caffeineScore = parseInt(finalScore);
         document.getElementById('scoreValue').innerText = caffeineScore;
         updateMugFill();
-        // Change liquid to pink
+        
+        // Change liquid to yellow with glowing stars when done
         isLiquidPink = true;
         const mugLiquid = document.querySelector('.mug-liquid');
+        const floatingStars = document.querySelectorAll('.floating-star');
         if (mugLiquid) {
-            mugLiquid.style.fill = '#EDBFE7';
+            mugLiquid.classList.add('done');
         }
+        floatingStars.forEach(star => {
+            star.classList.add('done');
+        });
         // TODO: Save score to database or localStorage
         console.log('Caffeine score saved:', caffeineScore);
     }
