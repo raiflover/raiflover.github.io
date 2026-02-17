@@ -120,8 +120,11 @@ function renderBarChart(containerId, data, options = {}) {
     chartGroup.appendChild(baselineLine);
 
     // Calculate stagger delay to fit animation within fixed duration (1.2s total)
-    const totalAnimationDuration = 1.2; // seconds
-    const staggerDelay = data.length > 1 ? totalAnimationDuration / data.length : 0;
+    // For large datasets (>30 points), use shorter total duration to avoid tiny delays
+    const totalAnimationDuration = data.length > 30 ? 0.8 : 1.2; // seconds
+    const calculatedDelay = data.length > 1 ? totalAnimationDuration / data.length : 0;
+    // Ensure minimum delay of 0.01s to prevent animation issues
+    const staggerDelay = Math.max(calculatedDelay, 0.01);
 
     // Draw bars for each data point
     data.forEach((entry, index) => {
@@ -344,8 +347,11 @@ function renderLineChart(containerId, data, options = {}) {
     }
 
     // Calculate stagger delay to fit animation within fixed duration (1.2s total)
-    const totalAnimationDuration = 1.2; // seconds
-    const staggerDelay = data.length > 1 ? totalAnimationDuration / data.length : 0;
+    // For large datasets (>30 points), use shorter total duration to avoid tiny delays
+    const totalAnimationDuration = data.length > 30 ? 0.8 : 1.2; // seconds
+    const calculatedDelay = data.length > 1 ? totalAnimationDuration / data.length : 0;
+    // Ensure minimum delay of 0.01s to prevent animation issues
+    const staggerDelay = Math.max(calculatedDelay, 0.01);
 
     // Calculate points
     const points = data.map((entry, index) => {
