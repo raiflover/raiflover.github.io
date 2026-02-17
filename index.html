@@ -159,6 +159,7 @@
             position: relative;
             z-index: 100;
             transform: translateZ(0);
+            -webkit-overflow-scrolling: touch;
         }
 
         /* Chromatic aberration (subtle RGB offsets) */
@@ -224,13 +225,15 @@
             }
             .container {
                 border-radius: 10px;
-                max-height: none;
+                max-height: 95vh;
                 max-width: 95vw;
                 min-width: 90vw;
                 margin: 0 auto;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
             .form-content {
-                padding: 20px;
+                padding: 12px;
                 min-height: auto;
             }
             h1 {
@@ -282,11 +285,13 @@
         .page {
             display: none;
             animation: fadeIn 0.3s ease-in;
+            overflow-y: visible;
         }
 
         .page.active {
             display: flex;
             flex-direction: column;
+            overflow-y: visible;
         }
 
         @keyframes fadeIn {
