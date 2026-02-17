@@ -179,6 +179,15 @@
     display: block;
 }
 
+/* Pie chart slice styling - glassmorphism effect */
+.chart-pie-slice {
+    transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.chart-pie-slice:hover {
+    filter: brightness(1.2) drop-shadow(0 4px 12px rgba(255,255,255,0.3)) !important;
+}
+
 /* Loading Spinner */
 .loading-spinner {
     width: 20px;

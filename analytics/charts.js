@@ -564,15 +564,15 @@ function renderPieChart(containerId, data, field) {
         total += counts[items[k]];
     }
 
-    // Colors for pie slices
+    // Colors for pie slices - semi-transparent for glassy look
     var colors = [
-        'rgba(180,200,255,0.8)',
-        'rgba(237,191,231,0.8)',
-        'rgba(244,227,179,0.8)',
-        'rgba(200,180,255,0.8)',
-        'rgba(180,255,220,0.8)',
-        'rgba(255,180,200,0.8)',
-        'rgba(220,220,255,0.8)',
+        'rgba(180,200,255,0.65)',
+        'rgba(237,191,231,0.65)',
+        'rgba(244,227,179,0.65)',
+        'rgba(200,180,255,0.65)',
+        'rgba(180,255,220,0.65)',
+        'rgba(255,180,200,0.65)',
+        'rgba(220,220,255,0.65)',
         'rgba(255,220,180,0.8)'
     ];
 
@@ -588,6 +588,32 @@ function renderPieChart(containerId, data, field) {
         class: 'chart-svg',
         style: 'max-width: 300px; margin: 0 auto;'
     });
+
+    // Create defs for gradients to add glassy depth
+    var defs = createSVGElement('defs', {});
+    for (var gradIdx = 0; gradIdx < colors.length; gradIdx++) {
+        var baseColor = colors[gradIdx];
+        var gradient = createSVGElement('radialGradient', {
+            id: 'pieGrad' + containerId + gradIdx,
+            cx: '40%',
+            cy: '40%',
+            r: '80%'
+        });
+
+        var stop1 = createSVGElement('stop', {
+            offset: '0%',
+            style: 'stop-color:' + baseColor.replace('0.65', '0.85') + ';stop-opacity:1'
+        });
+        var stop2 = createSVGElement('stop', {
+            offset: '100%',
+            style: 'stop-color:' + baseColor + ';stop-opacity:1'
+        });
+
+        gradient.appendChild(stop1);
+        gradient.appendChild(stop2);
+        defs.appendChild(gradient);
+    }
+    svg.appendChild(defs);
 
     // Calculate stagger delay to fit animation within fixed duration (1.2s total)
     var totalAnimationDuration = 1.2; // seconds
@@ -620,11 +646,11 @@ function renderPieChart(containerId, data, field) {
 
         var slice = createSVGElement('path', {
             d: pathData,
-            fill: colors[m % colors.length],
-            stroke: 'rgba(255,255,255,0.2)',
+            fill: 'url(#pieGrad' + containerId + (m % colors.length) + ')',
+            stroke: 'rgba(255,255,255,0.4)',
             'stroke-width': '2',
             class: 'chart-pie-slice',
-            style: 'cursor: pointer; opacity: 0; -webkit-transform-origin: center; transform-origin: center; -webkit-animation-delay: ' + (m * pieStaggerDelay) + 's; animation-delay: ' + (m * pieStaggerDelay) + 's;'
+            style: 'cursor: pointer; opacity: 0; -webkit-transform-origin: center; transform-origin: center; -webkit-animation-delay: ' + (m * pieStaggerDelay) + 's; animation-delay: ' + (m * pieStaggerDelay) + 's; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4)) drop-shadow(0 0 4px rgba(255,255,255,0.15));'
         });
 
         (function(itemName, itemCount, itemPercentage) {
