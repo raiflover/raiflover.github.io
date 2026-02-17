@@ -18,15 +18,15 @@ function initSleepTracker() {
 
   sleepData = new Array(48).fill(false); // 24 hours * 2 slots per hour (30-min intervals)
 
-  // Create slots
+  // Create 48 slots (exactly 24 hours in 30-minute intervals)
   for (let i = 0; i < 48; i++) {
     const slot = document.createElement("div");
     slot.className = "sleep-slot";
-    
+
     const timeLabel = document.createElement("span");
     timeLabel.className = "sleep-slot-time";
     timeLabel.textContent = formatTime(i);
-    
+
     slot.appendChild(timeLabel);
     slot.title = formatTime(i);
 
@@ -37,5 +37,16 @@ function initSleepTracker() {
 
     sleepGrid.appendChild(slot);
   }
+}
+
+// Calculate sleep duration from sleepData array
+function calculateSleepDuration() {
+  if (!sleepData || sleepData.length === 0) return 0;
+
+  // Count true values (each represents 30 minutes)
+  const sleepSlots = sleepData.filter(slot => slot === true).length;
+
+  // Convert to hours (2 slots = 1 hour)
+  return sleepSlots / 2;
 }
 
