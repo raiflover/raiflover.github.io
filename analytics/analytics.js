@@ -515,7 +515,10 @@ function initChartAnimations() {
                 var target = entry.target;
 
                 if (target.classList.contains('chart-container')) {
-                    target.classList.add('animate-in');
+                    // Delay animation by 500ms
+                    setTimeout(function() {
+                        target.classList.add('animate-in');
+                    }, 500);
                 }
 
                 // Unobserve after animation is triggered
@@ -530,18 +533,18 @@ function initChartAnimations() {
         var container = chartContainers[j];
         observer.observe(container);
 
-        // Immediate check: If container is already visible, trigger animation after a brief delay
+        // Immediate check: If container is already visible, trigger animation after delay
         // This handles cases where observer might not fire right away
         var rect = container.getBoundingClientRect();
         var isVisible = rect.top < window.innerHeight && rect.bottom > 0;
         if (isVisible) {
-            // Delay to let observer have a chance to fire naturally first
+            // Delay animation by 500ms to match observer delay
             setTimeout(function(cont) {
                 // Only trigger if observer hasn't already done so
                 if (!cont.classList.contains('animate-in')) {
                     cont.classList.add('animate-in');
                 }
-            }, 300, container);
+            }, 500, container);
         }
     }
 
@@ -594,11 +597,9 @@ function triggerChartAnimations() {
         chartContainers[j].classList.remove('animate-in');
     }
 
-    // Re-initialize animations after brief delay
-    setTimeout(function() {
-        initInsightAnimations();
-        initChartAnimations();
-    }, 100);
+    // Re-initialize animations immediately (delay is in the observer itself)
+    initInsightAnimations();
+    initChartAnimations();
 }
 
 

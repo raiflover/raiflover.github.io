@@ -213,7 +213,15 @@
 
     .chart-container {
         padding: 12px;
-        overflow-x: auto;
+        overflow: visible;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+    }
+
+    .chart-svg {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
     }
 
     .chart-wrapper h3 {
@@ -255,14 +263,33 @@
         text-align: center;
     }
 
-    .chart-svg {
-        min-width: 600px; /* Enable horizontal scroll */
+    /* Compress charts to fit mobile screens - Safari optimized */
+    .chart-container {
+        padding: 8px;
+        overflow: visible;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
     }
 
-    /* iOS-specific: Ensure buttons don't zoom */
+    .chart-svg {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        min-width: unset;
+    }
+
+    .chart-wrapper {
+        margin: 12px 0;
+    }
+
+    /* iOS-specific: Ensure buttons don't zoom and enable smooth scrolling */
     .tab-btn,
     .insight-btn {
         font-size: 16px; /* Prevent iOS zoom on focus */
+    }
+
+    #chartsContainer {
+        -webkit-overflow-scrolling: touch;
     }
 }
 
@@ -379,27 +406,26 @@
     }
 }
 
+/* Radial wipe animation for pie charts */
 @keyframes chartPieFadeIn {
     0% {
         opacity: 0;
-        transform: scale(0);
+        clip-path: circle(0% at 50% 50%);
     }
     100% {
         opacity: 1;
-        transform: scale(1);
+        clip-path: circle(150% at 50% 50%);
     }
 }
 
 @-webkit-keyframes chartPieFadeIn {
     0% {
         opacity: 0;
-        -webkit-transform: scale(0);
-        transform: scale(0);
+        -webkit-clip-path: circle(0% at 50% 50%);
     }
     100% {
         opacity: 1;
-        -webkit-transform: scale(1);
-        transform: scale(1);
+        -webkit-clip-path: circle(150% at 50% 50%);
     }
 }
 
@@ -432,8 +458,8 @@
 }
 
 .chart-container.animate-in .chart-sleep-bar {
-    -webkit-animation: fadeInFromLeft 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-    animation: fadeInFromLeft 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    -webkit-animation: fadeInFromLeft 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s forwards;
+    animation: fadeInFromLeft 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s forwards;
 }
 
 .chart-wrapper {

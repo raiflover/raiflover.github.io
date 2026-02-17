@@ -570,9 +570,9 @@ function renderPieChart(containerId, data, field) {
         'rgba(255,220,180,0.8)'
     ];
 
-    // Chart dimensions
-    var size = 300;
-    var radius = 120;
+    // Chart dimensions (smaller size for better layout)
+    var size = 240;
+    var radius = 95;
     var centerX = size / 2;
     var centerY = size / 2;
 
@@ -580,7 +580,7 @@ function renderPieChart(containerId, data, field) {
     var svg = createSVGElement('svg', {
         viewBox: '0 0 ' + size + ' ' + size,
         class: 'chart-svg',
-        style: 'max-width: 400px; margin: 0 auto;'
+        style: 'max-width: 300px; margin: 0 auto;'
     });
 
     // Calculate stagger delay to fit animation within fixed duration (1.2s total)
