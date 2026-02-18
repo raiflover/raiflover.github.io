@@ -1,0 +1,22 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Entries collection - allow authenticated users to read/write their own entries
+    match /entries/{date} {
+      // Allow read if user is authenticated and owns the document
+      allow read: if request.auth != null
+                  && (resource == null || resource.data.userId == request.auth.uid);
+
+      // Allow create/update if user is authenticated and setting their own userId
+      allow create, update: if request.auth != null
+                            && request.resource.data.userId == request.auth.uid;
+
+      // Allow delete if user is authenticated and owns the document
+      allow delete: if request.auth != null
+                    && resource.data.userId == request.auth.uid;
+    }
+  }
+}
+
+
+122374327994-0s2hire3m27m8dro9chqc02k5f3pmaai.apps.googleusercontent.com

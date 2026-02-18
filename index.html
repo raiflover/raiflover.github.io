@@ -6,6 +6,7 @@
     <title>Everything Tracker</title>
     <link rel="stylesheet" href="background/styles2.css">
     <link rel="stylesheet" href="trackers/sleep.css">
+    <link rel="stylesheet" href="analytics/analytics.css">
     <style>
         * {
             margin: 0;
@@ -1748,7 +1749,7 @@
 
                 <div class="button-group button-group-nav">
                     <button type="button" class="btn-back" onclick="goToPage(5)">←</button>
-                    <button type="button" class="btn-primary" onclick="submitAllData(); goToPage(7);" style="flex: 1;">Submit</button>
+                    <button type="button" class="btn-primary" onclick="submitAllData()" style="flex: 1;">Submit</button>
                 </div>
             </div>
 
@@ -1963,12 +1964,14 @@
 
             // Control background words animation - drift off on pages 2-6, return on other pages
             const backgroundWords = document.getElementById('backgroundWords');
-            if (pageNumber >= 2 && pageNumber <= 6) {
-                // Drift off and fade out on symptom/tracker pages
-                backgroundWords.classList.add('hidden');
-            } else {
-                // Return and fade in on pages 0, 1, 7
-                backgroundWords.classList.remove('hidden');
+            if (backgroundWords) {
+                if (pageNumber >= 2 && pageNumber <= 6) {
+                    // Drift off and fade out on symptom/tracker pages
+                    backgroundWords.classList.add('hidden');
+                } else {
+                    // Return and fade in on pages 0, 1, 7
+                    backgroundWords.classList.remove('hidden');
+                }
             }
 
             // Overlay logic: fade to 0.001 on pages 0, 1, 7 (background visible), stay at 1 on pages 2-6
@@ -2085,6 +2088,7 @@
 
         async function submitAllData() {
               // Check if user is authenticated
+                currentUser = currentUser || window.currentUser;
                 if (!currentUser) {
                 alert('Please log in first');
                 goToPage(0);
@@ -2169,6 +2173,7 @@
 
                 console.log('Entry saved successfully:', entry);
                 alert('Data submitted successfully! ✓');
+                goToPage(7);
 
             } catch (error) {
                 console.error('Error saving data:', error);
@@ -2238,7 +2243,6 @@
     </script>
 
     <!-- Analytics Module -->
-    <link rel="stylesheet" href="analytics/analytics.css">
     <script src="analytics/utils.js"></script>
     <script src="analytics/charts.js"></script>
     <script src="analytics/insights.js"></script>
