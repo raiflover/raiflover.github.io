@@ -185,8 +185,7 @@ function getPeriodLabel(period, offset) {
     } else if (period === 'month') {
         return LONG[s.getMonth()] + ' ' + s.getFullYear();
     } else if (period === '3months') {
-        var q = Math.floor(s.getMonth() / 3) + 1; // 1-4
-        return 'Q' + q + ' ' + s.getFullYear();
+        return SHORT[s.getMonth()] + ' \u2013 ' + SHORT[e.getMonth()] + ' ' + e.getFullYear();
     } else {
         return '' + s.getFullYear();
     }

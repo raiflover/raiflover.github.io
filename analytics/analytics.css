@@ -251,10 +251,12 @@
 
     .chart-wrapper h3 {
         font-size: 1em;
+        margin-bottom: 12px;
     }
 
     .insights-title {
         font-size: 1em;
+        margin-bottom: 12px;
     }
 
     .insight-item {
