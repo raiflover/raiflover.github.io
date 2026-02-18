@@ -525,7 +525,8 @@ function hideTooltip() {
 /* ── Jar live-physics ────────────────────────────────────────────────────── */
 
 /** Gravity vector (px/frame²) — updated by device-orientation listener */
-var _jarGravity = { x: 0, y: 0.25 };
+var _jarMobile = (typeof window !== 'undefined') && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+var _jarGravity = { x: 0, y: _jarMobile ? 0.45 : 0.25 };
 var _jarOrientationInited = false;
 
 /**
