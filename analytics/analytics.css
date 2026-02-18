@@ -11,6 +11,8 @@
 }
 
 .tab-btn {
+    -webkit-appearance: none;
+    appearance: none;
     padding: 10px 20px;
     background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.004));
     border: 1px solid rgba(255,255,255,0.03);
@@ -45,6 +47,8 @@
 }
 
 .period-btn {
+    -webkit-appearance: none;
+    appearance: none;
     padding: 6px 14px;
     background: linear-gradient(180deg, rgba(255,255,255,0.008), rgba(255,255,255,0.002));
     border: 1px solid rgba(255,255,255,0.02);
@@ -121,6 +125,7 @@
     font-size: 1.1em;
     margin: 0 0 12px 0;
     font-weight: 600;
+    text-align: center;
 }
 
 .insights-list {
@@ -153,29 +158,29 @@
 
 /* Compensate chart-wrapper negative margin — indent from container edge */
 #page7 .chart-wrapper h3 {
-    padding-left: 20px;
-    padding-right: 20px;
-    text-align: left;
+    padding-left: 30px;
+    padding-right: 30px;
+    text-align: center;
 }
 
 #page7 .insights-section {
-    padding-left: 20px;
+    padding-left: 30px;
     padding-right: 20px;
 }
 
 #page7 .notes-collapsible {
-    padding-left: 20px;
+    padding-left: 30px;
     padding-right: 20px;
 }
 
 .chart-wrapper {
-    margin-bottom: 30px;
+    margin-bottom: 16px;
 }
 
 .chart-wrapper h3 {
     color: #EDBFE7;
     font-size: 1.1em;
-    margin: 0 0 12px 0;
+    margin: 0 0 6px 0;
     font-weight: 600;
     text-align: center;
 }
@@ -264,17 +269,17 @@
     }
 
     #page7 .chart-wrapper h3 {
-        padding-left: 8px;
-        padding-right: 8px;
+        padding-left: 18px;
+        padding-right: 18px;
     }
 
     #page7 .insights-section {
-        padding-left: 8px;
+        padding-left: 18px;
         padding-right: 8px;
     }
 
     #page7 .notes-collapsible {
-        padding-left: 8px;
+        padding-left: 18px;
         padding-right: 8px;
     }
 
@@ -547,6 +552,7 @@
 #chart-tooltip {
     position: fixed;
     background: linear-gradient(135deg, rgba(20,20,31,0.95), rgba(15,22,29,0.95));
+    -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 8px;
@@ -584,6 +590,8 @@
 
 /* Notes collapsible button — matches period-btn pill style */
 .notes-toggle-btn {
+    -webkit-appearance: none;
+    appearance: none;
     font-family: inherit;
     outline: none;
     padding: 6px 14px;
@@ -638,6 +646,7 @@
     }
 
     /* Fix button font size to prevent zoom on focus */
+    .tab-btn,
     .notes-toggle-btn,
     .period-btn {
         font-size: 16px;

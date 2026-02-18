@@ -192,13 +192,13 @@ function renderBarChart(containerId, data, options = {}) {
     // Period-aware bar styling (4 tiers)
     var barGapFrac, barRx;
     // bars-week
-    if (_period === 'week')         { barGapFrac = 0.16; barRx = 22; }
+    if (_period === 'week')         { barGapFrac = 0.28; barRx = 22; }
     // bars-3months
     else if (_period === '3months') { barGapFrac = 0.12; barRx = 16; }
     // bars-month
-    else if (_period === 'month')   { barGapFrac = 0.08; barRx = 10; }
+    else if (_period === 'month')   { barGapFrac = 0.22; barRx = 18; }
     // bars-year
-    else                            { barGapFrac = 0.06; barRx = 8; }
+    else                            { barGapFrac = 0.22; barRx = 18; }
 
     // Clear container
     container.innerHTML = '';
@@ -645,6 +645,7 @@ function showTooltip(event, entry, metric, containerId) {
     tooltip.style.cssText = `
         position: fixed;
         background: linear-gradient(135deg, rgba(20,20,31,0.95), rgba(15,22,29,0.95));
+        -webkit-backdrop-filter: blur(12px);
         backdrop-filter: blur(12px);
         border: 1px solid rgba(255,255,255,0.1);
         border-radius: 8px;
@@ -1074,7 +1075,7 @@ function renderPieChart(containerId, data, field) {
     var positions = rawPos.map(function(p) { return { x: p.x + PHYS_PAD, y: p.y + PHYS_PAD }; });
 
     // Container: centered column
-    container.style.cssText = 'display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 4px 0; min-height: 320px;';
+    container.style.cssText = 'display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 20px 0 20px;';
 
     // Jar: lid + glass body (pure CSS — no SVG image needed)
     var jarShaker = document.createElement('div');
@@ -1203,7 +1204,7 @@ function renderSleepBarChart(containerId, data) {
     var width = 1000;
     var barHeight = 54;
     var barGap = 14;
-    var padding = { top: 30, right: 60, bottom: 60, left: 140 };
+    var padding = { top: 30, right: 95, bottom: 60, left: 115 };
     var height = padding.top + padding.bottom + (sleepDataProcessed.length * (barHeight + barGap));
 
     var chartWidth = width - padding.left - padding.right;
@@ -1382,7 +1383,7 @@ function showSleepTooltip(event, htmlContent) {
 
     var tooltip = document.createElement('div');
     tooltip.id = 'chart-tooltip';
-    tooltip.style.cssText = 'position: fixed; background: linear-gradient(135deg, rgba(20,20,31,0.95), rgba(15,22,29,0.95)); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 14px; color: #DFE4EB; font-size: 13px; pointer-events: none; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.5); line-height: 1.6;';
+    tooltip.style.cssText = 'position: fixed; background: linear-gradient(135deg, rgba(20,20,31,0.95), rgba(15,22,29,0.95)); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 14px; color: #DFE4EB; font-size: 13px; pointer-events: none; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.5); line-height: 1.6;';
 
     tooltip.innerHTML = htmlContent;
     document.body.appendChild(tooltip);
