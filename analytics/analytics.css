@@ -248,10 +248,6 @@
         font-size: 1em;
     }
 
-    .insights-section {
-        padding: 16px;
-    }
-
     .insights-title {
         font-size: 1em;
     }
@@ -325,7 +321,9 @@
 
     /* iOS-specific: Ensure buttons don't zoom and enable smooth scrolling */
     .tab-btn,
-    .insight-btn {
+    .insight-btn,
+    .period-btn,
+    .notes-toggle-btn {
         font-size: 16px; /* Prevent iOS zoom on focus */
     }
 
@@ -623,6 +621,7 @@
     .tab-btn,
     .insight-btn,
     .period-btn,
+    .period-nav-btn,
     .notes-toggle-btn,
     button {
         -webkit-tap-highlight-color: transparent;
@@ -632,13 +631,15 @@
     .tab-btn,
     .insight-btn,
     .period-btn,
+    .period-nav-btn,
     .notes-toggle-btn {
         -webkit-user-select: none;
         user-select: none;
     }
 
     /* Fix button font size to prevent zoom on focus */
-    .notes-toggle-btn {
+    .notes-toggle-btn,
+    .period-btn {
         font-size: 16px;
     }
 }
@@ -935,6 +936,11 @@
 }
 
 .period-nav-btn {
+    /* Safari Mobile: appearance + box-sizing required for flex inside <button> */
+    -webkit-appearance: none;
+    appearance: none;
+    box-sizing: border-box;
+    flex-shrink: 0;
     background: none;
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 50%;
@@ -942,14 +948,20 @@
     height: 30px;
     color: #DFE4EB;
     font-size: 1.3em;
-    line-height: 1;
+    line-height: 30px; /* fallback for browsers that ignore flex centering on buttons */
+    text-align: center;
     cursor: pointer;
+    display: -webkit-flex;
     display: flex;
+    -webkit-align-items: center;
     align-items: center;
+    -webkit-justify-content: center;
     justify-content: center;
     padding: 0;
     transition: background 0.2s, border-color 0.2s;
     -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .period-nav-btn:hover:not(:disabled) {
