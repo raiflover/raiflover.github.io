@@ -112,13 +112,8 @@
 }
 
 .insights-section {
-    background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    backdrop-filter: blur(12px) saturate(125%) contrast(105%);
-    border: 1px solid rgba(255,255,255,0.04);
-    border-radius: 14px;
-    padding: 20px;
-    margin-bottom: 16px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    padding: 0 0 12px 0;
+    margin-bottom: 4px;
 }
 
 .insights-title {
@@ -150,6 +145,29 @@
     margin: 20px 0;
 }
 
+/* Break charts out of .form-content horizontal padding so they use full container width */
+#page7 .chart-wrapper {
+    margin-left: -40px;
+    margin-right: -40px;
+}
+
+/* Compensate chart-wrapper negative margin — indent from container edge */
+#page7 .chart-wrapper h3 {
+    padding-left: 20px;
+    padding-right: 20px;
+    text-align: left;
+}
+
+#page7 .insights-section {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#page7 .notes-collapsible {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
 .chart-wrapper {
     margin-bottom: 30px;
 }
@@ -163,14 +181,9 @@
 }
 
 .chart-container {
-    background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    backdrop-filter: blur(12px) saturate(125%) contrast(105%);
-    border: 1px solid rgba(255,255,255,0.04);
-    border-radius: 14px;
-    padding: 32px 24px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    padding: 12px 0;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
+    -webkit-overflow-scrolling: touch;
 }
 
 .chart-svg {
@@ -221,10 +234,8 @@
     }
 
     .chart-container {
-        padding: 20px 16px;
+        padding: 8px 0;
         overflow: visible;
-        -webkit-transform: translateZ(0);
-        transform: translateZ(0);
     }
 
     .chart-svg {
@@ -251,14 +262,34 @@
 }
 
 @media (max-width: 480px) {
+    #page7 .chart-wrapper {
+        margin-left: -12px;
+        margin-right: -12px;
+    }
+
+    #page7 .chart-wrapper h3 {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    #page7 .insights-section {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    #page7 .notes-collapsible {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
     .analytics-tabs {
-        flex-direction: column;
-        gap: 8px;
+        gap: 6px;
     }
 
     .tab-btn {
-        width: 100%;
+        flex: 1;
         text-align: center;
+        padding: 8px 4px;
     }
 
     .insights-toggle {
@@ -274,7 +305,7 @@
 
     /* Compress charts to fit mobile screens - Safari optimized */
     .chart-container {
-        padding: 16px 12px;
+        padding: 6px 0;
         overflow: visible;
         -webkit-transform: translateZ(0);
         transform: translateZ(0);
@@ -291,16 +322,6 @@
         margin: 12px 0;
     }
 
-    /* Enhance chart appearance on mobile to match form style */
-    .chart-container {
-        background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-        backdrop-filter: blur(16px) saturate(130%);
-        -webkit-backdrop-filter: blur(16px) saturate(130%);
-        border: 1px solid rgba(255,255,255,0.06);
-        box-shadow: 0 6px 16px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.03);
-        padding: 16px;
-        border-radius: 16px;
-    }
 
     /* iOS-specific: Ensure buttons don't zoom and enable smooth scrolling */
     .tab-btn,
@@ -559,31 +580,36 @@
 }
 
 /* Smooth transitions */
-.insights-section,
 .chart-container {
     transition: all 0.3s ease;
 }
 
-.insights-section:hover,
-.chart-container:hover {
-    border-color: rgba(255,255,255,0.08);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.5);
-}
-
-/* Notes collapsible button */
+/* Notes collapsible button — matches period-btn pill style */
 .notes-toggle-btn {
     font-family: inherit;
     outline: none;
+    padding: 6px 14px;
+    background: linear-gradient(135deg, rgba(237,191,231,0.1), rgba(244,227,179,0.08));
+    border: 1px solid rgba(237,191,231,0.2);
+    border-radius: 14px;
+    color: #EDBFE7;
+    font-size: 0.85em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+    transition: all 0.25s;
 }
 
 .notes-toggle-btn:hover {
-    background: linear-gradient(135deg, rgba(237,191,231,0.15), rgba(244,227,179,0.12));
-    border-color: rgba(255,255,255,0.1);
+    background: linear-gradient(135deg, rgba(237,191,231,0.18), rgba(244,227,179,0.13));
+    border-color: rgba(237,191,231,0.35);
     box-shadow: 0 0 8px rgba(237,191,231,0.15);
 }
 
 .notes-toggle-btn:active {
-    transform: scale(0.98);
+    transform: scale(0.97);
 }
 
 /* iOS-specific improvements */
@@ -784,12 +810,12 @@
 .jar-body::before {
     content: '';
     position: absolute;
-    top: 0;
+    top: 5px;
     left: 5px;
     width: 16%;
     height: 88%;
     background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent);
-    border-radius: 0 0 0 16px;
+    border-radius: 16px 0 0 16px;
     pointer-events: none;
     z-index: 10;
 }
@@ -897,4 +923,49 @@
     font-size: 0.8em;
     color: #DFE4EB;
     opacity: 0.9;
+}
+
+/* Period calendar navigator */
+.period-navigator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin: 6px 0 14px;
+}
+
+.period-nav-btn {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    color: #DFE4EB;
+    font-size: 1.3em;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background 0.2s, border-color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.period-nav-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(237, 191, 231, 0.45);
+}
+
+.period-nav-btn:disabled {
+    opacity: 0.28;
+    cursor: default;
+}
+
+.period-nav-label {
+    color: #DFE4EB;
+    font-size: 0.88em;
+    min-width: 150px;
+    text-align: center;
+    letter-spacing: 0.01em;
 }

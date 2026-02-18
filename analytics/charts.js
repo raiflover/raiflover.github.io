@@ -16,6 +16,157 @@ function createSVGElement(type, attributes = {}) {
 }
 
 /**
+ * Aggregate daily data into N-day chunks, averaging each metric.
+ * Used to display weekly (chunkSize=7) or bi-weekly (chunkSize=14) averages.
+ */
+function _aggregateByDays(data, chunkSize) {
+    function mean(arr) {
+        var valid = arr.filter(function(v) { return v != null && !isNaN(v); });
+        if (!valid.length) return 4;
+        return Math.round(valid.reduce(function(s, v) { return s + v; }, 0) / valid.length * 10) / 10;
+    }
+    var result = [];
+    for (var i = 0; i < data.length; i += chunkSize) {
+        var chunk = data.slice(i, Math.min(i + chunkSize, data.length));
+        var nonMissing = chunk.filter(function(e) { return !e.isMissing; });
+        if (nonMissing.length === 0) {
+            result.push({ date: chunk[0].date, isMissing: true,
+                energy: { highest: 4, lowest: 4 }, mood: { highest: 4, lowest: 4 },
+                anxiety: 4, irritability: 4 });
+            continue;
+        }
+        result.push({
+            date: chunk[0].date,
+            isMissing: false,
+            energy: {
+                highest: mean(nonMissing.map(function(e) { return e.energy ? e.energy.highest : null; })),
+                lowest:  mean(nonMissing.map(function(e) { return e.energy ? e.energy.lowest  : null; }))
+            },
+            mood: {
+                highest: mean(nonMissing.map(function(e) { return e.mood ? e.mood.highest : null; })),
+                lowest:  mean(nonMissing.map(function(e) { return e.mood ? e.mood.lowest  : null; }))
+            },
+            anxiety:      mean(nonMissing.map(function(e) { return e.anxiety; })),
+            irritability: mean(nonMissing.map(function(e) { return e.irritability; }))
+        });
+    }
+    return result;
+}
+
+/**
+ * Aggregate raw day-data into N-day chunks for the sleep chart.
+ * Returns pre-processed sleep entries with averaged metrics.
+ */
+function _aggregateSleepRaw(data, chunkSize) {
+    function tMin(t) { var p = t.split(':'); return +p[0] * 60 + +p[1]; }
+    function tStr(m) { var n = ((Math.round(m) % 1440) + 1440) % 1440; return (n/60|0).toString().padStart(2,'0') + ':' + (n%60).toString().padStart(2,'0'); }
+    var result = [];
+    for (var i = 0; i < data.length; i += chunkSize) {
+        var chunk = data.slice(i, Math.min(i + chunkSize, data.length));
+        var entries = [];
+        for (var j = 0; j < chunk.length; j++) {
+            var e = chunk[j];
+            if (!e.isMissing && e.sleep && Array.isArray(e.sleep)) {
+                var an = analyzeSleepData(e.sleep);
+                if (an.duration > 0) entries.push({ dur: an.duration, bed: tMin(an.bedtime), wake: tMin(an.wakeTime), hasNaps: an.hasNaps, napCount: an.napCount || 0 });
+            }
+        }
+        if (!entries.length) continue;
+        var avgDur  = entries.reduce(function(s,e){return s+e.dur;},0) / entries.length;
+        // Circular bedtime average: times before 6am treated as next-day
+        var normBed = entries.map(function(e){return e.bed < 360 ? e.bed + 1440 : e.bed;});
+        var avgBed  = normBed.reduce(function(s,v){return s+v;},0) / normBed.length;
+        var avgWake = entries.reduce(function(s,e){return s+e.wake;},0) / entries.length;
+        result.push({ date: chunk[0].date, duration: avgDur,
+            bedtime: tStr(avgBed), wakeTime: tStr(avgWake),
+            hasNaps: entries.some(function(e){return e.hasNaps;}),
+            napCount: entries.reduce(function(s,e){return s+e.napCount;},0),
+            bedtimeMinutes: avgBed % 1440, wakeTimeMinutes: avgWake });
+    }
+    return result;
+}
+
+/**
+ * Aggregate daily data into calendar months, averaging each metric.
+ * Used to display monthly averages for the year view.
+ */
+function _aggregateByMonth(data) {
+    function mean(arr) {
+        var valid = arr.filter(function(v) { return v != null && !isNaN(v); });
+        if (!valid.length) return 4;
+        return Math.round(valid.reduce(function(s, v) { return s + v; }, 0) / valid.length * 10) / 10;
+    }
+    var groups = {}, order = [];
+    for (var i = 0; i < data.length; i++) {
+        var mk = data[i].date.substring(0, 7);
+        if (!groups[mk]) { groups[mk] = []; order.push(mk); }
+        groups[mk].push(data[i]);
+    }
+    var result = [];
+    for (var k = 0; k < order.length; k++) {
+        var key = order[k], chunk = groups[key];
+        var nonMissing = chunk.filter(function(e) { return !e.isMissing; });
+        if (nonMissing.length === 0) {
+            result.push({ date: key + '-01', isMissing: true,
+                energy: { highest: 4, lowest: 4 }, mood: { highest: 4, lowest: 4 },
+                anxiety: 4, irritability: 4 });
+            continue;
+        }
+        result.push({
+            date: key + '-01', isMissing: false,
+            energy: {
+                highest: mean(nonMissing.map(function(e) { return e.energy ? e.energy.highest : null; })),
+                lowest:  mean(nonMissing.map(function(e) { return e.energy ? e.energy.lowest  : null; }))
+            },
+            mood: {
+                highest: mean(nonMissing.map(function(e) { return e.mood ? e.mood.highest : null; })),
+                lowest:  mean(nonMissing.map(function(e) { return e.mood ? e.mood.lowest  : null; }))
+            },
+            anxiety:      mean(nonMissing.map(function(e) { return e.anxiety; })),
+            irritability: mean(nonMissing.map(function(e) { return e.irritability; }))
+        });
+    }
+    return result;
+}
+
+/**
+ * Aggregate raw day-data into calendar months for the sleep chart.
+ */
+function _aggregateSleepByMonth(data) {
+    function tMin(t) { var p = t.split(':'); return +p[0] * 60 + +p[1]; }
+    function tStr(m) { var n = ((Math.round(m) % 1440) + 1440) % 1440; return (n/60|0).toString().padStart(2,'0') + ':' + (n%60).toString().padStart(2,'0'); }
+    var groups = {}, order = [];
+    for (var i = 0; i < data.length; i++) {
+        var mk = data[i].date.substring(0, 7);
+        if (!groups[mk]) { groups[mk] = []; order.push(mk); }
+        groups[mk].push(data[i]);
+    }
+    var result = [];
+    for (var k = 0; k < order.length; k++) {
+        var key = order[k], chunk = groups[key];
+        var entries = [];
+        for (var j = 0; j < chunk.length; j++) {
+            var e = chunk[j];
+            if (!e.isMissing && e.sleep && Array.isArray(e.sleep)) {
+                var an = analyzeSleepData(e.sleep);
+                if (an.duration > 0) entries.push({ dur: an.duration, bed: tMin(an.bedtime), wake: tMin(an.wakeTime), hasNaps: an.hasNaps, napCount: an.napCount || 0 });
+            }
+        }
+        if (!entries.length) continue;
+        var avgDur  = entries.reduce(function(s,e){return s+e.dur;},0) / entries.length;
+        var normBed = entries.map(function(e){return e.bed < 360 ? e.bed + 1440 : e.bed;});
+        var avgBed  = normBed.reduce(function(s,v){return s+v;},0) / normBed.length;
+        var avgWake = entries.reduce(function(s,e){return s+e.wake;},0) / entries.length;
+        result.push({ date: key + '-01', duration: avgDur,
+            bedtime: tStr(avgBed), wakeTime: tStr(avgWake),
+            hasNaps: entries.some(function(e){return e.hasNaps;}),
+            napCount: entries.reduce(function(s,e){return s+e.napCount;},0),
+            bedtimeMinutes: avgBed % 1440, wakeTimeMinutes: avgWake });
+    }
+    return result;
+}
+
+/**
  * Render bar chart for energy or mood
  * @param {string} containerId - ID of container element
  * @param {Array} data - Array of data entries
@@ -33,6 +184,22 @@ function renderBarChart(containerId, data, options = {}) {
         colorHighNeg = 'rgba(120,140,180,0.8)'
     } = options;
 
+    // Aggregate into weekly/monthly averages for longer periods
+    var _period = (typeof AnalyticsState !== 'undefined') ? AnalyticsState.currentPeriod : 'week';
+    if (_period === '3months') data = _aggregateByDays(data, 7);
+    else if (_period === 'year') data = _aggregateByMonth(data);
+
+    // Period-aware bar styling (4 tiers)
+    var barGapFrac, barRx;
+    // bars-week
+    if (_period === 'week')         { barGapFrac = 0.16; barRx = 22; }
+    // bars-3months
+    else if (_period === '3months') { barGapFrac = 0.12; barRx = 16; }
+    // bars-month
+    else if (_period === 'month')   { barGapFrac = 0.08; barRx = 10; }
+    // bars-year
+    else                            { barGapFrac = 0.06; barRx = 8; }
+
     // Clear container
     container.innerHTML = '';
 
@@ -42,18 +209,15 @@ function renderBarChart(containerId, data, options = {}) {
         return;
     }
 
-    // Chart dimensions - LARGER
-    const width = 1000;
-    const height = 400;
-    const padding = { top: 30, right: 60, bottom: 80, left: 70 };
+    // Narrower viewBox → each unit maps to more screen pixels → everything renders larger
+    const width = 700;
+    const height = 380;
+    const padding = { top: 30, right: 50, bottom: 80, left: 60 };
     const chartWidth = width - padding.left - padding.right;
     const chartHeight = height - padding.top - padding.bottom;
     const baseline = 4;
 
-    // Calculate bar width based on data points
     const barGroupWidth = chartWidth / data.length;
-    const barWidth = Math.min(Math.max(barGroupWidth * 0.35, 4), 25);
-    const barGap = Math.max(barWidth * 0.3, 2);
 
     // Create SVG
     const svg = createSVGElement('svg', {
@@ -100,7 +264,7 @@ function renderBarChart(containerId, data, options = {}) {
             x: -10,
             y: y + 4,
             fill: '#DFE4EB',
-            'font-size': '12',
+            'font-size': '14',
             'text-anchor': 'end'
         });
         label.textContent = i;
@@ -172,18 +336,18 @@ function renderBarChart(containerId, data, options = {}) {
         }
         chartDefs.appendChild(gradient);
 
-        // Create rounded bar - MORE ROUNDED
+        // Bars with a 2-unit gap (1 each side) and slight rounding
         const bar = createSVGElement('rect', {
-            x: x - barWidth / 2,
+            x: x - barGroupWidth / 2 + barGroupWidth * barGapFrac / 2,
             y: barY,
-            width: barWidth * 1.5,
+            width: Math.max(barGroupWidth * (1 - barGapFrac), 2),
             height: Math.max(barHeight, 3),
             fill: 'url(#' + gradientId + ')',
-            stroke: entry.isMissing ? 'rgba(255,255,255,0.2)' : 'rgba(180,200,255,0.3)',
-            'stroke-width': entry.isMissing ? 1 : 2,
+            stroke: entry.isMissing ? 'rgba(255,255,255,0.2)' : 'none',
+            'stroke-width': entry.isMissing ? 1 : 0,
             'stroke-dasharray': entry.isMissing ? '3,3' : 'none',
-            rx: Math.min(barWidth * 1.2, 15),
-            ry: Math.min(barWidth * 1.2, 15),
+            rx: barRx,
+            ry: barRx,
             class: 'chart-bar',
             style: 'cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); opacity: 0; -webkit-animation-delay: ' + (index * staggerDelay) + 's; animation-delay: ' + (index * staggerDelay) + 's;'
         });
@@ -205,7 +369,7 @@ function renderBarChart(containerId, data, options = {}) {
                 x: labelX,
                 y: labelY,
                 fill: entry.isMissing ? '#888' : '#DFE4EB',
-                'font-size': '11',
+                'font-size': '13',
                 'text-anchor': 'middle',
                 transform: `rotate(-45, ${labelX}, ${labelY})`
             });
@@ -219,7 +383,7 @@ function renderBarChart(containerId, data, options = {}) {
                 x: labelX,
                 y: labelY,
                 fill: '#DFE4EB',
-                'font-size': '10',
+                'font-size': '12',
                 'text-anchor': 'middle',
                 transform: `rotate(-45, ${labelX}, ${labelY})`
             });
@@ -267,6 +431,11 @@ function renderLineChart(containerId, data, options = {}) {
         fillColor = 'rgba(244,227,179,0.2)'
     } = options;
 
+    // Aggregate into weekly/monthly averages for longer periods
+    var _period2 = (typeof AnalyticsState !== 'undefined') ? AnalyticsState.currentPeriod : 'week';
+    if (_period2 === '3months') data = _aggregateByDays(data, 7);
+    else if (_period2 === 'year') data = _aggregateByMonth(data);
+
     // Clear container
     container.innerHTML = '';
 
@@ -276,10 +445,10 @@ function renderLineChart(containerId, data, options = {}) {
         return;
     }
 
-    // Chart dimensions - LARGER
-    const width = 1000;
-    const height = 400;
-    const padding = { top: 30, right: 60, bottom: 80, left: 70 };
+    // Chart dimensions
+    const width = 700;
+    const height = 380;
+    const padding = { top: 30, right: 50, bottom: 80, left: 60 };
     const chartWidth = width - padding.left - padding.right;
     const chartHeight = height - padding.top - padding.bottom;
 
@@ -339,7 +508,7 @@ function renderLineChart(containerId, data, options = {}) {
             x: -10,
             y: y + 4,
             fill: '#DFE4EB',
-            'font-size': '12',
+            'font-size': '14',
             'text-anchor': 'end'
         });
         label.textContent = i;
@@ -412,7 +581,7 @@ function renderLineChart(containerId, data, options = {}) {
                 x: labelX,
                 y: labelY,
                 fill: point.isMissing ? '#888' : '#DFE4EB',
-                'font-size': '11',
+                'font-size': '13',
                 'text-anchor': 'middle',
                 transform: `rotate(-45, ${labelX}, ${labelY})`
             });
@@ -425,7 +594,7 @@ function renderLineChart(containerId, data, options = {}) {
                 x: labelX,
                 y: labelY,
                 fill: '#DFE4EB',
-                'font-size': '10',
+                'font-size': '12',
                 'text-anchor': 'middle',
                 transform: `rotate(-45, ${labelX}, ${labelY})`
             });
@@ -538,10 +707,15 @@ function _initJarOrientation() {
     _jarOrientationInited = true;
     if (typeof DeviceOrientationEvent === 'undefined') return;
     function handle(e) {
-        var g = e.gamma || 0;                               // left/right tilt  –90…+90
-        var b = e.beta != null ? e.beta : 90;               // forward tilt     –180…+180
-        _jarGravity.x = Math.max(-0.35, Math.min(0.35, g * 0.0038));
-        _jarGravity.y = Math.max(0.03,  Math.min(0.35, Math.abs(b) / 90 * 0.12));
+        var g = e.gamma || 0;                               // left/right tilt  –90…+90  (degrees)
+        var b = e.beta != null ? e.beta : 90;               // forward tilt     –180…+180 (degrees)
+        var gammaRad = g * Math.PI / 180;
+        var betaRad  = b * Math.PI / 180;
+        var scale = _jarMobile ? 0.45 : 0.25;
+        // sin() projection: gy = +scale when upright (beta=90°), 0 when flat, −scale when upside down
+        // gx = 0 when level, ±scale when fully sideways (gamma=±90°)
+        _jarGravity.x = scale * Math.sin(gammaRad);
+        _jarGravity.y = scale * Math.sin(betaRad);
     }
     if (typeof DeviceOrientationEvent.requestPermission === 'function') {
         // iOS 13+ — requestPermission must run inside a user gesture
@@ -900,7 +1074,7 @@ function renderPieChart(containerId, data, field) {
     var positions = rawPos.map(function(p) { return { x: p.x + PHYS_PAD, y: p.y + PHYS_PAD }; });
 
     // Container: centered column
-    container.style.cssText = 'display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 4px 0;';
+    container.style.cssText = 'display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 4px 0; min-height: 320px;';
 
     // Jar: lid + glass body (pure CSS — no SVG image needed)
     var jarShaker = document.createElement('div');
@@ -991,23 +1165,31 @@ function renderSleepBarChart(containerId, data) {
         return;
     }
 
-    // Process sleep data
-    var sleepDataProcessed = [];
-    for (var i = 0; i < data.length; i++) {
-        var entry = data[i];
-        if (!entry.isMissing && entry.sleep && Array.isArray(entry.sleep)) {
-            var analysis = analyzeSleepData(entry.sleep);
-            if (analysis.duration > 0) {
-                sleepDataProcessed.push({
-                    date: entry.date,
-                    duration: analysis.duration,
-                    bedtime: analysis.bedtime,
-                    wakeTime: analysis.wakeTime,
-                    hasNaps: analysis.hasNaps,
-                    napCount: analysis.napCount,
-                    bedtimeMinutes: timeToMinutes(analysis.bedtime),
-                    wakeTimeMinutes: timeToMinutes(analysis.wakeTime)
-                });
+    // Process sleep data — aggregate for longer periods
+    var _slPeriod = (typeof AnalyticsState !== 'undefined') ? AnalyticsState.currentPeriod : 'week';
+    var sleepDataProcessed;
+    if (_slPeriod === 'year') {
+        sleepDataProcessed = _aggregateSleepByMonth(data);
+    } else if (_slPeriod === '3months') {
+        sleepDataProcessed = _aggregateSleepRaw(data, 7);
+    } else {
+        sleepDataProcessed = [];
+        for (var i = 0; i < data.length; i++) {
+            var entry = data[i];
+            if (!entry.isMissing && entry.sleep && Array.isArray(entry.sleep)) {
+                var analysis = analyzeSleepData(entry.sleep);
+                if (analysis.duration > 0) {
+                    sleepDataProcessed.push({
+                        date: entry.date,
+                        duration: analysis.duration,
+                        bedtime: analysis.bedtime,
+                        wakeTime: analysis.wakeTime,
+                        hasNaps: analysis.hasNaps,
+                        napCount: analysis.napCount,
+                        bedtimeMinutes: timeToMinutes(analysis.bedtime),
+                        wakeTimeMinutes: timeToMinutes(analysis.wakeTime)
+                    });
+                }
             }
         }
     }
@@ -1019,8 +1201,8 @@ function renderSleepBarChart(containerId, data) {
 
     // Chart dimensions - LARGER
     var width = 1000;
-    var barHeight = 40;
-    var barGap = 12;
+    var barHeight = 54;
+    var barGap = 14;
     var padding = { top: 30, right: 60, bottom: 60, left: 140 };
     var height = padding.top + padding.bottom + (sleepDataProcessed.length * (barHeight + barGap));
 
@@ -1107,7 +1289,7 @@ function renderSleepBarChart(containerId, data) {
             fill: 'url(#sleepGradient-' + containerId + ')',
             stroke: 'rgba(180,200,255,0.6)',
             'stroke-width': 2,
-            rx: 12,
+            rx: 24,
             class: 'chart-sleep-bar',
             style: 'cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); opacity: 0; -webkit-animation-delay: ' + (j * sleepStaggerDelay) + 's; animation-delay: ' + (j * sleepStaggerDelay) + 's;'
         });
@@ -1144,7 +1326,7 @@ function renderSleepBarChart(containerId, data) {
             x: chartWidth + 10,
             y: y + barHeight / 2 + 5,
             fill: '#DFE4EB',
-            'font-size': '12',
+            'font-size': '14',
             'text-anchor': 'start'
         });
         durationLabel.textContent = item.duration.toFixed(1) + 'h';
@@ -1181,7 +1363,7 @@ function renderSleepBarChart(containerId, data) {
             x: x,
             y: sleepDataProcessed.length * (barHeight + barGap) + 25,
             fill: '#DFE4EB',
-            'font-size': '12',
+            'font-size': '14',
             'text-anchor': 'middle'
         });
         hourLabel.textContent = String(h).padStart(2, '0') + ':00';

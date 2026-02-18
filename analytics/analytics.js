@@ -5,6 +5,7 @@
 var AnalyticsState = {
     currentCategoryTab: 'energy',
     currentPeriod: 'week',
+    periodOffset: 0, // 0 = current period, -1 = one period ago, etc.
     cachedData: null,
     lastFetch: null,
     cacheExpiry: 5 * 60 * 1000, // 5 minutes
@@ -46,6 +47,15 @@ function setupAnalyticsEventListeners() {
     for (var j = 0; j < periodButtons.length; j++) {
         periodButtons[j].addEventListener('click', handlePeriodClick);
     }
+
+    // Period navigator prev/next buttons
+    var navPrev = document.getElementById('periodNavPrev');
+    var navNext = document.getElementById('periodNavNext');
+    if (navPrev) navPrev.addEventListener('click', function() { navigatePeriod(-1); });
+    if (navNext) navNext.addEventListener('click', function() { navigatePeriod(1); });
+
+    // Set initial navigator label
+    updatePeriodNavigator();
 }
 
 /**
@@ -81,9 +91,105 @@ function handlePeriodClick(event) {
     }
     event.target.classList.add('active');
 
-    // Update state and render
+    // Update state and render (reset offset to current period)
     AnalyticsState.currentPeriod = period;
+    AnalyticsState.periodOffset = 0;
     renderCurrentView();
+}
+
+/**
+ * Navigate the period calendar by `direction` steps (-1 = back, +1 = forward).
+ */
+function navigatePeriod(direction) {
+    if (AnalyticsState.isLoading) return;
+    var newOffset = AnalyticsState.periodOffset + direction;
+    if (newOffset > 0) return; // Cannot navigate into the future
+    AnalyticsState.periodOffset = newOffset;
+    renderCurrentView();
+}
+
+/**
+ * Update the period navigator label and disable the next button when at current period.
+ */
+function updatePeriodNavigator() {
+    var label = document.getElementById('periodNavLabel');
+    if (label) label.textContent = getPeriodLabel(AnalyticsState.currentPeriod, AnalyticsState.periodOffset);
+    var nextBtn = document.getElementById('periodNavNext');
+    if (nextBtn) nextBtn.disabled = AnalyticsState.periodOffset >= 0;
+}
+
+/**
+ * Return start/end Date objects for a given period and offset.
+ * offset=0 is the current period; offset=-1 is one period ago; etc.
+ */
+function getOffsetDateRange(period, offset) {
+    var now = new Date();
+    var startDate, endDate;
+
+    if (period === 'week') {
+        // Calendar week Mon–Sun
+        var dayOfWeek = now.getDay(); // 0=Sun
+        var daysFromMonday = (dayOfWeek === 0) ? 6 : dayOfWeek - 1;
+        var monday = new Date(now);
+        monday.setDate(now.getDate() - daysFromMonday + offset * 7);
+        monday.setHours(0, 0, 0, 0);
+        var sunday = new Date(monday);
+        sunday.setDate(monday.getDate() + 6);
+        sunday.setHours(23, 59, 59, 999);
+        startDate = monday;
+        endDate = sunday;
+    } else if (period === 'month') {
+        // Calendar month
+        var year = now.getFullYear();
+        var month = now.getMonth() + offset;
+        // Normalize month overflow/underflow
+        year += Math.floor(month / 12);
+        month = ((month % 12) + 12) % 12;
+        startDate = new Date(year, month, 1, 0, 0, 0, 0);
+        endDate   = new Date(year, month + 1, 0, 23, 59, 59, 999);
+    } else if (period === '3months') {
+        // Calendar quarter (Q1=Jan-Mar, Q2=Apr-Jun, Q3=Jul-Sep, Q4=Oct-Dec)
+        var currentQuarter = Math.floor(now.getMonth() / 3); // 0-3
+        var targetQuarter = currentQuarter + offset;
+        // Normalize across year boundaries
+        var qYear = now.getFullYear() + Math.floor(targetQuarter / 4);
+        targetQuarter = ((targetQuarter % 4) + 4) % 4;
+        var startMonth = targetQuarter * 3; // 0, 3, 6, or 9
+        startDate = new Date(qYear, startMonth, 1, 0, 0, 0, 0);
+        endDate   = new Date(qYear, startMonth + 3, 0, 23, 59, 59, 999); // last day of quarter
+    } else {
+        // Calendar year
+        var targetYear = now.getFullYear() + offset;
+        startDate = new Date(targetYear, 0, 1, 0, 0, 0, 0);
+        endDate   = new Date(targetYear, 11, 31, 23, 59, 59, 999);
+    }
+
+    return { startDate: startDate, endDate: endDate };
+}
+
+/**
+ * Return a human-readable label for the given period and offset.
+ */
+function getPeriodLabel(period, offset) {
+    var range = getOffsetDateRange(period, offset);
+    var s = range.startDate;
+    var e = range.endDate;
+    var SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var LONG  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+    if (period === 'week') {
+        if (s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear()) {
+            return SHORT[s.getMonth()] + ' ' + s.getDate() + ' \u2013 ' + e.getDate() + ', ' + s.getFullYear();
+        }
+        return SHORT[s.getMonth()] + ' ' + s.getDate() + ' \u2013 ' + SHORT[e.getMonth()] + ' ' + e.getDate() + ', ' + e.getFullYear();
+    } else if (period === 'month') {
+        return LONG[s.getMonth()] + ' ' + s.getFullYear();
+    } else if (period === '3months') {
+        var q = Math.floor(s.getMonth() / 3) + 1; // 1-4
+        return 'Q' + q + ' ' + s.getFullYear();
+    } else {
+        return '' + s.getFullYear();
+    }
 }
 
 /**
@@ -128,11 +234,7 @@ function fetchAnalyticsData() {
 
     console.log('Fetching analytics data from Firestore...');
 
-    // Get date range for the past year (maximum range)
-    var dateRange = getDateRange('year');
-    var startDateStr = formatDate(dateRange.startDate, 'YYYY-MM-DD');
-
-    // Query Firestore for user's entries
+    // Query Firestore for all of the user's entries (cached locally; date filtering done per-view)
     var entriesRef = window.firebaseCollection(window.firebaseDb, 'entries');
     var q = window.firebaseQuery(
         entriesRef,
@@ -147,22 +249,15 @@ function fetchAnalyticsData() {
 
         console.log('Fetched ' + entries.length + ' entries from Firestore');
 
-        // Filter entries from the past year and sort by date
-        var filteredEntries = entries.filter(function(entry) {
-            return entry.date >= startDateStr;
-        });
-
         // Sort by date ascending
-        filteredEntries.sort(function(a, b) {
+        entries.sort(function(a, b) {
             if (a.date < b.date) return -1;
             if (a.date > b.date) return 1;
             return 0;
         });
 
-        console.log('Filtered to ' + filteredEntries.length + ' entries from the past year');
-
-        // Store in cache
-        AnalyticsState.cachedData = filteredEntries;
+        // Store all entries in cache
+        AnalyticsState.cachedData = entries;
         AnalyticsState.lastFetch = Date.now();
     }).catch(function(error) {
         console.error('Firestore query error:', error);
@@ -179,9 +274,12 @@ function renderCurrentView() {
         return;
     }
 
-    // Get filtered data for the current period
-    var dateRange = getDateRange(AnalyticsState.currentPeriod);
+    // Get filtered data for the current period (with offset for calendar navigation)
+    var dateRange = getOffsetDateRange(AnalyticsState.currentPeriod, AnalyticsState.periodOffset);
     var filteredData = filterDataByRange(AnalyticsState.cachedData, dateRange.startDate, dateRange.endDate);
+
+    // Update navigator label and button states
+    updatePeriodNavigator();
     filteredData = fillMissingDates(filteredData, dateRange.startDate, dateRange.endDate);
 
     if (filteredData.length === 0) {
@@ -211,7 +309,7 @@ function renderCurrentView() {
  * Render Energy tab content
  */
 function renderEnergyTab(container, data) {
-    container.innerHTML = '<div class="chart-wrapper"><h3>Energy Insights</h3><div id="energyInsights"></div></div>' +
+    container.innerHTML = '<div class="chart-wrapper"><div id="energyInsights"></div></div>' +
         '<div class="chart-wrapper"><h3>Energy Levels</h3><div id="energyChart" class="chart-container"></div></div>' +
         '<div class="chart-wrapper"><h3>Caffeine Insights</h3><div id="caffeineInsights"></div></div>' +
         '<div class="chart-wrapper"><h3>Sleep Patterns</h3><div id="sleepInsights"></div><div id="sleepChart" class="chart-container"></div></div>';
@@ -256,7 +354,7 @@ function renderEnergyTab(container, data) {
  * Render Mood tab content
  */
 function renderMoodTab(container, data) {
-    container.innerHTML = '<div class="chart-wrapper"><h3>Mood Insights</h3><div id="moodInsights"></div></div>' +
+    container.innerHTML = '<div class="chart-wrapper"><div id="moodInsights"></div></div>' +
         '<div class="chart-wrapper"><h3>Mood Levels</h3><div id="moodChart" class="chart-container"></div></div>' +
         '<div class="chart-wrapper"><h3>Anxiety</h3><div id="anxietyChart" class="chart-container"></div></div>' +
         '<div class="chart-wrapper"><h3>Irritability</h3><div id="irritabilityChart" class="chart-container"></div></div>';
@@ -293,7 +391,7 @@ function renderMoodTab(container, data) {
  * Render Other tab content (Notes, Pattern Insights, Activities, People)
  */
 function renderOtherTab(container, data) {
-    container.innerHTML = '<div class="chart-wrapper"><h3>Notes</h3><div id="notesDisplay" class="chart-container"></div></div>' +
+    container.innerHTML = '<div class="chart-wrapper"><div id="notesDisplay" class="chart-container"></div></div>' +
         '<div class="chart-wrapper"><h3>Pattern Insights</h3><div id="patternInsights"></div></div>' +
         '<div class="chart-wrapper"><h3>Activities Distribution</h3><div id="activitiesPie" class="chart-container"></div></div>' +
         '<div class="chart-wrapper"><h3>People Distribution</h3><div id="peoplePie" class="chart-container"></div></div>';
@@ -394,7 +492,7 @@ function renderNotes(containerId, data) {
     }
 
     // Build notes content
-    var notesContent = '<div style="display: flex; flex-direction: column; gap: 15px; padding: 20px;">';
+    var notesContent = '<div style="display: flex; flex-direction: column; gap: 10px; padding: 8px 0 4px;">';
     for (var j = 0; j < displayNotes.length; j++) {
         var entry = displayNotes[j];
         notesContent += '<div style="background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; padding: 15px;">' +
@@ -410,9 +508,8 @@ function renderNotes(containerId, data) {
 
     // Create collapsible structure
     var html = '<div class="notes-collapsible">' +
-        '<button class="notes-toggle-btn" onclick="toggleNotesSection()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, rgba(237,191,231,0.1), rgba(244,227,179,0.08)); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; color: #EDBFE7; font-size: 0.95em; cursor: pointer; display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; transition: all 0.3s;">' +
-        '<span>Show/Hide Notes (' + notesEntries.length + ')</span>' +
-        '<span id="notesToggleIcon" style="font-size: 1.2em;">▼</span>' +
+        '<button class="notes-toggle-btn" onclick="toggleNotesSection()">' +
+        'Notes (' + notesEntries.length + ') <span id="notesToggleIcon">▼</span>' +
         '</button>' +
         '<div id="notesContent" style="display: block;">' +
         notesContent +
