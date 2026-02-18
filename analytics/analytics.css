@@ -271,15 +271,22 @@
     #page7 .chart-wrapper h3 {
         padding-left: 18px;
         padding-right: 18px;
+        text-align: center;
     }
 
     #page7 .insights-section {
-        padding-left: 18px;
+        padding-left: 26px;
         padding-right: 8px;
     }
 
+    #page7 .insights-section .insights-title {
+        text-align: center;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
     #page7 .notes-collapsible {
-        padding-left: 18px;
+        padding-left: 26px;
         padding-right: 8px;
     }
 

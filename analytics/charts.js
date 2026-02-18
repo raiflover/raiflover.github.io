@@ -1204,7 +1204,7 @@ function renderSleepBarChart(containerId, data) {
     var width = 1000;
     var barHeight = 54;
     var barGap = 14;
-    var padding = { top: 30, right: 95, bottom: 60, left: 115 };
+    var padding = { top: 30, right: 115, bottom: 60, left: 95 };
     var height = padding.top + padding.bottom + (sleepDataProcessed.length * (barHeight + barGap));
 
     var chartWidth = width - padding.left - padding.right;
