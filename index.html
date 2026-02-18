@@ -1120,29 +1120,29 @@
         .slider-input::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 48px;
-            height: 48px;
-            background: url('star2.svg') center/48px 48px no-repeat transparent;
+            width: 40px;
+            height: 40px;
+            background: url('star2.svg') center/40px 40px no-repeat transparent;
             border: none;
             border-radius: 0;
             box-shadow: none;
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
             filter: hue-rotate(290deg) saturate(0.8) brightness(1.1) drop-shadow(0 2px 6px rgba(237, 191, 231, 0.5));
-            margin-top: -13px;
+            margin-top: -18px;
             padding: 6px;
         }
 
         .slider-input::-webkit-slider-thumb:hover {
-            transform: scale(1.1);
+            transform: scale(1.0);
             filter: hue-rotate(290deg) saturate(0.8) brightness(1.1) drop-shadow(0 3px 10px rgba(237, 191, 231, 0.7));
         }
 
         /* Default pink star - Firefox - Large touch target for mobile */
         .slider-input::-moz-range-thumb {
-            width: 48px;
-            height: 48px;
-            background: url('star2.svg') center/48px 48px no-repeat transparent;
+            width: 40px;
+            height: 40px;
+            background: url('star2.svg') center/40px 40px no-repeat transparent;
             border: none;
             border-radius: 0;
             box-shadow: none;
@@ -1184,13 +1184,13 @@
         }
 
         .slider-input.active::-webkit-slider-thumb {
-            background: url('star2.svg') 0/28px 28px no-repeat !important;
+            background: url('star2.svg') center/40px 40px no-repeat transparent !important;
             filter: brightness(1.2) saturate(1.2) drop-shadow(0 0 8px rgba(244, 227, 179, 0.8)) drop-shadow(0 0 4px rgba(244, 227, 179, 0.6)) !important;
             transform: scale(1.1) !important;
         }
 
         .slider-input.active::-moz-range-thumb {
-            background: url('star2.svg') 0/28px 28px no-repeat !important;
+            background: url('star2.svg') center/40px 40px no-repeat transparent !important;
             filter: brightness(1.2) saturate(1.2) drop-shadow(0 0 8px rgba(244, 227, 179, 0.8)) drop-shadow(0 0 4px rgba(244, 227, 179, 0.6)) !important;
             transform: scale(1.1) !important;
         }
@@ -1209,32 +1209,34 @@
                 margin: 30px 0;
             }
             .slider-input::-webkit-slider-thumb {
-                width: 20px;
-                height: 20px;
-                background: url('star2.svg') 0/20px 20px no-repeat transparent;
+                width: 50px;
+                height: 50px;
+                background: url('star2.svg') center/50px 50px no-repeat transparent;
                 border: none;
                 border-radius: 0;
                 box-shadow: none;
                 outline: none;
+                margin-top: -20px;
             }
             .slider-input::-moz-range-thumb {
-                width: 20px;
-                height: 20px;
-                background: url('star2.svg') 0/20px 20px no-repeat transparent;
+                width: 50px;
+                height: 50px;
+                background: url('star2.svg') center/50px 50px no-repeat transparent;
                 border: none;
                 border-radius: 0;
                 box-shadow: none;
                 outline: none;
+                transform: translateY(-10px);
             }
             .slider-input.active::-webkit-slider-thumb {
-                background: url('star2.svg') 0/20px 20px no-repeat transparent !important;
+                background: url('star2.svg') center/50px 50px no-repeat transparent !important;
                 border: none !important;
                 border-radius: 0 !important;
                 box-shadow: none !important;
                 outline: none !important;
             }
             .slider-input.active::-moz-range-thumb {
-                background: url('star2.svg') 0/20px 20px no-repeat transparent !important;
+                background: url('star2.svg') center/50px 50px no-repeat transparent !important;
                 border: none !important;
                 border-radius: 0 !important;
                 box-shadow: none !important;
@@ -1363,6 +1365,47 @@
             .tag {
                 padding: 6px 12px;
                 font-size: 0.85em;
+            }
+        }
+
+        /* Page 4 compact layout */
+        #page4 .form-content {
+            padding: 12px 20px;
+        }
+
+        #page4 .tracker-section {
+            margin-bottom: 12px;
+        }
+
+        #page4 .tracker-section h2 {
+            margin-bottom: 6px;
+        }
+
+        #page4 .slider-group {
+            gap: 4px;
+            margin-bottom: 6px;
+        }
+
+        @media (max-width: 480px) {
+            #page4 .form-content {
+                padding: 8px 16px;
+            }
+
+            #page4 .tracker-section {
+                margin-bottom: 8px;
+            }
+
+            #page4 .tracker-section h2 {
+                margin-bottom: 4px;
+            }
+
+            #page4 .slider-input {
+                margin: 14px 0;
+            }
+
+            #page4 .slider-group {
+                gap: 0;
+                margin-bottom: 4px;
             }
         }
 
