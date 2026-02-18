@@ -564,7 +564,7 @@ function initChartAnimations() {
         setTimeout(function() {
             var allContainers = document.querySelectorAll('.chart-container');
             for (var i = 0; i < allContainers.length; i++) {
-                var chartElements = allContainers[i].querySelectorAll('.chart-bar, .chart-line, .chart-point, .chart-pie-slice, .chart-sleep-bar');
+                var chartElements = allContainers[i].querySelectorAll('.chart-bar, .chart-line, .chart-point, .chart-pie-slice, .chart-sleep-bar, .jar-star');
                 for (var j = 0; j < chartElements.length; j++) {
                     var element = chartElements[j];
                     var computedOpacity = window.getComputedStyle(element).opacity;

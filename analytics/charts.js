@@ -522,8 +522,280 @@ function hideTooltip() {
     }
 }
 
+/* ── Jar live-physics ────────────────────────────────────────────────────── */
+
+/** Gravity vector (px/frame²) — updated by device-orientation listener */
+var _jarGravity = { x: 0, y: 0.25 };
+var _jarOrientationInited = false;
+
 /**
- * Render pie chart for activities or people
+ * One-time setup for DeviceOrientation → gravity.
+ * Must be called from inside a user-gesture handler (iOS 13+ permission).
+ */
+function _initJarOrientation() {
+    if (_jarOrientationInited) return;
+    _jarOrientationInited = true;
+    if (typeof DeviceOrientationEvent === 'undefined') return;
+    function handle(e) {
+        var g = e.gamma || 0;                               // left/right tilt  –90…+90
+        var b = e.beta != null ? e.beta : 90;               // forward tilt     –180…+180
+        _jarGravity.x = Math.max(-0.35, Math.min(0.35, g * 0.0038));
+        _jarGravity.y = Math.max(0.03,  Math.min(0.35, Math.abs(b) / 90 * 0.12));
+    }
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+        // iOS 13+ — requestPermission must run inside a user gesture
+        DeviceOrientationEvent.requestPermission()
+            .then(function(r) { if (r === 'granted') window.addEventListener('deviceorientation', handle); })
+            .catch(function() {});
+    } else {
+        window.addEventListener('deviceorientation', handle);
+    }
+}
+
+/** Cancel a running physics instance (safe to call with null). */
+function _destroyJarPhysics(ph) {
+    if (!ph) return;
+    ph.active = false;
+    if (ph.rafId)     { cancelAnimationFrame(ph.rafId); ph.rafId = null; }
+    if (ph.timeoutId) { clearTimeout(ph.timeoutId);     ph.timeoutId = null; }
+}
+
+/** Apply a random velocity burst to all particles (shake effect). */
+function _shakeJar(ph) {
+    if (!ph || !ph.active) return;
+    ph.particles.forEach(function(p) {
+        p.vx   += (Math.random() - 0.5) * 10;
+        p.vy   += (Math.random() - 0.5) * 10 - 3; // slight upward bias
+        p.rvel += (Math.random() - 0.5) * 12;      // spin burst on shake
+    });
+}
+
+/**
+ * Start a live physics simulation for jar stars.
+ * Waits for the CSS fall animation to finish, then drives star positions via JS.
+ * Uses CSS transform (composited) instead of left/top for better performance.
+ *
+ * @param {HTMLElement}   jarBody    - the .jar-body div
+ * @param {Array<{x,y}>} positions  - initial star centre positions from gravityPack
+ * @param {number}        R         - star radius (px)
+ * @param {number}        W         - jar body width  (px, must match CSS)
+ * @param {number}        H         - jar body height (px, must match CSS)
+ * @returns physics-state object (pass to _destroyJarPhysics / _shakeJar)
+ */
+function _initJarPhysics(jarBody, positions, R, W, H, PAD) {
+    PAD = PAD || 0;
+    var starEls = Array.prototype.slice.call(jarBody.querySelectorAll('.jar-star'));
+    if (!starEls.length) return null;
+
+    var particles = starEls.map(function(el, i) {
+        var pos = positions[i] || { x: W * 0.5, y: H - R };
+        return { el: el, x: pos.x, y: pos.y, vx: 0, vy: 0,
+                 rot: 0, rvel: 0 };
+    });
+
+    // Find when the last CSS animation ends
+    var maxEnd = 0;
+    starEls.forEach(function(el) {
+        var d = parseFloat(el.style.animationDelay || 0);
+        if (d + 0.55 > maxEnd) maxEnd = d + 0.55;
+    });
+
+    var ph = { particles: particles, active: false, rafId: null, timeoutId: null };
+
+    ph.timeoutId = setTimeout(function() {
+        // Switch star positioning from CSS animation → JS transform
+        starEls.forEach(function(el, i) {
+            var pos = positions[i] || { x: W * 0.5, y: H - R };
+            el.style.animation        = 'none';
+            el.style.webkitAnimation  = 'none';
+            el.style.opacity          = '0.78';
+            // Reset left/top to 0; transform will handle the position
+            el.style.left = '0';
+            el.style.top  = '0';
+            var tx = 'translate(' + (pos.x - R) + 'px,' + (pos.y - R) + 'px) rotate(0deg)';
+            el.style.transform        = tx;
+            el.style.webkitTransform  = tx;
+        });
+
+        ph.active = true;
+        var minDist = 2 * R + 1;
+        var xMin = R + PAD, xMax = W - R - PAD;
+        var yMin = R + PAD, yMax = H - R - PAD;
+
+        // Pre-settle: resolve any initial overlaps synchronously before first paint.
+        // Runs pure position-correction (no velocity) so the first rendered frame is clean.
+        (function preSolve() {
+            var ps = particles, pn = ps.length;
+            for (var iter = 0; iter < 100; iter++) {
+                var anyOverlap = false;
+                for (var pi = 0; pi < pn - 1; pi++) {
+                    for (var pj = pi + 1; pj < pn; pj++) {
+                        var pdx = ps[pj].x - ps[pi].x, pdy = ps[pj].y - ps[pi].y;
+                        var pd2 = pdx * pdx + pdy * pdy;
+                        if (pd2 < minDist * minDist && pd2 > 0.001) {
+                            anyOverlap = true;
+                            var pd = Math.sqrt(pd2);
+                            var pnx = pdx / pd, pny = pdy / pd;
+                            var pov = (minDist - pd) * 0.52;
+                            ps[pi].x -= pnx * pov; ps[pi].y -= pny * pov;
+                            ps[pj].x += pnx * pov; ps[pj].y += pny * pov;
+                            if (ps[pi].x < xMin) ps[pi].x = xMin; if (ps[pi].x > xMax) ps[pi].x = xMax;
+                            if (ps[pi].y < yMin) ps[pi].y = yMin; if (ps[pi].y > yMax) ps[pi].y = yMax;
+                            if (ps[pj].x < xMin) ps[pj].x = xMin; if (ps[pj].x > xMax) ps[pj].x = xMax;
+                            if (ps[pj].y < yMin) ps[pj].y = yMin; if (ps[pj].y > yMax) ps[pj].y = yMax;
+                        }
+                    }
+                }
+                if (!anyOverlap) break; // converged early
+            }
+            // Apply settled positions to DOM immediately (before RAF starts)
+            particles.forEach(function(pt) {
+                var tx = 'translate(' + (pt.x - R) + 'px,' + (pt.y - R) + 'px) rotate(0deg)';
+                pt.el.style.transform = pt.el.style.webkitTransform = tx;
+            });
+        }());
+
+        function tick() {
+            if (!ph.active) return;
+            // Auto-stop when jar is removed from DOM (tab switch, etc.)
+            if (!jarBody.isConnected) { ph.active = false; return; }
+            var p = ph.particles, n = p.length;
+            var gx = _jarGravity.x, gy = _jarGravity.y;
+
+            // Gravity + friction damping; also advance rotation this frame
+            for (var i = 0; i < n; i++) {
+                p[i].vx   = (p[i].vx + gx) * 0.94;
+                p[i].vy   = (p[i].vy + gy) * 0.94;
+                p[i].x   += p[i].vx;
+                p[i].y   += p[i].vy;
+                p[i].rvel *= 0.975; // angular damping — fades slightly slower than translation
+                p[i].rot  += p[i].rvel;
+            }
+
+            // Wall collisions — low bounce + spin from the sliding velocity component
+            for (var i = 0; i < n; i++) {
+                if (p[i].x < xMin) { p[i].x = xMin; p[i].vx = Math.abs(p[i].vx) < 0.3 ? 0 :  Math.abs(p[i].vx) * 0.4; }
+                if (p[i].x > xMax) { p[i].x = xMax; p[i].vx = Math.abs(p[i].vx) < 0.3 ? 0 : -Math.abs(p[i].vx) * 0.4; }
+                if (p[i].y < yMin) { p[i].y = yMin; p[i].vy = Math.abs(p[i].vy) < 0.3 ? 0 :  Math.abs(p[i].vy) * 0.4; }
+                if (p[i].y > yMax) { p[i].y = yMax; p[i].vy = Math.abs(p[i].vy) < 0.3 ? 0 : -Math.abs(p[i].vy) * 0.4; }
+            }
+
+            // Star-star collision — 4 position-correction passes + 1 velocity impulse.
+            // Multiple passes are essential for dense packs: one pass leaves residual
+            // overlaps that the next frame's gravity immediately recreates.
+            for (var iter = 0; iter < 4; iter++) {
+                for (var i = 0; i < n - 1; i++) {
+                    for (var j = i + 1; j < n; j++) {
+                        var dx = p[j].x - p[i].x, dy = p[j].y - p[i].y;
+                        var d2 = dx * dx + dy * dy;
+                        if (d2 < minDist * minDist && d2 > 0.001) {
+                            var d  = Math.sqrt(d2);
+                            var nx = dx / d, ny = dy / d;
+                            var ov = (minDist - d) * 0.52;
+                            p[i].x -= nx * ov; p[i].y -= ny * ov;
+                            p[j].x += nx * ov; p[j].y += ny * ov;
+                            // Velocity + spin impulse only on first pass
+                            if (iter === 0) {
+                                var imp = (p[i].vx - p[j].vx) * nx + (p[i].vy - p[j].vy) * ny;
+                                if (imp > 0) {
+                                    p[i].vx -= 0.45 * imp * nx; p[i].vy -= 0.45 * imp * ny;
+                                    p[j].vx += 0.45 * imp * nx; p[j].vy += 0.45 * imp * ny;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Write position + rotation via composited transform (no layout triggers)
+            for (var i = 0; i < n; i++) {
+                var tx = 'translate(' + (p[i].x - R) + 'px,' + (p[i].y - R) + 'px) rotate(' + p[i].rot + 'deg)';
+                p[i].el.style.transform       = tx;
+                p[i].el.style.webkitTransform = tx;
+            }
+
+            ph.rafId = requestAnimationFrame(tick);
+        }
+
+        ph.rafId = requestAnimationFrame(tick);
+    }, (maxEnd + 0.15) * 1000);
+
+    return ph;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────── */
+
+/**
+ * Gravity-based circle packing simulation.
+ * Stars fall from the top one at a time and settle on the floor or on each other.
+ * @param {number} n      - number of circles to pack
+ * @param {number} w      - container width  (px)
+ * @param {number} h      - container height (px)
+ * @param {number} r      - circle radius    (px)
+ * @returns {Array<{x,y}>} center positions
+ */
+function gravityPack(n, w, h, r) {
+    var circles = [];
+    var minDist = 2 * r + 2; // comfortable gap — reduces initial overlap for physics to resolve
+
+    for (var i = 0; i < n; i++) {
+        var placed = false;
+
+        for (var attempt = 0; attempt < 40 && !placed; attempt++) {
+            // Random horizontal start, fall from top
+            var cx = r + Math.random() * (w - 2 * r);
+            var cy = r;
+            var prevCy = r;
+
+            // Step downward until blocked
+            for (var s = 0; s < h * 2; s++) {
+                prevCy = cy;
+                cy += 0.6;
+
+                // Floor
+                if (cy >= h - r) { cy = h - r; break; }
+
+                // Other circles
+                var hit = false;
+                for (var j = 0; j < circles.length; j++) {
+                    var dx = cx - circles[j].x;
+                    var dy = cy - circles[j].y;
+                    if (dx * dx + dy * dy < minDist * minDist) {
+                        cy = prevCy;
+                        hit = true;
+                        break;
+                    }
+                }
+                if (hit) break;
+            }
+
+            // Validate — no overlap
+            var ok = cy >= r && cy <= h - r;
+            for (var k = 0; k < circles.length && ok; k++) {
+                var dx2 = cx - circles[k].x;
+                var dy2 = cy - circles[k].y;
+                if (dx2 * dx2 + dy2 * dy2 < minDist * minDist) ok = false;
+            }
+
+            if (ok) { circles.push({ x: cx, y: cy }); placed = true; }
+        }
+
+        // Fallback: grid using the same minDist so fallback positions never overlap
+        if (!placed) {
+            var gcols = Math.max(1, Math.floor((w - 2 * r) / minDist) + 1);
+            var grows = Math.max(1, Math.floor((h - 2 * r) / minDist) + 1);
+            circles.push({
+                x: r + (i % gcols) * minDist,
+                y: h - r - (Math.floor(i / gcols) % grows) * minDist
+            });
+        }
+    }
+    return circles;
+}
+
+/**
+ * Render jar chart for activities or people
+ * One shaker jar per chart, all tags as mixed colored stars inside
  * @param {string} containerId - ID of container element
  * @param {Array} data - Array of data entries
  * @param {string} field - 'activities' or 'people'
@@ -531,8 +803,11 @@ function hideTooltip() {
 function renderPieChart(containerId, data, field) {
     var container = document.getElementById(containerId);
     if (!container) return;
-
-    // Clear container
+    // Destroy previous physics loop before clearing DOM
+    if (container._jarPhysics) {
+        _destroyJarPhysics(container._jarPhysics);
+        container._jarPhysics = null;
+    }
     container.innerHTML = '';
 
     // Count occurrences
@@ -553,172 +828,150 @@ function renderPieChart(containerId, data, field) {
         return;
     }
 
-    // Sort by count
-    items.sort(function(a, b) {
-        return counts[b] - counts[a];
-    });
+    items.sort(function(a, b) { return counts[b] - counts[a]; });
 
-    // Calculate total
-    var total = 0;
-    for (var k = 0; k < items.length; k++) {
-        total += counts[items[k]];
-    }
-
-    // Colors for pie slices - semi-transparent for glassy look
-    var colors = [
-        'rgba(180,200,255,0.65)',
-        'rgba(237,191,231,0.65)',
-        'rgba(244,227,179,0.65)',
-        'rgba(200,180,255,0.65)',
-        'rgba(180,255,220,0.65)',
-        'rgba(255,180,200,0.65)',
-        'rgba(220,220,255,0.65)',
-        'rgba(255,220,180,0.8)'
+    // 8-color palette (hue-rotate on star3.svg)
+    var starFilters = [
+        'hue-rotate(0deg)   saturate(1.3) brightness(1.1)',   // pink
+        'hue-rotate(40deg)  saturate(1.4) brightness(1.1)',   // orange
+        'hue-rotate(65deg)  saturate(1.3) brightness(1.15)',  // yellow
+        'hue-rotate(120deg) saturate(1.3) brightness(1.1)',   // green
+        'hue-rotate(175deg) saturate(1.4) brightness(1.1)',   // cyan
+        'hue-rotate(210deg) saturate(1.4) brightness(1.1)',   // blue
+        'hue-rotate(270deg) saturate(1.3) brightness(1.1)',   // purple
+        'hue-rotate(315deg) saturate(1.4) brightness(1.15)',  // magenta
     ];
 
-    // Chart dimensions (smaller size for better layout)
-    var size = 240;
-    var radius = 95;
-    var centerX = size / 2;
-    var centerY = size / 2;
-
-    // Create SVG
-    var svg = createSVGElement('svg', {
-        viewBox: '0 0 ' + size + ' ' + size,
-        class: 'chart-svg',
-        style: 'max-width: 300px; margin: 0 auto;'
+    var tagFilters = {};
+    items.forEach(function(item, idx) {
+        tagFilters[item] = starFilters[idx % starFilters.length];
     });
 
-    // Create defs for gradients to add glassy depth
-    var defs = createSVGElement('defs', {});
-    for (var gradIdx = 0; gradIdx < colors.length; gradIdx++) {
-        var baseColor = colors[gradIdx];
-        var gradient = createSVGElement('radialGradient', {
-            id: 'pieGrad' + containerId + gradIdx,
-            cx: '40%',
-            cy: '40%',
-            r: '80%'
+    // Star pool — size depends on the selected time period
+    var period = (typeof AnalyticsState !== 'undefined') ? AnalyticsState.currentPeriod : 'week';
+    var totalCount = items.reduce(function(s, item) { return s + counts[item]; }, 0);
+    var allocated = {};
+    var poolSize, big;
+
+    if (period === 'week') {
+        // 1 : 1  — one star per tag occurrence.
+        // Cap at 20: physics inner area is 100×110 px with R=9;
+        // hex-packing maximum ≈ 35, so 20 stays well clear and never overlaps.
+        items.forEach(function(item) { allocated[item] = counts[item]; });
+        poolSize = totalCount;
+        while (poolSize > 20) {
+            big = items.reduce(function(a, b) { return allocated[a] > allocated[b] ? a : b; });
+            allocated[big]--; poolSize--;
+        }
+    } else {
+        // Proportional — well below hex-pack limit so pre-settle always converges.
+        // 3 months: 26 stars  |  year: 32 stars
+        var MAX_STARS = period === 'year' ? 32 : 26; // year=32, 3months=26
+        items.forEach(function(item) {
+            allocated[item] = Math.max(1, Math.round(counts[item] / totalCount * MAX_STARS));
         });
-
-        var stop1 = createSVGElement('stop', {
-            offset: '0%',
-            style: 'stop-color:' + baseColor.replace('0.65', '0.85') + ';stop-opacity:1'
-        });
-        var stop2 = createSVGElement('stop', {
-            offset: '100%',
-            style: 'stop-color:' + baseColor + ';stop-opacity:1'
-        });
-
-        gradient.appendChild(stop1);
-        gradient.appendChild(stop2);
-        defs.appendChild(gradient);
-    }
-    svg.appendChild(defs);
-
-    // Calculate stagger delay to fit animation within fixed duration (1.2s total)
-    var totalAnimationDuration = 1.2; // seconds
-    var pieStaggerDelay = items.length > 1 ? totalAnimationDuration / items.length : 0;
-
-    // Draw pie slices
-    var currentAngle = -90; // Start at top
-
-    for (var m = 0; m < items.length; m++) {
-        var item = items[m];
-        var count = counts[item];
-        var percentage = (count / total) * 100;
-        var sliceAngle = (count / total) * 360;
-
-        // Calculate arc path
-        var startAngle = currentAngle * (Math.PI / 180);
-        var endAngle = (currentAngle + sliceAngle) * (Math.PI / 180);
-
-        var x1 = centerX + radius * Math.cos(startAngle);
-        var y1 = centerY + radius * Math.sin(startAngle);
-        var x2 = centerX + radius * Math.cos(endAngle);
-        var y2 = centerY + radius * Math.sin(endAngle);
-
-        var largeArcFlag = sliceAngle > 180 ? 1 : 0;
-
-        var pathData = 'M ' + centerX + ' ' + centerY +
-                      ' L ' + x1 + ' ' + y1 +
-                      ' A ' + radius + ' ' + radius + ' 0 ' + largeArcFlag + ' 1 ' + x2 + ' ' + y2 +
-                      ' Z';
-
-        var slice = createSVGElement('path', {
-            d: pathData,
-            fill: 'url(#pieGrad' + containerId + (m % colors.length) + ')',
-            stroke: 'rgba(255,255,255,0.4)',
-            'stroke-width': '2',
-            class: 'chart-pie-slice',
-            style: 'cursor: pointer; opacity: 0; -webkit-transform-origin: center; transform-origin: center; -webkit-animation-delay: ' + (m * pieStaggerDelay) + 's; animation-delay: ' + (m * pieStaggerDelay) + 's; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4)) drop-shadow(0 0 4px rgba(255,255,255,0.15));'
-        });
-
-        (function(itemName, itemCount, itemPercentage) {
-            slice.addEventListener('mouseenter', function(e) {
-                var tooltipContent = {
-                    date: itemName,
-                    [field]: itemPercentage.toFixed(1) + '% (' + itemCount + ' times)'
-                };
-                showPieTooltip(e, itemName, itemCount, itemPercentage);
-            });
-            slice.addEventListener('mouseleave', hideTooltip);
-        })(item, count, percentage);
-
-        svg.appendChild(slice);
-
-        currentAngle += sliceAngle;
+        poolSize = items.reduce(function(s, item) { return s + allocated[item]; }, 0);
+        while (poolSize > MAX_STARS) {
+            big = items.reduce(function(a, b) { return allocated[a] > allocated[b] ? a : b; });
+            allocated[big]--; poolSize--;
+        }
     }
 
-    container.appendChild(svg);
+    // Build + shuffle pool (Fisher-Yates)
+    var starPool = [];
+    items.forEach(function(item) {
+        for (var k = 0; k < allocated[item]; k++) starPool.push(tagFilters[item]);
+    });
+    for (var si = starPool.length - 1; si > 0; si--) {
+        var sj = Math.floor(Math.random() * (si + 1));
+        var tmp = starPool[si]; starPool[si] = starPool[sj]; starPool[sj] = tmp;
+    }
 
-    // Add legend
+    // CSS jar body dimensions (must match .jar-body in analytics.css)
+    var JAR_BODY_W = 130;
+    var JAR_BODY_H = 140;
+    var STAR_R = 9;             // physics radius — star image is 2*R = 18px
+    var STAR_SIZE = STAR_R * 2;
+    var PHYS_PAD = 6;           // inner margin so stars never touch the glass walls
+
+    // Gravity-pack into the padded inner area, then offset to jar coordinates
+    var rawPos = gravityPack(starPool.length, JAR_BODY_W - 2 * PHYS_PAD, JAR_BODY_H - 2 * PHYS_PAD, STAR_R);
+    var positions = rawPos.map(function(p) { return { x: p.x + PHYS_PAD, y: p.y + PHYS_PAD }; });
+
+    // Container: centered column
+    container.style.cssText = 'display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 4px 0;';
+
+    // Jar: lid + glass body (pure CSS — no SVG image needed)
+    var jarShaker = document.createElement('div');
+    jarShaker.className = 'jar-shaker';
+
+    var jarLid = document.createElement('div');
+    jarLid.className = 'jar-lid';
+
+    var jarBody = document.createElement('div');
+    jarBody.className = 'jar-body';
+
+    // Place stars at physics-computed positions
+    starPool.forEach(function(filterStyle, s) {
+        var pos = positions[s] || { x: STAR_R, y: JAR_BODY_H - STAR_R };
+        var delay = 0.05 + s * 0.04;
+        var startRot = Math.floor(Math.random() * 50) - 25; // –25 … +25 deg
+
+        var star = document.createElement('img');
+        star.src = '../star3.svg';
+        star.className = 'jar-star';
+        star.style.cssText = [
+            'position: absolute',
+            'width: '  + STAR_SIZE + 'px',
+            'height: ' + STAR_SIZE + 'px',
+            'left: '   + (pos.x - STAR_R) + 'px',
+            'top: '    + (pos.y - STAR_R) + 'px',
+            'filter: ' + filterStyle,
+            'opacity: 0',
+            '-webkit-animation-delay: ' + delay + 's',
+            'animation-delay: '         + delay + 's',
+        ].join('; ');
+        // CSS custom property for per-star random start rotation
+        star.style.setProperty('--startRot', startRot + 'deg');
+        jarBody.appendChild(star);
+    });
+
+    jarShaker.appendChild(jarLid);
+    jarShaker.appendChild(jarBody);
+
+    // Click/tap: request orientation permission (iOS 13+) + shake stars
+    jarShaker.addEventListener('click', function() {
+        _initJarOrientation();
+        _shakeJar(container._jarPhysics);
+        // Brief visual tap feedback on the jar wrapper
+        jarShaker.classList.add('shaking');
+        setTimeout(function() { jarShaker.classList.remove('shaking'); }, 460);
+    });
+
+    container.appendChild(jarShaker);
+
+    // Legend: colored star icon + "tag ×count"
     var legend = document.createElement('div');
-    legend.style.cssText = 'margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;';
+    legend.className = 'jar-legend';
+    items.forEach(function(item) {
+        var li = document.createElement('div');
+        li.className = 'jar-legend-item';
 
-    for (var n = 0; n < items.length; n++) {
-        var item = items[n];
-        var count = counts[item];
-        var percentage = (count / total) * 100;
-
-        var legendItem = document.createElement('div');
-        legendItem.style.cssText = 'display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.04); border-radius: 8px;';
-
-        var colorBox = document.createElement('div');
-        colorBox.style.cssText = 'width: 12px; height: 12px; border-radius: 2px; background: ' + colors[n % colors.length] + ';';
+        var dot = document.createElement('img');
+        dot.src = '../star3.svg';
+        dot.style.cssText = 'width: 13px; height: 13px; flex-shrink: 0; filter: ' + tagFilters[item] + ';';
 
         var label = document.createElement('span');
-        label.style.cssText = 'color: #DFE4EB; font-size: 0.85em;';
-        label.textContent = item + ' (' + percentage.toFixed(0) + '%)';
+        label.textContent = item + ' \u00d7' + counts[item];
 
-        legendItem.appendChild(colorBox);
-        legendItem.appendChild(label);
-        legend.appendChild(legendItem);
-    }
-
+        li.appendChild(dot);
+        li.appendChild(label);
+        legend.appendChild(li);
+    });
     container.appendChild(legend);
-}
 
-/**
- * Show tooltip for pie chart
- */
-function showPieTooltip(event, name, count, percentage) {
-    hideTooltip(); // Hide any existing tooltip
-
-    var tooltip = document.createElement('div');
-    tooltip.id = 'chart-tooltip';
-    tooltip.style.cssText = 'position: fixed; background: linear-gradient(135deg, rgba(20,20,31,0.95), rgba(15,22,29,0.95)); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 14px; color: #DFE4EB; font-size: 13px; pointer-events: none; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.5);';
-
-    var content = '<div style="margin-bottom: 4px; color: #EDBFE7; font-weight: bold;">' + name + '</div>' +
-                 '<div>Count: ' + count + '</div>' +
-                 '<div>Percentage: ' + percentage.toFixed(1) + '%</div>';
-
-    tooltip.innerHTML = content;
-    document.body.appendChild(tooltip);
-
-    // Position tooltip
-    var rect = tooltip.getBoundingClientRect();
-    tooltip.style.left = (event.clientX - rect.width / 2) + 'px';
-    tooltip.style.top = (event.clientY - rect.height - 10) + 'px';
+    // Start live physics — takes over star positions after CSS fall animation
+    container._jarPhysics = _initJarPhysics(jarBody, positions, STAR_R, JAR_BODY_W, JAR_BODY_H, PHYS_PAD);
 }
 
 /**

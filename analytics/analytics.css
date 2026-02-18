@@ -482,6 +482,11 @@
     animation: fadeInFromLeft 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s forwards;
 }
 
+.chart-container.animate-in .jar-star {
+    -webkit-animation: jarStarFall 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: jarStarFall 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
 .chart-wrapper {
     opacity: 0;
     animation: fadeInUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
@@ -630,7 +635,9 @@
     .chart-line,
     .chart-point,
     .chart-pie-slice,
-    .chart-sleep-bar {
+    .chart-sleep-bar,
+    .jar-star,
+    .jar-shaker {
         opacity: 1 !important;
         animation: none !important;
     }
@@ -695,4 +702,199 @@
         -webkit-transform: translateY(0);
         transform: translateY(0);
     }
+}
+
+/* ── Magical glassmorphism jar ─────────────────────────────── */
+
+/* Stars: no pointer events, positioned by physics sim */
+.jar-star {
+    pointer-events: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* Outer wrapper — flex column, shake pivot at base */
+.jar-shaker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transform-origin: center 96%;
+    filter: drop-shadow(0 10px 28px rgba(0,0,0,0.55));
+    transition: filter 0.3s ease;
+}
+
+.jar-shaker:hover {
+    filter: drop-shadow(0 10px 28px rgba(0,0,0,0.55))
+            drop-shadow(0 0 26px rgba(237,191,231,0.38));
+}
+
+/* Tap feedback — plays once on click via JS classList toggle */
+.jar-shaker.shaking {
+    -webkit-animation: jarShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    animation: jarShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* Glass lid */
+.jar-lid {
+    width: 100px;
+    height: 14px;
+    background: linear-gradient(180deg,
+        rgba(255,255,255,0.16) 0%,
+        rgba(255,255,255,0.07) 100%
+    );
+    border: 1.5px solid rgba(255,255,255,0.24);
+    border-radius: 6px 6px 3px 3px;
+    position: relative;
+    z-index: 1;
+    box-shadow:
+        0 0 12px rgba(237,191,231,0.2),
+        inset 0 1px 0 rgba(255,255,255,0.25),
+        inset 0 -1px 0 rgba(0,0,0,0.12);
+}
+
+/* Glass jar body — 130 × 140px, must match JAR_BODY_W/H in charts.js */
+.jar-body {
+    width: 130px;
+    height: 140px;
+    position: relative;
+    overflow: hidden;
+    /* Safari mobile: overflow:hidden + border-radius doesn't clip transformed children
+       unless the element is in its own composited layer. translateZ(0) forces that. */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    border: 1.5px solid rgba(255,255,255,0.15);
+    border-top: none;
+    border-radius: 4px 4px 24px 24px;
+    background: linear-gradient(
+        158deg,
+        rgba(255,255,255,0.08) 0%,
+        rgba(255,255,255,0.01) 48%,
+        rgba(255,255,255,0.06) 100%
+    );
+    box-shadow:
+        inset  4px 0 14px rgba(255,255,255,0.03),
+        inset -4px 0 14px rgba(255,255,255,0.03),
+        inset  0 -6px 22px rgba(0,0,0,0.12),
+        0 14px 36px rgba(0,0,0,0.55),
+        0 0 0 0.5px rgba(255,255,255,0.07);
+}
+
+/* Left-side glass highlight */
+.jar-body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 5px;
+    width: 16%;
+    height: 88%;
+    background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent);
+    border-radius: 0 0 0 16px;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Magical bottom glow — pulses gently */
+.jar-body::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(0deg,
+        rgba(237,191,231,0.11) 0%,
+        rgba(244,227,179,0.05) 60%,
+        transparent 100%
+    );
+    pointer-events: none;
+    z-index: 10;
+    -webkit-animation: jarGlow 3.2s ease-in-out infinite;
+    animation: jarGlow 3.2s ease-in-out infinite;
+}
+
+@keyframes jarGlow {
+    0%, 100% { opacity: 0.45; }
+    50%       { opacity: 1;    }
+}
+
+@-webkit-keyframes jarGlow {
+    0%, 100% { opacity: 0.45; }
+    50%       { opacity: 1;    }
+}
+
+/* Stars fall from above the jar top into their gravity-packed positions */
+@keyframes jarStarFall {
+    0% {
+        opacity: 0;
+        transform: translateY(-160px) scale(0.3) rotate(var(--startRot, -20deg));
+    }
+    55% { opacity: 1; }
+    80% { transform: translateY(5px) scale(1.12) rotate(3deg); }
+    92% { transform: translateY(-2px) scale(0.96) rotate(-1deg); }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(0deg);
+    }
+}
+
+@-webkit-keyframes jarStarFall {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(-160px) scale(0.3) rotate(var(--startRot, -20deg));
+        transform: translateY(-160px) scale(0.3) rotate(var(--startRot, -20deg));
+    }
+    55% { opacity: 1; }
+    80% {
+        -webkit-transform: translateY(5px) scale(1.12) rotate(3deg);
+        transform: translateY(5px) scale(1.12) rotate(3deg);
+    }
+    92% {
+        -webkit-transform: translateY(-2px) scale(0.96) rotate(-1deg);
+        transform: translateY(-2px) scale(0.96) rotate(-1deg);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: translateY(0) scale(1) rotate(0deg);
+        transform: translateY(0) scale(1) rotate(0deg);
+    }
+}
+
+/* Jar shake on hover */
+@keyframes jarShake {
+    0%,  100% { transform: rotate(0deg)  translateY(0);    }
+    10%        { transform: rotate(-6deg) translateY(-2px); }
+    20%        { transform: rotate(6deg)  translateY(-3px); }
+    30%        { transform: rotate(-5deg) translateY(-2px); }
+    50%        { transform: rotate(4deg)  translateY(-2px); }
+    70%        { transform: rotate(-2deg) translateY(-1px); }
+    90%        { transform: rotate(1deg)  translateY(0);    }
+}
+
+@-webkit-keyframes jarShake {
+    0%,  100% { -webkit-transform: rotate(0deg)  translateY(0);    transform: rotate(0deg)  translateY(0);    }
+    10%        { -webkit-transform: rotate(-6deg) translateY(-2px); transform: rotate(-6deg) translateY(-2px); }
+    20%        { -webkit-transform: rotate(6deg)  translateY(-3px); transform: rotate(6deg)  translateY(-3px); }
+    30%        { -webkit-transform: rotate(-5deg) translateY(-2px); transform: rotate(-5deg) translateY(-2px); }
+    50%        { -webkit-transform: rotate(4deg)  translateY(-2px); transform: rotate(4deg)  translateY(-2px); }
+    70%        { -webkit-transform: rotate(-2deg) translateY(-1px); transform: rotate(-2deg) translateY(-1px); }
+    90%        { -webkit-transform: rotate(1deg)  translateY(0);    transform: rotate(1deg)  translateY(0);    }
+}
+
+/* Tag legend */
+.jar-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px 10px;
+    justify-content: center;
+    max-width: 240px;
+}
+
+.jar-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8em;
+    color: #DFE4EB;
+    opacity: 0.9;
 }
