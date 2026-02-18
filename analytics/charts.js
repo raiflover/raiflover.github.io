@@ -524,7 +524,7 @@ function renderLineChart(containerId, data, options = {}) {
 
     // Calculate points
     const points = data.map((entry, index) => {
-        const x = (index / (data.length - 1)) * chartWidth;
+        const x = data.length > 1 ? (index / (data.length - 1)) * chartWidth : chartWidth / 2;
         const value = entry[metric] || 4;
         const y = chartHeight - ((value - 1) / 6) * chartHeight;
         return { x, y, value, date: entry.date, isMissing: entry.isMissing };

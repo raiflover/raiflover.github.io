@@ -40,7 +40,9 @@ function getDateRange(rangeType) {
  * @returns {string} - Formatted date string
  */
 function formatDate(date, format = 'YYYY-MM-DD') {
-    const d = typeof date === 'string' ? new Date(date) : date;
+    const d = typeof date === 'string'
+        ? (date.length === 10 ? new Date(date + 'T00:00:00') : new Date(date))
+        : date;
 
     const year = d.getFullYear();
     const month = d.getMonth();

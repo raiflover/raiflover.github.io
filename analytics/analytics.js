@@ -279,12 +279,13 @@ function renderCurrentView() {
 
     // Update navigator label and button states
     updatePeriodNavigator();
-    filteredData = fillMissingDates(filteredData, dateRange.startDate, dateRange.endDate);
 
     if (filteredData.length === 0) {
         showAnalyticsMessage('No data for this time period.');
         return;
     }
+
+    filteredData = fillMissingDates(filteredData, dateRange.startDate, dateRange.endDate);
 
     // Render based on current category tab
     var container = document.getElementById('analyticsContent');

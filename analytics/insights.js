@@ -834,7 +834,7 @@ function calculateSleepInsights(data) {
             var minutes = parseInt(parts[1]);
             // Convert to minutes from midnight, handle times after midnight as next day
             var totalMinutes = hours * 60 + minutes;
-            if (hours < 12) totalMinutes += 24 * 60; // If before noon, assume it's late night
+            if (hours < 6) totalMinutes += 24 * 60; // If before 6am, assume it's late night
             return totalMinutes;
         }));
 
