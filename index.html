@@ -2,12 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Everything Tracker</title>
     <link rel="stylesheet" href="background/styles2.css">
     <link rel="stylesheet" href="trackers/sleep.css">
     <link rel="stylesheet" href="analytics/analytics.css">
     <style>
+        :root {
+            --glass-bg-1: rgba(255, 255, 255, 0.16);
+            --glass-bg-2: rgba(255, 255, 255, 0.05);
+            --glass-stroke: rgba(255, 255, 255, 0.28);
+            --glass-stroke-soft: rgba(255, 255, 255, 0.12);
+            --glass-ink: #EEF2FF;
+            --glass-tint: rgba(190, 215, 255, 0.13);
+            --glass-shadow: rgba(5, 12, 28, 0.56);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -18,6 +28,7 @@
             font-family: Helvetica, sans-serif;
             background: #0d101a;
             min-height: 100vh;
+            min-height: 100svh;
             min-height: 100dvh;
             display: flex;
             justify-content: center;
@@ -113,6 +124,7 @@
             left: 0;
             width: 100%;
             height: 100vh;
+            height: 100svh;
             height: 100dvh;
             background-color: #0d1320 !important;
             z-index: 1;
@@ -127,6 +139,7 @@
             left: 0;
             width: 100%;
             height: 100vh;
+            height: 100svh;
             height: 100dvh;
             background-color: #0f161d;
             opacity: 0.001;
@@ -148,13 +161,19 @@
         }
 
         .container {
-            /* lighter tint, stronger blur for liquid glass */
-            background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-            backdrop-filter: blur(12px) saturate(125%) contrast(105%);
-            -webkit-backdrop-filter: blur(12px) saturate(125%) contrast(105%);
-            border: 1px solid rgba(255,255,255,0.04);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255,255,255,0.02);
-            border-radius: 14px;
+            background:
+                linear-gradient(165deg, var(--glass-bg-1), var(--glass-bg-2) 55%, rgba(255,255,255,0.02)),
+                radial-gradient(140% 120% at 12% 4%, rgba(255,255,255,0.33), transparent 52%),
+                radial-gradient(130% 100% at 88% 96%, var(--glass-tint), transparent 58%);
+            backdrop-filter: blur(20px) saturate(145%) contrast(108%);
+            -webkit-backdrop-filter: blur(20px) saturate(145%) contrast(108%);
+            border: 1px solid var(--glass-stroke-soft);
+            box-shadow:
+                0 18px 36px var(--glass-shadow),
+                0 1px 0 rgba(255,255,255,0.38) inset,
+                0 -1px 0 rgba(255,255,255,0.08) inset,
+                0 0 0 1px rgba(255,255,255,0.03);
+            border-radius: 26px;
             width: 100%;
             max-width: 500px;
             overflow-y: auto;
@@ -166,35 +185,51 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* Chromatic aberration (subtle RGB offsets) */
         .container::before {
             content: "";
             position: absolute;
             inset: 0;
             pointer-events: none;
-            background: linear-gradient(180deg, rgba(255,10,40,0.02), rgba(0,0,255,0.02));
-            mix-blend-mode: screen;
-            transform: translateX(-1px);
-            filter: blur(2px) contrast(110%);
             border-radius: inherit;
-            opacity: 0.9;
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.42), rgba(255,255,255,0.11) 30%, rgba(255,255,255,0.03) 62%, rgba(255,255,255,0.16)),
+                repeating-linear-gradient(
+                    115deg,
+                    rgba(255,255,255,0.06) 0px,
+                    rgba(255,255,255,0.06) 1px,
+                    rgba(255,255,255,0.0) 1px,
+                    rgba(255,255,255,0.0) 5px
+                );
+            opacity: 0.42;
+            border: 1px solid var(--glass-stroke);
         }
 
-        /* Reflective streak / distortion layer */
         .container::after {
             content: "";
             position: absolute;
-            left: -10%;
-            top: -30%;
-            width: 120%;
-            height: 60%;
+            left: -35%;
+            top: -72%;
+            width: 170%;
+            height: 130%;
             pointer-events: none;
-            background: linear-gradient(120deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 35%, rgba(255,255,255,0) 60%);
-            mix-blend-mode: overlay;
-            transform: rotate(-8deg) translateZ(0) scale(1.02);
-            filter: blur(6px) saturate(120%);
-            border-radius: 40%;
-            opacity: 0.95;
+            border-radius: 52%;
+            background: linear-gradient(
+                120deg,
+                rgba(255,255,255,0.00) 23%,
+                rgba(255,255,255,0.40) 34%,
+                rgba(255,255,255,0.08) 47%,
+                rgba(255,255,255,0.00) 62%
+            );
+            transform: rotate(-12deg) translate3d(0,0,0);
+            filter: blur(9px);
+            opacity: 0.62;
+            animation: liquidSheen 10s cubic-bezier(0.26, 0.73, 0.23, 0.98) infinite;
+        }
+
+        @keyframes liquidSheen {
+            0%   { transform: rotate(-12deg) translate3d(-8%, -2%, 0); opacity: 0.34; }
+            50%  { transform: rotate(-10deg) translate3d(4%, 3%, 0);  opacity: 0.68; }
+            100% { transform: rotate(-12deg) translate3d(12%, -1%, 0); opacity: 0.34; }
         }
 
         .form-content {
@@ -207,7 +242,7 @@
         @media (max-width: 768px) {
             .container {
                 max-width: 100%;
-                border-radius: 12px;
+                border-radius: 22px;
             }
             h1 {
                 font-size: 1.6em;
@@ -228,13 +263,15 @@
                 justify-content: center;
             }
             .container {
-                border-radius: 10px;
+                border-radius: 20px;
                 max-height: 95vh;
                 max-width: 95vw;
                 min-width: 90vw;
                 margin: 0 auto;
                 overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
+                backdrop-filter: blur(16px) saturate(138%) contrast(106%);
+                -webkit-backdrop-filter: blur(16px) saturate(138%) contrast(106%);
             }
             .form-content {
                 padding: 12px;
@@ -337,22 +374,30 @@
 
         input {
             padding: 10px 12px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.006));
-            border: 1px solid rgba(255,255,255,0.035);
-            color: #EEF2FF;
-            border-radius: 12px;
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.07)),
+                linear-gradient(90deg, rgba(188,212,255,0.09), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255,255,255,0.18);
+            color: var(--glass-ink);
+            border-radius: 16px;
             font-size: 16px;
             transition: border-color 0.18s, box-shadow 0.18s, transform 0.12s;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.02), inset 0 -6px 20px rgba(0,0,0,0.25);
-            backdrop-filter: blur(8px) saturate(115%);
-            -webkit-backdrop-filter: blur(8px) saturate(115%);
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.35),
+                inset 0 -12px 20px rgba(3, 11, 26, 0.28),
+                0 2px 8px rgba(0,0,0,0.16);
+            backdrop-filter: blur(12px) saturate(140%);
+            -webkit-backdrop-filter: blur(12px) saturate(140%);
             height: 44px;
         }
 
         input:focus {
             outline: none;
-            border-color: rgba(244,227,179,0.7);
-            box-shadow: 0 6px 22px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.02);
+            border-color: rgba(244,227,179,0.74);
+            box-shadow:
+                0 0 0 1px rgba(244,227,179,0.36),
+                0 10px 22px rgba(0,0,0,0.34),
+                inset 0 1px 0 rgba(255,255,255,0.48);
             transform: translateY(-1px);
         }
 
@@ -389,21 +434,27 @@
 
         button {
             padding: 10px 24px;
-            border: none;
-            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 18px;
             font-size: 0.95em;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.24s;
             height: 36px;
+            backdrop-filter: blur(10px) saturate(140%);
+            -webkit-backdrop-filter: blur(10px) saturate(140%);
+            box-shadow:
+                0 4px 12px rgba(0,0,0,0.22),
+                inset 0 1px 0 rgba(255,255,255,0.34);
         }
 
         .btn-primary {
             flex: 1;
-            background: linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,255,255,0.006));
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.32), rgba(255,255,255,0.09)),
+                linear-gradient(130deg, rgba(186,210,255,0.16), rgba(244,227,179,0.05));
             color: #EDBFE7;
-            border: 1px solid rgba(255,255,255,0.04);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+            border-color: rgba(255,255,255,0.25);
         }
 
         /* remove glowing hover effect; keep subtle press feel */
@@ -418,9 +469,11 @@
         }
 
         .btn-back {
-            background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.004));
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.23), rgba(255,255,255,0.07)),
+                linear-gradient(130deg, rgba(188,212,255,0.1), rgba(255,255,255,0.03));
             color: #EDBFE7;
-            border: 1px solid rgba(255,255,255,0.03);
+            border-color: rgba(255,255,255,0.22);
         }
 
         .btn-back:hover {
@@ -429,10 +482,11 @@
 
         .btn-next {
             flex: 1;
-            background: linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,255,255,0.006));
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.32), rgba(255,255,255,0.09)),
+                linear-gradient(130deg, rgba(186,210,255,0.16), rgba(244,227,179,0.05));
             color: #EDBFE7;
-            border: 1px solid rgba(255,255,255,0.04);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+            border-color: rgba(255,255,255,0.25);
             text-align: right;
             padding-right: 20px;
         }
@@ -692,7 +746,8 @@
 
         .mug-liquid {
             clip-path: inset(100% 0 0 0);
-            transition: clip-path 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), fill 0.5s ease;
+            -webkit-clip-path: inset(100% 0 0 0);
+            transition: clip-path 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), -webkit-clip-path 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), fill 0.5s ease;
             fill: #EDBFE7;
             opacity: 0.85;
         }
@@ -993,7 +1048,7 @@
         .caffeine-btn {
             padding: 8px 12px;
             border: none;
-            border-radius: 10px;
+            border-radius: 14px;
             font-size: 0.9em;
             font-weight: 500;
             cursor: pointer;
@@ -1028,7 +1083,7 @@
             background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.006));
             border: 1px solid rgba(255,255,255,0.035);
             color: #EEF2FF;
-            border-radius: 10px;
+            border-radius: 14px;
             font-size: 16px;
             height: 36px;
             transition: border-color 0.18s;
@@ -1260,7 +1315,7 @@
             background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.006));
             border: 1px solid rgba(255,255,255,0.035);
             color: #EEF2FF;
-            border-radius: 10px;
+            border-radius: 14px;
             font-size: 16px;
             font-family: inherit;
             resize: vertical;
@@ -1297,7 +1352,7 @@
             background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.006));
             border: 1px solid rgba(255,255,255,0.035);
             color: #EEF2FF;
-            border-radius: 10px;
+            border-radius: 14px;
             font-size: 16px;
             cursor: pointer;
             transition: border-color 0.18s;
@@ -1332,7 +1387,7 @@
             background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.006));
             border: 1px solid rgba(255,255,255,0.035);
             color: #EDBFE7;
-            border-radius: 20px;
+            border-radius: 24px;
             font-size: 0.9em;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -1424,7 +1479,7 @@
         .habit-section {
             background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.006));
             border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 12px;
+            border-radius: 18px;
             overflow: hidden;
         }
 
@@ -1482,7 +1537,7 @@
             min-height: 56px; /* habit day height on desktop */
             background: rgba(255,255,255,0.03);
             border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 8px;
+            border-radius: 12px;
             color: #DFE4EB;
             font-size: 0.72em;
             cursor: pointer;
@@ -1588,7 +1643,7 @@
         .habit-tab-btn {
             flex: 1;
             padding: 8px 16px;
-            border-radius: 20px;
+            border-radius: 22px;
             background: rgba(255,255,255,0.04);
             border: 1px solid rgba(255,255,255,0.06);
             color: #DFE4EB;
@@ -1649,7 +1704,7 @@
             padding: 5px 8px;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 8px;
+            border-radius: 12px;
             color: #DFE4EB;
             font-size: 0.88em;
             font-family: inherit;
@@ -1675,7 +1730,7 @@
             padding: 5px 6px;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 8px;
+            border-radius: 12px;
             color: #DFE4EB;
             font-size: 0.88em;
             font-family: inherit;
@@ -1705,7 +1760,7 @@
 
         .habit-tag {
             padding: 4px 10px;
-            border-radius: 14px;
+            border-radius: 18px;
             background: rgba(255,255,255,0.04);
             border: 1px solid rgba(255,255,255,0.07);
             color: rgba(223,228,235,0.65);
@@ -2205,6 +2260,8 @@
             const sliders = document.querySelectorAll('.slider-input');
 
             sliders.forEach(slider => {
+                if (slider.dataset.bound === '1') return;
+                slider.dataset.bound = '1';
                 const defaultValue = parseInt(slider.dataset.default, 10);
 
                 // Check initial state
@@ -2408,8 +2465,8 @@
 
             // Update progress bar with magical effects
             const progressContainer = document.querySelector('.progress-container');
-            if (pageNumber === 0 || pageNumber === 1 || pageNumber === 7) {
-                // Hide progress bar on login, menu, and analytics pages
+            if (pageNumber === 0 || pageNumber === 1 || pageNumber === 7 || pageNumber === 8) {
+                // Hide progress bar on login, menu, analytics, and habits pages
                 progressContainer.style.display = 'none';
             } else {
                 progressContainer.style.display = 'block';
@@ -2421,6 +2478,12 @@
             const tags = document.querySelectorAll('.tag');
 
             tags.forEach(tag => {
+                if (tag.dataset.bound === '1') return;
+                tag.dataset.bound = '1';
+
+                tag.setAttribute('role', 'button');
+                tag.setAttribute('tabindex', '0');
+
                 const toggleTagSelection = function(e) {
                     e.preventDefault();
                     this.classList.toggle('selected');
@@ -2432,6 +2495,12 @@
                 } else {
                     tag.addEventListener('click', toggleTagSelection);
                 }
+
+                tag.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        toggleTagSelection.call(this, e);
+                    }
+                });
             });
         }
 
@@ -2679,12 +2748,51 @@
             return h * 60 + m;
         }
 
+        function hasDayHabitData(habitId, dateStr) {
+            if (habitId === 'cleaning') {
+                return _hmTotal('cleaning', 'time', dateStr) > 0;
+            }
+            if (habitId === 'exercise') {
+                var steps = parseInt(getDayVal('exercise', 'steps', dateStr), 10) || 0;
+                return _hmTotal('exercise', 'time', dateStr) > 0 ||
+                    steps > 0 ||
+                    getDayTags('exercise', 'types', dateStr).length > 0;
+            }
+            if (habitId === 'reading') {
+                return ['fiction', 'nonfiction', 'fanfic', 'comic'].some(function(field) {
+                    return _hmTotal('reading', field, dateStr) > 0;
+                });
+            }
+            if (habitId === 'writing') {
+                return ['nonfiction', 'poetry', 'prose', 'reflection'].some(function(field) {
+                    return _hmTotal('writing', field, dateStr) > 0;
+                });
+            }
+            if (habitId === 'second-language') {
+                return _hmTotal('second-language', 'time', dateStr) > 0;
+            }
+            return false;
+        }
+
+        function syncHabitDayCompletion(habitId, dateStr) {
+            var key = 'habit-' + habitId + '-' + dateStr;
+            var done = hasDayHabitData(habitId, dateStr);
+            if (done) {
+                localStorage.setItem(key, '1');
+            } else {
+                localStorage.removeItem(key);
+            }
+            // Keep weekly tab and Firestore habit-day boolean in sync with daily inputs.
+            saveHabitToFirebase(habitId, dateStr, done);
+        }
+
         function onDayHrChange(habitId, field, dateStr, val) {
             setDayVal(habitId, field + '_h', dateStr, val);
             var total = _hmTotal(habitId, field, dateStr);
             if (habitId === 'reading') updateReadingTotal(dateStr);
             if (habitId === 'writing') updateWritingTotal(dateStr);
             saveDayFieldToFirebase(habitId, field, dateStr, total || null);
+            syncHabitDayCompletion(habitId, dateStr);
         }
 
         function onDayMinChange(habitId, field, dateStr, val) {
@@ -2693,13 +2801,16 @@
             if (habitId === 'reading') updateReadingTotal(dateStr);
             if (habitId === 'writing') updateWritingTotal(dateStr);
             saveDayFieldToFirebase(habitId, field, dateStr, total || null);
+            syncHabitDayCompletion(habitId, dateStr);
         }
 
         // kept for steps (plain number field)
         function onDayFieldChange(habitId, field, dateStr, value) {
             setDayVal(habitId, field, dateStr, value);
-            var num = value === '' ? null : Number(value);
+            var parsed = Number(value);
+            var num = (value === '' || isNaN(parsed)) ? null : parsed;
             saveDayFieldToFirebase(habitId, field, dateStr, num);
+            syncHabitDayCompletion(habitId, dateStr);
         }
 
         function toggleDayTag(habitId, field, dateStr, tag) {
@@ -2712,6 +2823,7 @@
             );
             if (btn) btn.classList.toggle('active', tags.indexOf(tag) >= 0);
             saveDayFieldToFirebase(habitId, field, dateStr, tags);
+            syncHabitDayCompletion(habitId, dateStr);
         }
 
         function updateReadingTotal(dateStr) {
