@@ -54,11 +54,13 @@ function saveCaffeine() {
 }
 
 function updateMugFill() {
-    const fillPercentage = (caffeineScore / maxCaffeine) * 100;
+    const fillPercentage = Math.max(0, Math.min(100, (caffeineScore / maxCaffeine) * 100));
     const mugLiquid = document.querySelector('.mug-liquid');
     if (mugLiquid) {
         const insetTop = 100 - fillPercentage;
-        mugLiquid.style.clipPath = `inset(${insetTop}% 0 0 0)`;
+        const insetValue = `inset(${insetTop}% 0 0 0)`;
+        mugLiquid.style.clipPath = insetValue;
+        mugLiquid.style.webkitClipPath = insetValue;
     }
 }
 

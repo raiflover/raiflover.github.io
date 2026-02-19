@@ -35,6 +35,8 @@
   justify-content: center;
   position: relative;
   padding: 2px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .sleep-slot:hover {

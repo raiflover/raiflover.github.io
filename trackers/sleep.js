@@ -30,10 +30,16 @@ function initSleepTracker() {
     slot.appendChild(timeLabel);
     slot.title = formatTime(i);
 
-    slot.addEventListener("click", () => {
+    const toggleSleepSlot = () => {
       sleepData[i] = !sleepData[i];
       slot.classList.toggle("asleep");
-    });
+    };
+
+    if (window.PointerEvent) {
+      slot.addEventListener("pointerup", toggleSleepSlot);
+    } else {
+      slot.addEventListener("click", toggleSleepSlot);
+    }
 
     sleepGrid.appendChild(slot);
   }
