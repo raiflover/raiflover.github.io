@@ -1,11 +1,11 @@
 /* Analytics Styling */
 /* Glassmorphism design matching the main app aesthetic */
 :root {
-    --analytics-glass-1: rgba(26, 36, 60, 0.62);
-    --analytics-glass-2: rgba(14, 21, 38, 0.66);
-    --analytics-stroke: rgba(255,255,255,0.12);
-    --analytics-stroke-soft: rgba(255,255,255,0.08);
-    --analytics-shadow: rgba(3, 8, 24, 0.58);
+    --analytics-glass-1: rgba(14, 24, 46, 0.68);
+    --analytics-glass-2: rgba(8, 14, 30, 0.74);
+    --analytics-stroke: rgba(210,226,255,0.12);
+    --analytics-stroke-soft: rgba(210,226,255,0.07);
+    --analytics-shadow: rgba(2, 7, 20, 0.66);
 }
 
 /* Tab Navigation */
@@ -21,11 +21,9 @@
     -webkit-appearance: none;
     appearance: none;
     padding: 10px 20px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04)), linear-gradient(135deg, var(--analytics-glass-1), var(--analytics-glass-2));
-    border: 1px solid var(--analytics-stroke-soft);
-    -webkit-backdrop-filter: blur(12px) saturate(135%);
-    backdrop-filter: blur(12px) saturate(135%);
-    border-radius: 20px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 22px;
     color: #DFE4EB;
     font-size: 0.95em;
     cursor: pointer;
@@ -34,16 +32,16 @@
 }
 
 .tab-btn:hover {
-    background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.05)), linear-gradient(135deg, var(--analytics-glass-1), var(--analytics-glass-2));
-    border-color: rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(255,255,255,0.12);
     transform: translateY(-1px);
 }
 
 .tab-btn.active {
-    background: linear-gradient(90deg, rgba(237,191,231,0.25), rgba(244,227,179,0.2));
-    border: 1px solid rgba(244,227,179,0.4);
+    background: linear-gradient(135deg, rgba(237,191,231,0.15), rgba(244,227,179,0.1));
+    border: 1px solid rgba(237,191,231,0.3);
     color: #EDBFE7;
-    box-shadow: inset 0 0 16px rgba(244,227,179,0.15), 0 0 12px rgba(244,227,179,0.3);
+    box-shadow: 0 0 8px rgba(237,191,231,0.2);
 }
 
 /* Time Period Selector */
@@ -59,11 +57,9 @@
     -webkit-appearance: none;
     appearance: none;
     padding: 6px 14px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03)), linear-gradient(135deg, var(--analytics-glass-1), var(--analytics-glass-2));
-    border: 1px solid var(--analytics-stroke-soft);
-    -webkit-backdrop-filter: blur(10px) saturate(130%);
-    backdrop-filter: blur(10px) saturate(130%);
-    border-radius: 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 22px;
     color: #DFE4EB;
     font-size: 0.85em;
     cursor: pointer;
@@ -74,7 +70,8 @@
 
 .period-btn:hover {
     opacity: 1;
-    border-color: rgba(255,255,255,0.16);
+    border-color: rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.07);
     transform: translateY(-1px);
 }
 
@@ -98,11 +95,9 @@
 
 .insight-btn {
     padding: 8px 16px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.13), rgba(255,255,255,0.04)), linear-gradient(135deg, var(--analytics-glass-1), var(--analytics-glass-2));
-    border: 1px solid var(--analytics-stroke-soft);
-    -webkit-backdrop-filter: blur(11px) saturate(132%);
-    backdrop-filter: blur(11px) saturate(132%);
-    border-radius: 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 22px;
     color: #DFE4EB;
     font-size: 0.9em;
     cursor: pointer;
@@ -111,8 +106,8 @@
 }
 
 .insight-btn:hover {
-    background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.05)), linear-gradient(135deg, var(--analytics-glass-1), var(--analytics-glass-2));
-    border-color: rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(255,255,255,0.12);
     transform: translateY(-1px);
 }
 
@@ -129,13 +124,13 @@
 }
 
 .insights-section {
-    background: linear-gradient(165deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02)), linear-gradient(140deg, var(--analytics-glass-1), var(--analytics-glass-2));
-    border: 1px solid var(--analytics-stroke-soft);
-    border-radius: 18px;
-    box-shadow: 0 10px 24px var(--analytics-shadow), inset 0 1px 0 rgba(255,255,255,0.2);
-    padding: 14px 16px;
-    -webkit-backdrop-filter: blur(14px) saturate(140%);
-    backdrop-filter: blur(14px) saturate(140%);
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
     margin-bottom: 4px;
 }
 
@@ -170,37 +165,25 @@
 }
 
 /* Break charts out of .form-content horizontal padding so they use full container width */
-#page7 .chart-wrapper {
-    margin-left: -40px;
-    margin-right: -40px;
-}
+#page7 .chart-wrapper { margin-left: 0; margin-right: 0; }
 
 /* Compensate chart-wrapper negative margin — indent from container edge */
-#page7 .chart-wrapper h3 {
-    padding-left: 30px;
-    padding-right: 30px;
-    text-align: center;
-}
+#page7 .chart-wrapper h3 { padding-left: 0; padding-right: 0; text-align: center; }
 
-#page7 .insights-section {
-    padding-left: 30px;
-    padding-right: 30px;
-}
+#page7 .insights-section { padding-left: 0; padding-right: 0; }
 
-#page7 .notes-collapsible {
-    padding-left: 30px;
-    padding-right: 30px;
-}
+#page7 .notes-collapsible { padding-left: 0; padding-right: 0; }
 
 .chart-wrapper {
-    background: linear-gradient(165deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02)), linear-gradient(140deg, var(--analytics-glass-1), var(--analytics-glass-2));
-    border: 1px solid var(--analytics-stroke-soft);
-    border-radius: 20px;
-    box-shadow: 0 12px 28px var(--analytics-shadow), inset 0 1px 0 rgba(255,255,255,0.2);
-    -webkit-backdrop-filter: blur(15px) saturate(142%);
-    backdrop-filter: blur(15px) saturate(142%);
-    padding: 14px 10px 10px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.006));
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 18px;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    padding: 14px 14px 12px;
     margin-bottom: 16px;
+    overflow: hidden;
 }
 
 .chart-wrapper h3 {
@@ -212,10 +195,10 @@
 }
 
 .chart-container {
-    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.015));
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
-    padding: 12px 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 8px 0;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
 }
@@ -295,19 +278,19 @@
 
 @media (max-width: 480px) {
     #page7 .chart-wrapper {
-        margin-left: -12px;
-        margin-right: -12px;
+        margin-left: 0;
+        margin-right: 0;
     }
 
     #page7 .chart-wrapper h3 {
-        padding-left: 18px;
-        padding-right: 18px;
+        padding-left: 0;
+        padding-right: 0;
         text-align: center;
     }
 
     #page7 .insights-section {
-        padding-left: 26px;
-        padding-right: 26px;
+        padding-left: 0;
+        padding-right: 0;
     }
 
     #page7 .insights-section .insights-title {
@@ -317,8 +300,8 @@
     }
 
     #page7 .notes-collapsible {
-        padding-left: 26px;
-        padding-right: 26px;
+        padding-left: 0;
+        padding-right: 0;
     }
 
     .analytics-tabs {

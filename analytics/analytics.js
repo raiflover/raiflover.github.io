@@ -342,19 +342,14 @@ function renderEnergyTab(container, data) {
     var caffeineInsights = calculateCaffeineInsights(data);
     var caffeineInsightsContainer = document.getElementById('caffeineInsights');
     if (caffeineInsightsContainer) {
-        caffeineInsightsContainer.innerHTML = '<div class="insights-section">' +
-            '<div class="insights-title" style="display: none;">Caffeine Insights</div>' +
-            caffeineInsights.html +
-            '</div>';
+        caffeineInsightsContainer.innerHTML = caffeineInsights.html;
     }
 
     // Render sleep insights
     var sleepInsights = calculateSleepInsights(data);
     var sleepInsightsContainer = document.getElementById('sleepInsights');
     if (sleepInsightsContainer) {
-        sleepInsightsContainer.innerHTML = '<div class="insights-section">' +
-            sleepInsights.html +
-            '</div>';
+        sleepInsightsContainer.innerHTML = sleepInsights.html;
     }
 
     // Render sleep bar chart
@@ -414,9 +409,7 @@ function renderOtherTab(container, data) {
     var patternInsights = analyzePatterns(data);
     var patternInsightsContainer = document.getElementById('patternInsights');
     if (patternInsightsContainer) {
-        patternInsightsContainer.innerHTML = '<div class="insights-section">' +
-            patternInsights.html +
-            '</div>';
+        patternInsightsContainer.innerHTML = patternInsights.html;
     }
 
     // Render activities pie chart
