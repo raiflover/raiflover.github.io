@@ -1,3 +1,8 @@
+.sleep-tracker {
+  position: relative;
+  isolation: isolate;
+}
+
 .sleep-tracker h2 {
   color: #DFE4EB;
   margin-bottom: 12px;
@@ -24,10 +29,12 @@
   aspect-ratio: 1;
   min-width: 32px;
   border-radius: 10px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.006));
-  border: 1px solid rgba(255,255,255,0.035);
+  background:
+    linear-gradient(165deg, rgba(220,235,255,0.08), rgba(220,235,255,0.015)),
+    linear-gradient(140deg, rgba(18,30,56,0.7), rgba(8,14,28,0.76));
+  border: 1px solid rgba(210,226,255,0.08);
   cursor: pointer;
-  transition: background 0.15s, transform 0.1s;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease, box-shadow 0.2s ease;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
   display: flex;
   flex-direction: column;
@@ -37,6 +44,10 @@
   padding: 2px;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  background-clip: padding-box;
 }
 
 .sleep-slot:hover {
@@ -57,8 +68,10 @@
 }
 
 .sleep-slot.asleep {
-  background: linear-gradient(180deg, rgba(180,200,255,0.5), rgba(244,227,179,0.3));
-  border-color: rgba(180,200,255,0.5);
+  background:
+    linear-gradient(160deg, rgba(180,200,255,0.34), rgba(244,227,179,0.2)),
+    linear-gradient(140deg, rgba(28,44,82,0.72), rgba(12,20,38,0.8));
+  border-color: rgba(180,200,255,0.42);
   box-shadow: inset 0 2px 4px rgba(0,0,0,0.2), 
               inset 0 0 16px rgba(180,200,255,0.35),
               0 0 16px rgba(244,227,179,0.4);
