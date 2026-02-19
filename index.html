@@ -16,6 +16,8 @@
             --glass-ink: #EEF2FF;
             --glass-tint: rgba(78, 120, 205, 0.22);
             --glass-shadow: rgba(2, 6, 18, 0.74);
+            --glass-frost-1: rgba(220, 235, 255, 0.12);
+            --glass-frost-2: rgba(220, 235, 255, 0.02);
         }
 
         * {
@@ -226,11 +228,56 @@
             animation: liquidSheen 10s cubic-bezier(0.26, 0.73, 0.23, 0.98) infinite;
         }
 
+        .container:has(#page2.active),
+        .container:has(#page3.active),
+        .container:has(#page4.active),
+        .container:has(#page5.active),
+        .container:has(#page6.active),
+        .container:has(#page8.active) {
+            isolation: isolate;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+        }
+
+        .container:has(#page2.active)::before,
+        .container:has(#page3.active)::before,
+        .container:has(#page4.active)::before,
+        .container:has(#page5.active)::before,
+        .container:has(#page6.active)::before,
+        .container:has(#page8.active)::before {
+            background: linear-gradient(
+                180deg,
+                var(--glass-frost-1),
+                rgba(220, 235, 255, 0.07) 34%,
+                rgba(220, 235, 255, 0.02) 64%,
+                var(--glass-frost-2)
+            );
+            opacity: 0.22;
+        }
+
+        .container:has(#page2.active)::after,
+        .container:has(#page3.active)::after,
+        .container:has(#page4.active)::after,
+        .container:has(#page5.active)::after,
+        .container:has(#page6.active)::after,
+        .container:has(#page8.active)::after {
+            opacity: 0.25;
+            filter: blur(10px);
+            animation: liquidSheenSoft 14s cubic-bezier(0.26, 0.73, 0.23, 0.98) infinite;
+        }
+
 
         @keyframes liquidSheen {
             0%   { transform: rotate(-12deg) translate3d(-8%, -2%, 0); opacity: 0.34; }
             50%  { transform: rotate(-10deg) translate3d(4%, 3%, 0);  opacity: 0.68; }
             100% { transform: rotate(-12deg) translate3d(12%, -1%, 0); opacity: 0.34; }
+        }
+
+        @keyframes liquidSheenSoft {
+            0%   { transform: rotate(-12deg) translate3d(-4%, -1%, 0); opacity: 0.2; }
+            50%  { transform: rotate(-11deg) translate3d(2%, 2%, 0); opacity: 0.34; }
+            100% { transform: rotate(-12deg) translate3d(6%, -1%, 0); opacity: 0.2; }
         }
 
         .form-content {
@@ -1189,7 +1236,7 @@
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
             filter: hue-rotate(290deg) saturate(0.8) brightness(1.1) drop-shadow(0 2px 6px rgba(237, 191, 231, 0.5));
-            margin-top: -10px;
+            margin-top: -15px;
             padding: 6px;
         }
 
@@ -1551,6 +1598,16 @@
             appearance: none;
         }
 
+        #page8 .habit-section,
+        #page8 .habit-tab-btn,
+        #page8 .period-nav-btn,
+        #page8 .habit-day {
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+            background-clip: padding-box;
+        }
+
         .habit-day:hover {
             background: rgba(255,255,255,0.06);
         }
@@ -1653,7 +1710,7 @@
             font-size: 0.88em;
             cursor: pointer;
             font-family: inherit;
-            transition: all 0.2s ease;
+            transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
             -webkit-tap-highlight-color: transparent;
             -webkit-appearance: none;
             appearance: none;
