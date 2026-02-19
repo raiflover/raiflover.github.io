@@ -192,13 +192,13 @@ function renderBarChart(containerId, data, options = {}) {
     // Period-aware bar styling (4 tiers)
     var barGapFrac, barRx;
     // bars-week
-    if (_period === 'week')         { barGapFrac = 0.28; barRx = 22; }
+    if (_period === 'week')         { barGapFrac = 0.28; barRx = 18; }
     // bars-3months
-    else if (_period === '3months') { barGapFrac = 0.12; barRx = 16; }
+    else if (_period === '3months') { barGapFrac = 0.12; barRx = 12; }
     // bars-month
-    else if (_period === 'month')   { barGapFrac = 0.22; barRx = 18; }
+    else if (_period === 'month')   { barGapFrac = 0.22; barRx = 16; }
     // bars-year
-    else                            { barGapFrac = 0.22; barRx = 18; }
+    else                            { barGapFrac = 0.22; barRx = 14; }
 
     // Clear container
     container.innerHTML = '';
@@ -411,7 +411,8 @@ function createBarElement(x, baseY, width, normalizedValue, unitHeight, color, i
         fill: color,
         'stroke': isMissing ? 'rgba(255,255,255,0.2)' : 'none',
         'stroke-dasharray': isMissing ? '3,3' : 'none',
-        rx: 2
+        rx: 10,
+        ry: 10
     });
 }
 
@@ -644,17 +645,19 @@ function showTooltip(event, entry, metric, containerId) {
     tooltip.id = 'chart-tooltip';
     tooltip.style.cssText = `
         position: fixed;
-        background: linear-gradient(135deg, rgba(20,20,31,0.95), rgba(15,22,29,0.95));
-        -webkit-backdrop-filter: blur(12px);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 8px;
-        padding: 10px 14px;
+        background:
+            linear-gradient(165deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06) 58%, rgba(255,255,255,0.02)),
+            linear-gradient(135deg, rgba(20,20,31,0.88), rgba(15,22,29,0.86));
+        -webkit-backdrop-filter: blur(16px) saturate(140%);
+        backdrop-filter: blur(16px) saturate(140%);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 16px;
+        padding: 11px 15px;
         color: #DFE4EB;
         font-size: 13px;
         pointer-events: none;
         z-index: 10000;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        box-shadow: 0 14px 28px rgba(5, 12, 28, 0.42), inset 0 1px 0 rgba(255,255,255,0.28);
     `;
 
     let content = `<div style="margin-bottom: 4px; color: #EDBFE7; font-weight: bold;">${formatDate(entry.date, 'MMM DD')}</div>`;
@@ -1261,7 +1264,8 @@ function renderSleepBarChart(containerId, data) {
             fill: 'rgba(255,255,255,0.02)',
             stroke: 'rgba(255,255,255,0.05)',
             'stroke-width': 1,
-            rx: 12
+            rx: 18,
+            ry: 18
         });
         chartGroup.appendChild(bgBar);
 
@@ -1290,7 +1294,8 @@ function renderSleepBarChart(containerId, data) {
             fill: 'url(#sleepGradient-' + containerId + ')',
             stroke: 'rgba(180,200,255,0.6)',
             'stroke-width': 2,
-            rx: 24,
+            rx: 18,
+            ry: 18,
             class: 'chart-sleep-bar',
             style: 'cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); opacity: 0; -webkit-animation-delay: ' + (j * sleepStaggerDelay) + 's; animation-delay: ' + (j * sleepStaggerDelay) + 's;'
         });
@@ -1383,7 +1388,7 @@ function showSleepTooltip(event, htmlContent) {
 
     var tooltip = document.createElement('div');
     tooltip.id = 'chart-tooltip';
-    tooltip.style.cssText = 'position: fixed; background: linear-gradient(135deg, rgba(20,20,31,0.95), rgba(15,22,29,0.95)); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 14px; color: #DFE4EB; font-size: 13px; pointer-events: none; z-index: 10000; box-shadow: 0 4px 12px rgba(0,0,0,0.5); line-height: 1.6;';
+    tooltip.style.cssText = 'position: fixed; background: linear-gradient(165deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06) 58%, rgba(255,255,255,0.02)), linear-gradient(135deg, rgba(20,20,31,0.88), rgba(15,22,29,0.86)); -webkit-backdrop-filter: blur(16px) saturate(140%); backdrop-filter: blur(16px) saturate(140%); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 11px 15px; color: #DFE4EB; font-size: 13px; pointer-events: none; z-index: 10000; box-shadow: 0 14px 28px rgba(5, 12, 28, 0.42), inset 0 1px 0 rgba(255,255,255,0.28); line-height: 1.6;';
 
     tooltip.innerHTML = htmlContent;
     document.body.appendChild(tooltip);

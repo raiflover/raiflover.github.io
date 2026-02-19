@@ -12,11 +12,16 @@ var AnalyticsState = {
     isLoading: false
 };
 
+var analyticsListenersBound = false;
+var chartAnimationSafetyTimeout = null;
+var chartAnimationForceTimeout = null;
+
 /**
  * Initialize analytics when page 7 loads
  */
 function initAnalytics() {
     console.log('Initializing analytics...');
+    currentUser = currentUser || window.currentUser;
 
     // Check authentication
     if (!currentUser) {
@@ -36,6 +41,9 @@ function initAnalytics() {
  * Set up event listeners for tabs and periods
  */
 function setupAnalyticsEventListeners() {
+    if (analyticsListenersBound) return;
+    analyticsListenersBound = true;
+
     // Category tab buttons
     var categoryTabs = document.querySelectorAll('[data-category-tab]');
     for (var i = 0; i < categoryTabs.length; i++) {
@@ -593,6 +601,15 @@ function initInsightAnimations() {
  * Initialize intersection observer for chart animations
  */
 function initChartAnimations() {
+    if (chartAnimationSafetyTimeout) {
+        clearTimeout(chartAnimationSafetyTimeout);
+        chartAnimationSafetyTimeout = null;
+    }
+    if (chartAnimationForceTimeout) {
+        clearTimeout(chartAnimationForceTimeout);
+        chartAnimationForceTimeout = null;
+    }
+
     // Check if IntersectionObserver is supported
     if (!window.IntersectionObserver) {
         // Fallback: just show all charts without animation
@@ -650,7 +667,7 @@ function initChartAnimations() {
 
     // Safety fallback: If charts are still not animated after 2 seconds, trigger the animation
     // This handles edge cases where observer doesn't trigger (browser bugs, timing issues, etc.)
-    setTimeout(function() {
+    chartAnimationSafetyTimeout = setTimeout(function() {
         var containers = document.querySelectorAll('.chart-container');
         for (var k = 0; k < containers.length; k++) {
             // Add animate-in class if not present (this will trigger CSS animations)
@@ -661,7 +678,7 @@ function initChartAnimations() {
 
         // Final emergency fallback: After another second, if elements are still invisible, force them visible
         // This only happens if CSS animations completely fail
-        setTimeout(function() {
+        chartAnimationForceTimeout = setTimeout(function() {
             var allContainers = document.querySelectorAll('.chart-container');
             for (var i = 0; i < allContainers.length; i++) {
                 var chartElements = allContainers[i].querySelectorAll('.chart-bar, .chart-line, .chart-point, .chart-pie-slice, .chart-sleep-bar, .jar-star');
