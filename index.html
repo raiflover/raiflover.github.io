@@ -18,6 +18,7 @@
             font-family: Helvetica, sans-serif;
             background: #0d101a;
             min-height: 100vh;
+            min-height: 100dvh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -112,6 +113,7 @@
             left: 0;
             width: 100%;
             height: 100vh;
+            height: 100dvh;
             background-color: #0d1320 !important;
             z-index: 1;
             pointer-events: none;
@@ -125,6 +127,7 @@
             left: 0;
             width: 100%;
             height: 100vh;
+            height: 100dvh;
             background-color: #0f161d;
             opacity: 0.001;
             z-index: 2;
@@ -2418,17 +2421,17 @@
             const tags = document.querySelectorAll('.tag');
 
             tags.forEach(tag => {
-                // Use touchend for better iOS support, with click as fallback
-                tag.addEventListener('click', function(e) {
+                const toggleTagSelection = function(e) {
                     e.preventDefault();
                     this.classList.toggle('selected');
-                });
+                };
 
-                // Add touch event support for iOS
-                tag.addEventListener('touchend', function(e) {
-                    e.preventDefault();
-                    this.classList.toggle('selected');
-                }, { passive: false });
+                // Single input path to avoid click + touch double-toggle on Safari
+                if (window.PointerEvent) {
+                    tag.addEventListener('pointerup', toggleTagSelection);
+                } else {
+                    tag.addEventListener('click', toggleTagSelection);
+                }
             });
         }
 
@@ -3124,6 +3127,120 @@
         });
 
         console.log('Firebase initialized successfully');
+    </script>
+    <!-- Firebase SDK (Compat fallback for older Safari without module support) -->
+    <script nomodule src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script nomodule src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script nomodule src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script nomodule src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+    <script nomodule>
+        (function() {
+            if (!window.firebase) return;
+
+            var firebaseConfig = {
+                apiKey: "AIzaSyDNOXNXLLf-vZbPJ76T5TA8ZWdW67VhOL8",
+                authDomain: "everything-tracker-f3c03.firebaseapp.com",
+                projectId: "everything-tracker-f3c03",
+                storageBucket: "everything-tracker-f3c03.firebasestorage.app",
+                messagingSenderId: "122374327994",
+                appId: "1:122374327994:web:3cb3355a343632e3343c83"
+            };
+
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+
+            var auth = firebase.auth();
+            var db = firebase.firestore();
+            var storage = firebase.storage();
+
+            function compatCollection(root) {
+                var ref = root;
+                for (var i = 1; i < arguments.length; i++) {
+                    ref = ref.collection(arguments[i]);
+                }
+                return ref;
+            }
+
+            function compatDoc(root) {
+                var ref = root;
+                for (var i = 1; i < arguments.length; i++) {
+                    ref = (i % 2 === 1) ? ref.collection(arguments[i]) : ref.doc(arguments[i]);
+                }
+                return ref;
+            }
+
+            function compatWhere(fieldPath, opStr, value) {
+                return { __type: 'where', fieldPath: fieldPath, opStr: opStr, value: value };
+            }
+
+            function compatOrderBy(fieldPath, directionStr) {
+                return { __type: 'orderBy', fieldPath: fieldPath, directionStr: directionStr };
+            }
+
+            function compatQuery(baseRef) {
+                var q = baseRef;
+                for (var i = 1; i < arguments.length; i++) {
+                    var c = arguments[i];
+                    if (!c) continue;
+                    if (c.__type === 'where') {
+                        q = q.where(c.fieldPath, c.opStr, c.value);
+                    } else if (c.__type === 'orderBy') {
+                        q = q.orderBy(c.fieldPath, c.directionStr);
+                    }
+                }
+                return q;
+            }
+
+            window.firebaseAuth = auth;
+            window.firebaseDb = db;
+            window.firebaseStorage = storage;
+
+            window.firebaseSignInWithEmailAndPassword = function(authRef, email, password) {
+                return authRef.signInWithEmailAndPassword(email, password);
+            };
+            window.firebaseSignOut = function(authRef) {
+                return authRef.signOut();
+            };
+
+            window.firebaseCollection = compatCollection;
+            window.firebaseDoc = compatDoc;
+            window.firebaseSetDoc = function(docRef, data, options) {
+                return docRef.set(data, options || {});
+            };
+            window.firebaseGetDoc = function(docRef) {
+                return docRef.get();
+            };
+            window.firebaseGetDocs = function(refOrQuery) {
+                return refOrQuery.get();
+            };
+            window.firebaseQuery = compatQuery;
+            window.firebaseWhere = compatWhere;
+            window.firebaseOrderBy = compatOrderBy;
+            window.firebaseTimestamp = firebase.firestore.Timestamp;
+
+            window.firebaseRef = function(storageRef, path) {
+                return storageRef.ref(path);
+            };
+            window.firebaseUploadBytes = function(storagePathRef, file) {
+                return storagePathRef.put(file);
+            };
+            window.firebaseGetDownloadURL = function(storagePathRef) {
+                return storagePathRef.getDownloadURL();
+            };
+
+            auth.onAuthStateChanged(function(user) {
+                if (user) {
+                    console.log('User is signed in:', user.email);
+                    window.currentUser = user;
+                } else {
+                    console.log('User is signed out');
+                    window.currentUser = null;
+                }
+            });
+
+            console.log('Firebase compat fallback initialized successfully');
+        })();
     </script>
 
     <!-- Analytics Module -->
