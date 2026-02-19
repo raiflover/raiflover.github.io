@@ -226,6 +226,42 @@
             animation: liquidSheen 10s cubic-bezier(0.26, 0.73, 0.23, 0.98) infinite;
         }
 
+        /* liquid-glass-react host */
+        .liquid-glass-mount {
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            position: relative;
+            z-index: 100;
+        }
+
+        .liquid-glass-surface {
+            width: 100%;
+            height: 100%;
+            border-radius: 26px;
+            overflow: hidden;
+            max-height: 90vh;
+        }
+
+        /* Keep existing app layout but let liquid-glass-react own the glass look */
+        .container.liquid-glass-content {
+            background:
+                linear-gradient(165deg, rgba(10, 16, 30, 0.44), rgba(10, 16, 30, 0.56)),
+                radial-gradient(120% 95% at 12% 4%, rgba(147, 170, 222, 0.2), transparent 52%);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.2),
+                inset 0 -16px 24px rgba(0,0,0,0.26);
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            border-radius: 26px;
+        }
+
+        .container.liquid-glass-content::before,
+        .container.liquid-glass-content::after {
+            display: none;
+        }
+
         @keyframes liquidSheen {
             0%   { transform: rotate(-12deg) translate3d(-8%, -2%, 0); opacity: 0.34; }
             50%  { transform: rotate(-10deg) translate3d(4%, 3%, 0);  opacity: 0.68; }
@@ -242,6 +278,10 @@
         @media (max-width: 768px) {
             .container {
                 max-width: 100%;
+                border-radius: 22px;
+            }
+            .liquid-glass-surface,
+            .container.liquid-glass-content {
                 border-radius: 22px;
             }
             h1 {
@@ -272,6 +312,10 @@
                 -webkit-overflow-scrolling: touch;
                 backdrop-filter: blur(16px) saturate(138%) contrast(106%);
                 -webkit-backdrop-filter: blur(16px) saturate(138%) contrast(106%);
+            }
+            .liquid-glass-surface,
+            .container.liquid-glass-content {
+                border-radius: 20px;
             }
             .form-content {
                 padding: 12px;
@@ -3361,5 +3405,63 @@
     <script src="analytics/insights.js"></script>
     <script src="analytics/analytics.js"></script>
     <script src="analytics/habits-analytics.js"></script>
+    <script type="module">
+        (async function initLiquidGlassReact() {
+            var original = document.querySelector('.container');
+            if (!original) return;
+
+            var parent = original.parentNode;
+            var next = original.nextSibling;
+            var originalClass = original.className;
+            var originalHtml = original.innerHTML;
+
+            var mount = document.createElement('div');
+            mount.id = 'liquidGlassMount';
+            mount.className = 'liquid-glass-mount';
+            parent.insertBefore(mount, original);
+            original.remove();
+
+            try {
+                var React = await import('https://esm.sh/react@18.3.1');
+                var ReactDOMClient = await import('https://esm.sh/react-dom@18.3.1/client');
+                var LiquidGlassModule = await import('https://esm.sh/liquid-glass-react@latest');
+                var LiquidGlass = LiquidGlassModule.default || LiquidGlassModule.LiquidGlass || LiquidGlassModule;
+                var root = ReactDOMClient.createRoot(mount);
+
+                root.render(
+                    React.createElement(
+                        LiquidGlass,
+                        {
+                            displacementScale: 68,
+                            blurAmount: 0.12,
+                            saturation: 120,
+                            aberrationIntensity: 0.3,
+                            elasticity: 0.08,
+                            cornerRadius: 26,
+                            padding: '0px',
+                            style: { width: '100%', height: '100%' }
+                        },
+                        React.createElement('div', { className: 'liquid-glass-surface' },
+                            React.createElement('div', {
+                                className: originalClass + ' liquid-glass-content',
+                                dangerouslySetInnerHTML: { __html: originalHtml }
+                            })
+                        )
+                    )
+                );
+            } catch (err) {
+                console.error('liquid-glass-react failed to load, using fallback container:', err);
+                mount.remove();
+                var fallback = document.createElement('div');
+                fallback.className = originalClass;
+                fallback.innerHTML = originalHtml;
+                if (next) {
+                    parent.insertBefore(fallback, next);
+                } else {
+                    parent.appendChild(fallback);
+                }
+            }
+        })();
+    </script>
 </body>
 </html>
