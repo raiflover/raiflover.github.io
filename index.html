@@ -1130,7 +1130,7 @@
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
             filter: hue-rotate(290deg) saturate(0.8) brightness(1.1) drop-shadow(0 2px 6px rgba(237, 191, 231, 0.5));
-            margin-top: -18px;
+            margin-top: -10px;
             padding: 6px;
         }
 
@@ -1410,6 +1410,354 @@
             }
         }
 
+        /* ── Habits Page ─────────────────────────────────────── */
+        .habits-content {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+        .habit-section {
+            background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.006));
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .habit-toggle {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            background: none;
+            border: none;
+            color: #EDBFE7;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            text-align: left;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .habit-toggle-arrow {
+            font-size: 1.2em;
+            transition: transform 0.25s ease;
+            opacity: 0.5;
+        }
+
+        .habit-toggle.open .habit-toggle-arrow {
+            transform: rotate(90deg);
+            opacity: 1;
+        }
+
+        .habit-body {
+            display: none;
+            padding: 0 12px 14px;
+        }
+
+        .habit-body.open {
+            display: block;
+        }
+
+        .habit-days {
+            display: flex;
+            gap: 5px;
+        }
+
+        .habit-day {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 2px;
+            min-height: 56px; /* habit day height on desktop */
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px;
+            color: #DFE4EB;
+            font-size: 0.72em;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .habit-day:hover {
+            background: rgba(255,255,255,0.06);
+        }
+
+        .habit-day.done {
+            background: linear-gradient(135deg, rgba(237,191,231,0.22), rgba(244,227,179,0.16));
+            border-color: rgba(237,191,231,0.35);
+            color: #EDBFE7;
+            box-shadow: 0 0 8px rgba(237,191,231,0.18);
+        }
+
+        .habit-day-label {
+            opacity: 0.65;
+            font-size: 1em;
+        }
+
+        .habit-day.done .habit-day-label {
+            opacity: 1;
+        }
+
+        .habit-day-check {
+            font-size: 1.15em;
+            line-height: 1;
+        }
+
+        /* ── Per-habit colors ─────────────────────────────────── */
+        /* Cleaning — Mint */
+        .habit-section-cleaning {
+            background: linear-gradient(180deg, rgba(168,230,217,0.05), rgba(168,230,217,0.015));
+            border-color: rgba(168,230,217,0.12);
+        }
+        .habit-section-cleaning .habit-toggle { color: #A8E6D9; }
+        .habit-section-cleaning .habit-day.done {
+            background: linear-gradient(135deg, rgba(168,230,217,0.22), rgba(168,230,217,0.1));
+            border-color: rgba(168,230,217,0.38);
+            box-shadow: 0 0 8px rgba(168,230,217,0.18);
+            color: #A8E6D9;
+        }
+
+        /* Exercise — Peach */
+        .habit-section-exercise {
+            background: linear-gradient(180deg, rgba(237,182,140,0.05), rgba(237,182,140,0.015));
+            border-color: rgba(237,182,140,0.12);
+        }
+        .habit-section-exercise .habit-toggle { color: #EDB68C; }
+        .habit-section-exercise .habit-day.done {
+            background: linear-gradient(135deg, rgba(237,182,140,0.22), rgba(237,182,140,0.1));
+            border-color: rgba(237,182,140,0.38);
+            box-shadow: 0 0 8px rgba(237,182,140,0.18);
+            color: #EDB68C;
+        }
+
+        /* Reading — Lavender */
+        .habit-section-reading {
+            background: linear-gradient(180deg, rgba(195,165,243,0.05), rgba(195,165,243,0.015));
+            border-color: rgba(195,165,243,0.12);
+        }
+        .habit-section-reading .habit-toggle { color: #C3A5F3; }
+        .habit-section-reading .habit-day.done {
+            background: linear-gradient(135deg, rgba(195,165,243,0.22), rgba(195,165,243,0.1));
+            border-color: rgba(195,165,243,0.38);
+            box-shadow: 0 0 8px rgba(195,165,243,0.18);
+            color: #C3A5F3;
+        }
+
+        /* Writing — Gold */
+        .habit-section-writing {
+            background: linear-gradient(180deg, rgba(244,227,179,0.05), rgba(244,227,179,0.015));
+            border-color: rgba(244,227,179,0.12);
+        }
+        .habit-section-writing .habit-toggle { color: #f4e3b3; }
+        .habit-section-writing .habit-day.done {
+            background: linear-gradient(135deg, rgba(244,227,179,0.22), rgba(244,227,179,0.1));
+            border-color: rgba(244,227,179,0.38);
+            box-shadow: 0 0 8px rgba(244,227,179,0.18);
+            color: #f4e3b3;
+        }
+
+        /* Second Language — Pink (matches existing palette) */
+        .habit-section-second-language {
+            background: linear-gradient(180deg, rgba(237,191,231,0.05), rgba(237,191,231,0.015));
+            border-color: rgba(237,191,231,0.12);
+        }
+        .habit-section-second-language .habit-toggle { color: #EDBFE7; }
+
+        /* ── Habit Tabs ───────────────────────────────────────── */
+        .habit-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .habit-tab-btn {
+            flex: 1;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            color: #DFE4EB;
+            font-size: 0.88em;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .habit-tab-btn.active {
+            background: linear-gradient(135deg, rgba(237,191,231,0.15), rgba(244,227,179,0.1));
+            border-color: rgba(237,191,231,0.3);
+            color: #EDBFE7;
+        }
+
+        /* ── Day view fields ──────────────────────────────────── */
+        .habit-day-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 2px 0 4px;
+        }
+
+        .habit-field {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .habit-field-tags {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .habit-field-label {
+            font-size: 0.8em;
+            color: rgba(223,228,235,0.78);
+            min-width: 82px;
+            flex-shrink: 0;
+        }
+
+        .habit-field-tags .habit-field-label {
+            min-width: unset;
+        }
+
+        .habit-time-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .habit-num-input {
+            width: 72px;
+            padding: 5px 8px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            color: #DFE4EB;
+            font-size: 0.88em;
+            font-family: inherit;
+            -webkit-appearance: none;
+            appearance: none;
+            outline: none;
+            transition: border-color 0.18s;
+        }
+
+        .habit-num-input:focus { border-color: rgba(237,191,231,0.3); }
+        .habit-section-cleaning .habit-num-input:focus { border-color: rgba(168,230,217,0.3); }
+        .habit-section-exercise .habit-num-input:focus { border-color: rgba(237,182,140,0.3); }
+        .habit-section-reading .habit-num-input:focus { border-color: rgba(195,165,243,0.3); }
+        .habit-section-writing .habit-num-input:focus { border-color: rgba(244,227,179,0.3); }
+
+        .habit-field-unit {
+            font-size: 0.78em;
+            color: rgba(223,228,235,0.52);
+        }
+
+        .habit-hm-input {
+            width: 44px;
+            padding: 5px 6px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            color: #DFE4EB;
+            font-size: 0.88em;
+            font-family: inherit;
+            text-align: center;
+            -webkit-appearance: none;
+            appearance: none;
+            outline: none;
+            transition: border-color 0.18s;
+        }
+
+        .habit-hm-input:focus { border-color: rgba(237,191,231,0.3); }
+        .habit-section-cleaning .habit-hm-input:focus { border-color: rgba(168,230,217,0.3); }
+        .habit-section-exercise .habit-hm-input:focus { border-color: rgba(237,182,140,0.3); }
+        .habit-section-reading .habit-hm-input:focus { border-color: rgba(195,165,243,0.3); }
+        .habit-section-writing .habit-hm-input:focus { border-color: rgba(244,227,179,0.3); }
+
+        .habit-field-total {
+            font-size: 0.88em;
+            color: rgba(195,165,243,0.85);
+        }
+
+        .habit-tag-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .habit-tag {
+            padding: 4px 10px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.07);
+            color: rgba(223,228,235,0.65);
+            font-size: 0.76em;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.18s ease;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .habit-section-cleaning .habit-tag.active {
+            background: rgba(168,230,217,0.14);
+            border-color: rgba(168,230,217,0.32);
+            color: #A8E6D9;
+        }
+        .habit-section-exercise .habit-tag.active {
+            background: rgba(237,182,140,0.14);
+            border-color: rgba(237,182,140,0.32);
+            color: #EDB68C;
+        }
+        .habit-section-reading .habit-tag.active {
+            background: rgba(195,165,243,0.14);
+            border-color: rgba(195,165,243,0.32);
+            color: #C3A5F3;
+        }
+        .habit-section-writing .habit-tag.active {
+            background: rgba(244,227,179,0.14);
+            border-color: rgba(244,227,179,0.32);
+            color: #f4e3b3;
+        }
+
+        @media (max-width: 480px) {
+            .habit-toggle {
+                padding: 12px 14px;
+                font-size: 0.95em;
+            }
+
+            .habit-body {
+                padding: 0 8px 12px;
+            }
+
+            .habit-days {
+                gap: 4px;
+            }
+
+            /* habit day height on mobile */
+            .habit-day {
+                padding: 7px 1px;
+                min-height: 48px; 
+                font-size: 0.68em;
+            }
+        }
+
         /* iOS-specific fixes */
         @supports (-webkit-touch-callout: none) {
             /* Smooth momentum scrolling */
@@ -1424,6 +1772,12 @@
             .btn-back,
             .btn-next {
                 touch-action: manipulation;
+            }
+
+            /* Prevent iOS zoom on number input focus */
+            .habit-num-input,
+            .habit-hm-input {
+                font-size: 16px;
             }
         }
     </style>
@@ -1468,6 +1822,7 @@
                 <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 40px;">
                     <button type="button" class="btn-primary" onclick="goToPage(2)" style="width: 100%; height: 48px;">Symptoms</button>
                     <button type="button" class="btn-primary" onclick="goToPage(7)" style="width: 100%; height: 48px;">Analytics</button>
+                    <button type="button" class="btn-primary" onclick="goToPage(8)" style="width: 100%; height: 48px;">Habits</button>
                 </div>
 
                 <div class="button-group button-group-nav" style="margin-top: 40px;">
@@ -1763,6 +2118,7 @@
                     <button class="tab-btn active" data-category-tab="energy">Energy</button>
                     <button class="tab-btn" data-category-tab="mood">Mood</button>
                     <button class="tab-btn" data-category-tab="other">Other</button>
+                    <button class="tab-btn" data-category-tab="habits">Habits</button>
                 </div>
 
                 <!-- Time Period Selector -->
@@ -1794,6 +2150,33 @@
             <div class="progress-container" aria-hidden="false">
                 <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
                     <div class="progress-fill" id="pageIndicatorFill"></div>
+                </div>
+            </div>
+
+            <!-- Page 8: Habits -->
+            <div class="page" id="page8">
+                <h1>Habits</h1>
+                <p class="subtitle">˚.✦ ⵢ₊˚.₍ᐢ..ᐢ₎⊹ ˓𓄹 ָ࣪ ⸰</p>
+
+                <!-- Tabs -->
+                <div class="habit-tabs">
+                    <button class="habit-tab-btn active" data-tab="day" onclick="switchHabitTab('day')">Day</button>
+                    <button class="habit-tab-btn" data-tab="week" onclick="switchHabitTab('week')">Week</button>
+                </div>
+
+                <!-- Navigator -->
+                <div class="period-navigator">
+                    <button class="period-nav-btn" id="habitsNavPrev" onclick="habitsNavigateCurrent(-1)">&#8249;</button>
+                    <span class="period-nav-label" id="habitsNavLabel"></span>
+                    <button class="period-nav-btn" id="habitsNavNext" onclick="habitsNavigateCurrent(1)" disabled>&#8250;</button>
+                </div>
+
+                <!-- Habit Sections -->
+                <div class="habits-content" id="habitsContent"></div>
+
+                <div class="button-group button-group-nav" style="margin-top: 20px;">
+                    <button type="button" class="btn-back" onclick="goToPage(1)">←</button>
+                    <button type="button" class="btn-primary" onclick="submitHabits()" style="flex: 1;">Submit</button>
                 </div>
             </div>
         </div>
@@ -1949,7 +2332,7 @@
         }
 
         function goToPage(pageNumber) {
-            if (pageNumber < 0 || pageNumber > 7) return;
+            if (pageNumber < 0 || pageNumber > 8) return;
 
             // Hide all pages
             document.querySelectorAll('.page').forEach(page => {
@@ -1974,8 +2357,8 @@
                 }
             }
 
-            // Overlay logic: fade to 0.001 on pages 0, 1, 7 (background visible), stay at 1 on pages 2-6
-            if (pageNumber === 0 || pageNumber === 1 || pageNumber === 7) {
+            // Overlay logic: fade to 0.001 on pages 0, 1, 7, 8 (background visible), stay at 1 on pages 2-6
+            if (pageNumber === 0 || pageNumber === 1 || pageNumber === 7 || pageNumber === 8) {
                 fadeOverlay.style.opacity = '0.001';
                 if (currentPage >= 2 && currentPage <= 6) {
                     window.resumeWordCreation();
@@ -2007,6 +2390,13 @@
                 setTimeout(() => {
                     initAnalytics();
                 }, 100);
+            }
+
+            // Initialize habits when going to page 8
+            if (pageNumber === 8) {
+                setTimeout(() => {
+                    initHabitsPage();
+                }, 50);
             }
 
             // Show the new page
@@ -2167,8 +2557,8 @@
                     imageMetadata: imageMetadata
                 };
 
-                // Save to Firestore (setDoc will completely override any existing entry for this date)
-                const entryRef = window.firebaseDoc(window.firebaseDb, 'entries', formData.date);
+                // Save to Firestore under users/{uid}/entriesSymptoms/{date}
+                const entryRef = window.firebaseDoc(window.firebaseDb, 'users', currentUser.uid, 'entriesSymptoms', formData.date);
                 await window.firebaseSetDoc(entryRef, entry, { merge: false });
 
                 console.log('Entry saved successfully:', entry);
@@ -2178,6 +2568,500 @@
             } catch (error) {
                 console.error('Error saving data:', error);
                 alert('Error saving data: ' + error.message);
+            }
+        }
+
+        // ── Habits Page ────────────────────────────────────────────
+        var habitsWeekOffset = 0;
+        var habitsDayOffset  = 0;
+        var habitCurrentTab  = 'day';
+        var HABIT_NAMES = ['Cleaning', 'Exercise', 'Reading', 'Writing', 'Second Language'];
+        var HABIT_IDS   = ['cleaning', 'exercise', 'reading', 'writing', 'second-language'];
+        var DAY_LABELS  = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+        function habitsWeekStart(offset) {
+            var now = new Date();
+            now.setHours(0, 0, 0, 0);
+            var dow = now.getDay();                          // 0=Sun … 6=Sat
+            var toMonday = (dow === 0 ? -6 : 1 - dow);      // shift to Monday
+            var mon = new Date(now);
+            mon.setDate(now.getDate() + toMonday + offset * 7);
+            return mon;
+        }
+
+        function habitsDateStr(date) {
+            return date.getFullYear() + '-' +
+                String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                String(date.getDate()).padStart(2, '0');
+        }
+
+        function habitsWeekLabel(mon) {
+            var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            var sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+            if (mon.getMonth() === sun.getMonth()) {
+                return MONTHS[mon.getMonth()] + ' ' + mon.getDate() + ' \u2013 ' + sun.getDate() + ', ' + sun.getFullYear();
+            }
+            return MONTHS[mon.getMonth()] + ' ' + mon.getDate() + ' \u2013 ' + MONTHS[sun.getMonth()] + ' ' + sun.getDate() + ', ' + sun.getFullYear();
+        }
+
+        async function habitsNavigate(dir) {
+            habitsWeekOffset = Math.min(0, habitsWeekOffset + dir);
+            await loadAndRenderHabits();
+        }
+
+        async function habitsNavigateCurrent(dir) {
+            if (habitCurrentTab === 'week') {
+                await habitsNavigate(dir);
+            } else {
+                habitsDayOffset = Math.min(0, habitsDayOffset + dir);
+                await loadAndRenderHabitsDay();
+            }
+        }
+
+        function switchHabitTab(tab) {
+            habitCurrentTab = tab;
+            document.querySelectorAll('.habit-tab-btn').forEach(function(btn) {
+                btn.classList.toggle('active', btn.dataset.tab === tab);
+            });
+            if (tab === 'week') {
+                habitsWeekOffset = 0;
+                loadAndRenderHabits();
+            } else {
+                habitsDayOffset = 0;
+                loadAndRenderHabitsDay();
+            }
+        }
+
+        function habitsDayLabel(offset) {
+            if (offset === 0) return 'Today';
+            if (offset === -1) return 'Yesterday';
+            var d = new Date();
+            d.setDate(d.getDate() + offset);
+            var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            var DAYS   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+            return DAYS[d.getDay()] + ', ' + MONTHS[d.getMonth()] + ' ' + d.getDate();
+        }
+
+        // ── Day view: localStorage helpers ─────────────────────
+        function getDayKey(habitId, field, dateStr) {
+            return 'hday-' + habitId + '-' + field + '-' + dateStr;
+        }
+        function getDayVal(habitId, field, dateStr) {
+            return localStorage.getItem(getDayKey(habitId, field, dateStr)) || '';
+        }
+        function setDayVal(habitId, field, dateStr, value) {
+            var key = getDayKey(habitId, field, dateStr);
+            if (value === '' || value === null || value === undefined) {
+                localStorage.removeItem(key);
+            } else {
+                localStorage.setItem(key, String(value));
+            }
+        }
+        function getDayTags(habitId, field, dateStr) {
+            try { return JSON.parse(localStorage.getItem(getDayKey(habitId, field, dateStr)) || '[]'); }
+            catch(e) { return []; }
+        }
+
+        // ── Day view: UI event handlers ─────────────────────────
+        function formatDuration(min) {
+            if (!min || min <= 0) return '—';
+            if (min < 60) return min + ' min';
+            var h = Math.floor(min / 60), m = min % 60;
+            return h + 'h' + (m ? ' ' + m + 'min' : '');
+        }
+
+        function _hmTotal(habitId, field, dateStr) {
+            var h = parseInt(getDayVal(habitId, field + '_h', dateStr), 10) || 0;
+            var m = parseInt(getDayVal(habitId, field + '_m', dateStr), 10) || 0;
+            return h * 60 + m;
+        }
+
+        function onDayHrChange(habitId, field, dateStr, val) {
+            setDayVal(habitId, field + '_h', dateStr, val);
+            var total = _hmTotal(habitId, field, dateStr);
+            if (habitId === 'reading') updateReadingTotal(dateStr);
+            if (habitId === 'writing') updateWritingTotal(dateStr);
+            saveDayFieldToFirebase(habitId, field, dateStr, total || null);
+        }
+
+        function onDayMinChange(habitId, field, dateStr, val) {
+            setDayVal(habitId, field + '_m', dateStr, val);
+            var total = _hmTotal(habitId, field, dateStr);
+            if (habitId === 'reading') updateReadingTotal(dateStr);
+            if (habitId === 'writing') updateWritingTotal(dateStr);
+            saveDayFieldToFirebase(habitId, field, dateStr, total || null);
+        }
+
+        // kept for steps (plain number field)
+        function onDayFieldChange(habitId, field, dateStr, value) {
+            setDayVal(habitId, field, dateStr, value);
+            var num = value === '' ? null : Number(value);
+            saveDayFieldToFirebase(habitId, field, dateStr, num);
+        }
+
+        function toggleDayTag(habitId, field, dateStr, tag) {
+            var tags = getDayTags(habitId, field, dateStr);
+            var idx = tags.indexOf(tag);
+            if (idx >= 0) tags.splice(idx, 1); else tags.push(tag);
+            localStorage.setItem(getDayKey(habitId, field, dateStr), JSON.stringify(tags));
+            var btn = document.querySelector(
+                '[data-th="' + habitId + '"][data-tf="' + field + '"][data-tv="' + tag + '"]'
+            );
+            if (btn) btn.classList.toggle('active', tags.indexOf(tag) >= 0);
+            saveDayFieldToFirebase(habitId, field, dateStr, tags);
+        }
+
+        function updateReadingTotal(dateStr) {
+            var total = ['fiction','nonfiction','fanfic','comic'].reduce(function(sum, f) {
+                return sum + _hmTotal('reading', f, dateStr);
+            }, 0);
+            var el = document.getElementById('reading-total');
+            if (el) el.textContent = formatDuration(total);
+        }
+
+        function updateWritingTotal(dateStr) {
+            var total = ['nonfiction','poetry','prose','reflection'].reduce(function(sum, f) {
+                return sum + _hmTotal('writing', f, dateStr);
+            }, 0);
+            var el = document.getElementById('writing-total');
+            if (el) el.textContent = formatDuration(total);
+        }
+
+        // ── Day view: Firebase save ─────────────────────────────
+        async function saveDayFieldToFirebase(habitId, field, dateStr, value) {
+            var user = currentUser || window.currentUser;
+            if (!user || !window.firebaseDb) return;
+            try {
+                var docRef = window.firebaseDoc(window.firebaseDb, 'users', user.uid, 'entriesHabits', dateStr);
+                var update = {};
+                update[habitId.replace('-','_') + '_' + field] = value;
+                await window.firebaseSetDoc(docRef, update, { merge: true });
+            } catch(e) { console.error('Habits day save error:', e); }
+        }
+
+        // ── Day view: Firebase load ─────────────────────────────
+        async function loadHabitsDayData(dateStr) {
+            var user = currentUser || window.currentUser;
+            if (!user || !window.firebaseDb || !window.firebaseGetDoc) return;
+            try {
+                var docRef = window.firebaseDoc(window.firebaseDb, 'users', user.uid, 'entriesHabits', dateStr);
+                var snap = await window.firebaseGetDoc(docRef);
+                if (!snap.exists()) return;
+                var data = snap.data();
+                // time fields: stored as total minutes, split to _h and _m in localStorage
+                var TIME_FIELDS = [
+                    ['cleaning','time'],
+                    ['exercise','time'],
+                    ['reading','fiction'], ['reading','nonfiction'], ['reading','fanfic'], ['reading','comic'],
+                    ['writing','nonfiction'], ['writing','poetry'], ['writing','prose'], ['writing','reflection'],
+                    ['second-language','time']
+                ];
+                TIME_FIELDS.forEach(function(p) {
+                    var fbKey = p[0].replace('-','_') + '_' + p[1];
+                    var val = data[fbKey];
+                    if (val == null) return;
+                    var totalMin = parseInt(val, 10) || 0;
+                    localStorage.setItem(getDayKey(p[0], p[1] + '_h', dateStr), String(Math.floor(totalMin / 60)));
+                    localStorage.setItem(getDayKey(p[0], p[1] + '_m', dateStr), String(totalMin % 60));
+                });
+                // non-time fields
+                var OTHER = { 'exercise_steps': ['exercise','steps'], 'exercise_types': ['exercise','types'] };
+                Object.keys(OTHER).forEach(function(fbKey) {
+                    if (data[fbKey] == null) return;
+                    var p = OTHER[fbKey], val = data[fbKey];
+                    localStorage.setItem(getDayKey(p[0], p[1], dateStr),
+                        Array.isArray(val) ? JSON.stringify(val) : String(val));
+                });
+            } catch(e) { console.error('Habits day load error:', e); }
+        }
+
+        // ── Day view: HTML builders ─────────────────────────────
+        function _inp(habitId, field, sub, dateStr, placeholder) {
+            var val = getDayVal(habitId, field + '_' + sub, dateStr);
+            var fn = sub === 'h' ? 'onDayHrChange' : 'onDayMinChange';
+            return '<input type="number" inputmode="numeric" class="habit-hm-input" min="0"' +
+                ' placeholder="' + placeholder + '" value="' + (val || '') + '"' +
+                ' oninput="' + fn + '(\'' + habitId + '\',\'' + field + '\',\'' + dateStr + '\',this.value)">';
+        }
+
+        function habitTimeField(habitId, field, dateStr, label) {
+            label = label || 'Time spent';
+            return '<div class="habit-field">' +
+                '<span class="habit-field-label">' + label + '</span>' +
+                '<div class="habit-time-row">' +
+                _inp(habitId, field, 'h', dateStr, '0') +
+                '<span class="habit-field-unit">h</span>' +
+                _inp(habitId, field, 'm', dateStr, '00') +
+                '<span class="habit-field-unit">min</span>' +
+                '</div></div>';
+        }
+
+        function habitNumberField(habitId, field, dateStr, label) {
+            var val = getDayVal(habitId, field, dateStr);
+            return '<div class="habit-field">' +
+                '<span class="habit-field-label">' + label + '</span>' +
+                '<div class="habit-time-row">' +
+                '<input type="number" inputmode="numeric" class="habit-num-input" min="0" placeholder="0"' +
+                ' value="' + (val || '') + '" oninput="onDayFieldChange(\'' + habitId + '\',\'' + field + '\',\'' + dateStr + '\',this.value)">' +
+                '</div></div>';
+        }
+
+        function habitTagsField(habitId, field, dateStr, tags, label) {
+            var selected = getDayTags(habitId, field, dateStr);
+            var html = '<div class="habit-field habit-field-tags">' +
+                (label ? '<span class="habit-field-label">' + label + '</span>' : '') +
+                '<div class="habit-tag-group">';
+            tags.forEach(function(tag) {
+                var active = selected.indexOf(tag) >= 0;
+                html += '<button class="habit-tag' + (active ? ' active' : '') + '"' +
+                    ' data-th="' + habitId + '" data-tf="' + field + '" data-tv="' + tag + '"' +
+                    ' onclick="toggleDayTag(\'' + habitId + '\',\'' + field + '\',\'' + dateStr + '\',\'' + tag + '\')">' +
+                    tag + '</button>';
+            });
+            html += '</div></div>';
+            return html;
+        }
+
+        function habitTotalRow(id, label) {
+            return '<div class="habit-field"><span class="habit-field-label">' + label + '</span>' +
+                '<span class="habit-field-total" id="' + id + '">—</span></div>';
+        }
+
+        function buildDayHabitFields(habitId, dateStr) {
+            var html = '<div class="habit-day-fields">';
+            if (habitId === 'cleaning') {
+                html += habitTimeField('cleaning', 'time', dateStr);
+            } else if (habitId === 'exercise') {
+                html += habitTimeField('exercise', 'time', dateStr);
+                html += habitNumberField('exercise', 'steps', dateStr, 'Steps');
+                html += habitTagsField('exercise', 'types', dateStr,
+                    ['Full Body','Upper Body','Lower Body','Abs','Cardio','Stretching','Walking','Dancing','Other']);
+            } else if (habitId === 'reading') {
+                html += habitTimeField('reading', 'fiction',    dateStr, 'Fiction');
+                html += habitTimeField('reading', 'nonfiction', dateStr, 'Non-fiction');
+                html += habitTimeField('reading', 'fanfic',     dateStr, 'Fanfic');
+                html += habitTimeField('reading', 'comic',      dateStr, 'Comic');
+                html += habitTotalRow('reading-total', 'Total');
+            } else if (habitId === 'writing') {
+                html += habitTimeField('writing', 'nonfiction', dateStr, 'Non-fiction');
+                html += habitTimeField('writing', 'poetry',     dateStr, 'Poetry');
+                html += habitTimeField('writing', 'prose',      dateStr, 'Prose');
+                html += habitTimeField('writing', 'reflection', dateStr, 'Reflection');
+                html += habitTotalRow('writing-total', 'Total');
+            } else if (habitId === 'second-language') {
+                html += habitTimeField('second-language', 'time', dateStr);
+            }
+            html += '</div>';
+            return html;
+        }
+
+        // ── Day view: render ────────────────────────────────────
+        function renderHabitsDayView() {
+            var d = new Date();
+            d.setDate(d.getDate() + habitsDayOffset);
+            var dateStr = habitsDateStr(d);
+
+            var label = document.getElementById('habitsNavLabel');
+            if (label) label.textContent = habitsDayLabel(habitsDayOffset);
+            var nextBtn = document.getElementById('habitsNavNext');
+            if (nextBtn) nextBtn.disabled = habitsDayOffset >= 0;
+
+            var openMap = {};
+            HABIT_IDS.forEach(function(id) {
+                var b = document.getElementById('habit-body-' + id);
+                openMap[id] = b ? b.classList.contains('open') : false;
+            });
+
+            var html = '';
+            HABIT_NAMES.forEach(function(name, idx) {
+                var id = HABIT_IDS[idx];
+                var open = openMap[id];
+                html += '<div class="habit-section habit-section-' + id + '">';
+                html += '<button class="habit-toggle' + (open ? ' open' : '') +
+                    '" data-habit-toggle="' + id + '" onclick="toggleHabitSection(\'' + id + '\')">';
+                html += '<span>' + name + '</span><span class="habit-toggle-arrow">&#8250;</span>';
+                html += '</button>';
+                html += '<div class="habit-body' + (open ? ' open' : '') + '" id="habit-body-' + id + '">';
+                html += buildDayHabitFields(id, dateStr);
+                html += '</div></div>';
+            });
+
+            var content = document.getElementById('habitsContent');
+            if (content) content.innerHTML = html;
+            updateReadingTotal(dateStr);
+            updateWritingTotal(dateStr);
+        }
+
+        async function loadAndRenderHabitsDay() {
+            var d = new Date();
+            d.setDate(d.getDate() + habitsDayOffset);
+            await loadHabitsDayData(habitsDateStr(d));
+            renderHabitsDayView();
+        }
+
+        function isHabitDone(habitId, dateStr) {
+            return localStorage.getItem('habit-' + habitId + '-' + dateStr) === '1';
+        }
+
+        function toggleHabitDay(habitId, dateStr) {
+            var key = 'habit-' + habitId + '-' + dateStr;
+            var done;
+            if (localStorage.getItem(key) === '1') {
+                localStorage.removeItem(key);
+                done = false;
+            } else {
+                localStorage.setItem(key, '1');
+                done = true;
+            }
+            var btn = document.getElementById('hday-' + habitId + '-' + dateStr);
+            if (btn) {
+                btn.classList.toggle('done', done);
+                btn.querySelector('.habit-day-check').textContent = done ? '\u2606' : '\u00b7';
+            }
+            saveHabitToFirebase(habitId, dateStr, done);
+        }
+
+        async function saveHabitToFirebase(habitId, dateStr, done) {
+            var user = currentUser || window.currentUser;
+            if (!user || !window.firebaseDb) return;
+            try {
+                var docRef = window.firebaseDoc(window.firebaseDb, 'users', user.uid, 'entriesHabits', dateStr);
+                var update = {};
+                update[habitId] = done;
+                await window.firebaseSetDoc(docRef, update, { merge: true });
+            } catch (e) {
+                console.error('Habits save error:', e);
+            }
+        }
+
+        async function loadHabitsWeekData(days) {
+            var user = currentUser || window.currentUser;
+            if (!user || !window.firebaseDb || !window.firebaseGetDoc) return;
+            for (var i = 0; i < days.length; i++) {
+                try {
+                    var docRef = window.firebaseDoc(window.firebaseDb, 'users', user.uid, 'entriesHabits', days[i].dateStr);
+                    var snap = await window.firebaseGetDoc(docRef);
+                    if (snap.exists()) {
+                        var data = snap.data();
+                        HABIT_IDS.forEach(function(id) {
+                            var key = 'habit-' + id + '-' + days[i].dateStr;
+                            if (data[id] === true) {
+                                localStorage.setItem(key, '1');
+                            } else if (data[id] === false) {
+                                localStorage.removeItem(key);
+                            }
+                        });
+                    }
+                } catch (e) {
+                    console.error('Habits load error:', e);
+                }
+            }
+        }
+
+        function toggleHabitSection(habitId) {
+            var body = document.getElementById('habit-body-' + habitId);
+            var toggle = document.querySelector('[data-habit-toggle="' + habitId + '"]');
+            if (!body || !toggle) return;
+            var open = body.classList.toggle('open');
+            toggle.classList.toggle('open', open);
+        }
+
+        function renderHabitsPage() {
+            var mon = habitsWeekStart(habitsWeekOffset);
+
+            var label = document.getElementById('habitsNavLabel');
+            if (label) label.textContent = habitsWeekLabel(mon);
+
+            var nextBtn = document.getElementById('habitsNavNext');
+            if (nextBtn) nextBtn.disabled = habitsWeekOffset >= 0;
+
+            // Build days for this week
+            var days = [];
+            for (var i = 0; i < 7; i++) {
+                var d = new Date(mon);
+                d.setDate(mon.getDate() + i);
+                days.push({ label: DAY_LABELS[i], dateStr: habitsDateStr(d) });
+            }
+
+            // Preserve open/close state before re-render
+            var openMap = {};
+            HABIT_IDS.forEach(function(id) {
+                var b = document.getElementById('habit-body-' + id);
+                openMap[id] = b ? b.classList.contains('open') : false;
+            });
+
+            var html = '';
+            HABIT_NAMES.forEach(function(name, idx) {
+                var id = HABIT_IDS[idx];
+                var open = openMap[id];
+                html += '<div class="habit-section habit-section-' + id + '">';
+                html += '<button class="habit-toggle' + (open ? ' open' : '') + '" data-habit-toggle="' + id + '" onclick="toggleHabitSection(\'' + id + '\')">';
+                html += '<span>' + name + '</span><span class="habit-toggle-arrow">&#8250;</span>';
+                html += '</button>';
+                html += '<div class="habit-body' + (open ? ' open' : '') + '" id="habit-body-' + id + '">';
+                html += '<div class="habit-days">';
+                days.forEach(function(day) {
+                    var done = isHabitDone(id, day.dateStr);
+                    html += '<button class="habit-day' + (done ? ' done' : '') + '" id="hday-' + id + '-' + day.dateStr + '" onclick="toggleHabitDay(\'' + id + '\',\'' + day.dateStr + '\')">';
+                    html += '<span class="habit-day-label">' + day.label + '</span>';
+                    html += '<span class="habit-day-check">' + (done ? '\u2606' : '\u00b7') + '</span>';
+                    html += '</button>';
+                });
+                html += '</div></div></div>';
+            });
+
+            var content = document.getElementById('habitsContent');
+            if (content) content.innerHTML = html;
+        }
+
+        async function loadAndRenderHabits() {
+            var mon = habitsWeekStart(habitsWeekOffset);
+            var days = [];
+            for (var i = 0; i < 7; i++) {
+                var d = new Date(mon);
+                d.setDate(mon.getDate() + i);
+                days.push({ label: DAY_LABELS[i], dateStr: habitsDateStr(d) });
+            }
+            await loadHabitsWeekData(days);
+            renderHabitsPage();
+        }
+
+        async function initHabitsPage() {
+            habitsWeekOffset = 0;
+            habitsDayOffset  = 0;
+            habitCurrentTab  = 'day';
+            // Reset tab button active state
+            document.querySelectorAll('.habit-tab-btn').forEach(function(btn) {
+                btn.classList.toggle('active', btn.dataset.tab === 'day');
+            });
+            await loadAndRenderHabitsDay();
+        }
+
+        async function submitHabits() {
+            if (habitCurrentTab === 'day') {
+                // Day view auto-saves on each change; just navigate back
+                goToPage(1);
+                return;
+            }
+            // Week view: batch-save all 7 days
+            var user = currentUser || window.currentUser;
+            if (!user) { alert('Please log in first'); goToPage(0); return; }
+            try {
+                var mon = habitsWeekStart(habitsWeekOffset);
+                for (var i = 0; i < 7; i++) {
+                    var d = new Date(mon);
+                    d.setDate(mon.getDate() + i);
+                    var dateStr = habitsDateStr(d);
+                    var dayData = {};
+                    HABIT_IDS.forEach(function(id) { dayData[id] = isHabitDone(id, dateStr); });
+                    var docRef = window.firebaseDoc(window.firebaseDb, 'users', user.uid, 'entriesHabits', dateStr);
+                    await window.firebaseSetDoc(docRef, dayData, { merge: true });
+                }
+                alert('Habits saved! ✓');
+                goToPage(1);
+            } catch(e) {
+                console.error('Habits submit error:', e);
+                alert('Error saving habits: ' + e.message);
             }
         }
     </script>
@@ -2247,5 +3131,6 @@
     <script src="analytics/charts.js"></script>
     <script src="analytics/insights.js"></script>
     <script src="analytics/analytics.js"></script>
+    <script src="analytics/habits-analytics.js"></script>
 </body>
 </html>
