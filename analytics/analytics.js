@@ -233,14 +233,10 @@ function fetchAnalyticsData() {
 
     console.log('Fetching analytics data from Firestore...');
 
-    // Query Firestore for all of the user's entries (cached locally; date filtering done per-view)
-    var entriesRef = window.firebaseCollection(window.firebaseDb, 'entries');
-    var q = window.firebaseQuery(
-        entriesRef,
-        window.firebaseWhere('userId', '==', currentUser.uid)
-    );
+    // Query Firestore for all of the user's symptom entries (user-scoped subcollection)
+    var entriesRef = window.firebaseCollection(window.firebaseDb, 'users', currentUser.uid, 'entriesSymptoms');
 
-    return window.firebaseGetDocs(q).then(function(querySnapshot) {
+    return window.firebaseGetDocs(entriesRef).then(function(querySnapshot) {
         var entries = [];
         querySnapshot.forEach(function(doc) {
             entries.push(doc.data());
@@ -268,6 +264,13 @@ function fetchAnalyticsData() {
  * Render current view based on category tab and period
  */
 function renderCurrentView() {
+    // Habits tab has its own data source — bypass symptom cache
+    if (AnalyticsState.currentCategoryTab === 'habits') {
+        updatePeriodNavigator();
+        if (typeof window.renderHabitsTab === 'function') window.renderHabitsTab();
+        return;
+    }
+
     if (!AnalyticsState.cachedData) {
         showAnalyticsMessage('No data available. Start tracking to see analytics!');
         return;
@@ -509,7 +512,7 @@ function renderNotes(containerId, data) {
     // Create collapsible structure
     var html = '<div class="notes-collapsible">' +
         '<button class="notes-toggle-btn" onclick="toggleNotesSection()">' +
-        'Notes (' + notesEntries.length + ') <span id="notesToggleIcon">▼</span>' +
+        'Notes (' + notesEntries.length + ') <span id="notesToggleIcon" class="notes-toggle-arrow open">&#8250;</span>' +
         '</button>' +
         '<div id="notesContent" style="display: block;">' +
         notesContent +
@@ -528,10 +531,10 @@ function toggleNotesSection() {
 
     if (content.style.display === 'none') {
         content.style.display = 'block';
-        icon.textContent = '▼';
+        icon.classList.add('open');
     } else {
         content.style.display = 'none';
-        icon.textContent = '▶';
+        icon.classList.remove('open');
     }
 }
 

@@ -165,12 +165,12 @@
 
 #page7 .insights-section {
     padding-left: 30px;
-    padding-right: 20px;
+    padding-right: 30px;
 }
 
 #page7 .notes-collapsible {
     padding-left: 30px;
-    padding-right: 20px;
+    padding-right: 30px;
 }
 
 .chart-wrapper {
@@ -278,7 +278,7 @@
 
     #page7 .insights-section {
         padding-left: 26px;
-        padding-right: 8px;
+        padding-right: 26px;
     }
 
     #page7 .insights-section .insights-title {
@@ -289,7 +289,7 @@
 
     #page7 .notes-collapsible {
         padding-left: 26px;
-        padding-right: 8px;
+        padding-right: 26px;
     }
 
     .analytics-tabs {
@@ -625,6 +625,16 @@
 
 .notes-toggle-btn:active {
     transform: scale(0.97);
+}
+
+.notes-toggle-arrow {
+    display: inline-block;
+    font-size: 1.1em;
+    transition: transform 0.25s ease;
+}
+
+.notes-toggle-arrow.open {
+    transform: rotate(90deg);
 }
 
 /* iOS-specific improvements */
@@ -998,4 +1008,396 @@
     min-width: 150px;
     text-align: center;
     letter-spacing: 0.01em;
+}
+
+/* ── Habits Analytics ──────────────────────────────────────────────────────── */
+
+.ha-section {
+    background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.005));
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    margin-bottom: 14px;
+    overflow: hidden;
+}
+
+.ha-section-cleaning        { border-color: rgba(168,230,217,0.18); }
+.ha-section-exercise        { border-color: rgba(237,182,140,0.18); }
+.ha-section-reading         { border-color: rgba(195,165,243,0.18); }
+.ha-section-writing         { border-color: rgba(244,227,179,0.18); }
+.ha-section-second-language { border-color: rgba(237,191,231,0.18); }
+
+.ha-toggle {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    padding: 14px 18px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1em;
+    font-weight: 500;
+    text-align: left;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.ha-name {
+    font-size: 1.1em;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+.ha-arrow {
+    display: inline-block;
+    font-size: 1.2em;
+    color: rgba(223,228,235,0.4);
+    transition: transform 0.25s ease;
+    transform: rotate(0deg);
+}
+
+.ha-toggle-open .ha-arrow {
+    transform: rotate(90deg);
+}
+
+.ha-body {
+    padding: 0 18px 18px;
+}
+
+.ha-body.ha-closed {
+    display: none;
+}
+
+/* ── Week calendar ──────────────────────────────────────────────────────────── */
+
+.ha-week-cal {
+    display: -webkit-flex;
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.ha-day-box {
+    -webkit-flex: 1 1 0;
+    flex: 1 1 0;
+    min-width: 40px;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: center;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 6px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.05);
+    background: rgba(255,255,255,0.02);
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.ha-day-box.ha-done {
+    background: var(--hc, rgba(255,255,255,0.08));
+    border-color: rgba(255,255,255,0.1);
+}
+
+.ha-day-lbl {
+    font-size: 0.66em;
+    color: rgba(223,228,235,0.48);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.ha-day-val {
+    font-size: 0.76em;
+    color: #DFE4EB;
+    font-weight: 500;
+    text-align: center;
+}
+
+.ha-day-tags {
+    font-size: 0.59em;
+    color: rgba(223,228,235,0.42);
+    text-align: center;
+    line-height: 1.3;
+    word-break: break-word;
+}
+
+/* ── Month star grid ────────────────────────────────────────────────────────── */
+
+.ha-month-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    margin-bottom: 16px;
+}
+
+.ha-month-hdr {
+    font-size: 0.64em;
+    color: rgba(223,228,235,0.38);
+    text-align: center;
+    padding: 2px 0 4px;
+    letter-spacing: 0.03em;
+}
+
+.ha-month-cell {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    aspect-ratio: 1;
+}
+
+.ha-star {
+    width: 32px;
+    height: 32px;
+    display: block;
+    border-radius: 2px;
+}
+
+.ha-star-done {
+    -webkit-mask: url(../star3.svg) center / contain no-repeat;
+    mask: url(../star3.svg) center / contain no-repeat;
+}
+
+.ha-star-empty {
+    -webkit-mask: url(../star1.svg) center / contain no-repeat;
+    mask: url(../star1.svg) center / contain no-repeat;
+}
+
+/* ── Block grids ────────────────────────────────────────────────────────────── */
+
+.ha-block-grid {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 16px;
+}
+
+.ha-block {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    transition: transform 0.15s;
+}
+
+.ha-block:hover {
+    transform: scale(1.2);
+}
+
+.ha-mblock {
+    width: 56px;
+    height: 28px;
+    border-radius: 6px;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    font-size: 0.62em;
+    color: rgba(255,255,255,0.72);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    cursor: default;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* ── Bar chart ──────────────────────────────────────────────────────────────── */
+
+.ha-chart-wrap {
+    margin-bottom: 14px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding-top: 12px;
+}
+
+.ha-bar-chart {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ha-bar-row {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.ha-bar-lbl {
+    font-size: 0.74em;
+    color: rgba(223,228,235,0.62);
+    min-width: 80px;
+    text-align: right;
+}
+
+.ha-bar-track {
+    -webkit-flex: 1;
+    flex: 1;
+    height: 8px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.ha-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+}
+
+.ha-bar-val {
+    font-size: 0.74em;
+    color: rgba(223,228,235,0.5);
+    min-width: 44px;
+}
+
+/* ── Insights ───────────────────────────────────────────────────────────────── */
+
+.ha-insights {
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding-top: 12px;
+    margin-top: 4px;
+}
+
+.ha-stats {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    margin-bottom: 10px;
+}
+
+.ha-stats-sm {
+    margin-top: 4px;
+    margin-bottom: 10px;
+}
+
+.ha-stat {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    align-items: flex-start;
+    gap: 2px;
+}
+
+.ha-stat-val {
+    font-size: 1.05em;
+    font-weight: 600;
+}
+
+.ha-stat-lbl {
+    font-size: 0.66em;
+    color: rgba(223,228,235,0.42);
+    letter-spacing: 0.02em;
+}
+
+.ha-trend {
+    font-size: 0.88em;
+    font-weight: 500;
+}
+
+.ha-up      { color: #8ee8c0; }
+.ha-down    { color: #e8a89e; }
+.ha-neutral { color: rgba(223,228,235,0.38); }
+
+.ha-cats {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+    margin-bottom: 10px;
+}
+
+.ha-cat {
+    font-size: 0.76em;
+    color: rgba(223,228,235,0.55);
+}
+
+.ha-cat strong {
+    color: rgba(223,228,235,0.82);
+}
+
+.ha-msg {
+    font-size: 0.84em;
+    color: rgba(223,228,235,0.58);
+    margin: 8px 0 0;
+    font-style: italic;
+    line-height: 1.5;
+}
+
+.ha-msg-extra {
+    font-size: 0.76em;
+    color: rgba(223,228,235,0.4);
+    margin-top: 4px;
+}
+
+/* ── Habits analytics mobile ────────────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+    .ha-toggle {
+        padding: 12px 14px;
+        font-size: 0.95em;
+    }
+
+    .ha-body {
+        padding: 0 14px 14px;
+    }
+
+    .ha-day-box {
+        padding: 8px 4px;
+        min-width: 34px;
+    }
+
+    .ha-day-val {
+        font-size: 0.68em;
+    }
+
+    .ha-day-tags {
+        font-size: 0.54em;
+    }
+
+    .ha-star {
+        width: 26px;
+        height: 26px;
+    }
+
+    .ha-block {
+        width: 16px;
+        height: 16px;
+    }
+
+    .ha-mblock {
+        width: 44px;
+        height: 24px;
+        font-size: 0.58em;
+    }
+
+    .ha-bar-lbl {
+        min-width: 60px;
+        font-size: 0.68em;
+    }
+
+    .ha-stat-val {
+        font-size: 0.95em;
+    }
 }
