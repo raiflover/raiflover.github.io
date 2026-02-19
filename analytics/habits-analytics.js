@@ -365,9 +365,6 @@ function haMonthGrid(id, entries, year, month) {
     var rgb        = HA_COLORS[id].rgb;
 
     var html = '<div class="ha-month-grid">';
-    ['M','T','W','T','F','S','S'].forEach(function(d) {
-        html += '<div class="ha-month-hdr">' + d + '</div>';
-    });
     for (var b = 0; b < startOffset; b++) html += '<div class="ha-month-cell"></div>';
     for (var day = 1; day <= lastDay.getDate(); day++) {
         var ds    = year + '-' + String(month + 1).padStart(2,'0') + '-' + String(day).padStart(2,'0');

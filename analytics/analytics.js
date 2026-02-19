@@ -342,14 +342,18 @@ function renderEnergyTab(container, data) {
     var caffeineInsights = calculateCaffeineInsights(data);
     var caffeineInsightsContainer = document.getElementById('caffeineInsights');
     if (caffeineInsightsContainer) {
-        caffeineInsightsContainer.innerHTML = caffeineInsights.html;
+        caffeineInsightsContainer.innerHTML = '<div class="insights-section">' +
+            caffeineInsights.html +
+            '</div>';
     }
 
     // Render sleep insights
     var sleepInsights = calculateSleepInsights(data);
     var sleepInsightsContainer = document.getElementById('sleepInsights');
     if (sleepInsightsContainer) {
-        sleepInsightsContainer.innerHTML = sleepInsights.html;
+        sleepInsightsContainer.innerHTML = '<div class="insights-section">' +
+            sleepInsights.html +
+            '</div>';
     }
 
     // Render sleep bar chart
@@ -362,12 +366,24 @@ function renderEnergyTab(container, data) {
 function renderMoodTab(container, data) {
     container.innerHTML = '<div class="chart-wrapper"><div id="moodInsights"></div></div>' +
         '<div class="chart-wrapper"><h3>Mood Levels</h3><div id="moodChart" class="chart-container"></div></div>' +
+        '<div class="chart-wrapper"><div id="anxietyInsights"></div></div>' +
         '<div class="chart-wrapper"><h3>Anxiety</h3><div id="anxietyChart" class="chart-container"></div></div>' +
+        '<div class="chart-wrapper"><div id="irritabilityInsights"></div></div>' +
         '<div class="chart-wrapper"><h3>Irritability</h3><div id="irritabilityChart" class="chart-container"></div></div>';
 
     // Render insights
     var insightsHtml = renderInsightsHTML('mood', data);
     document.getElementById('moodInsights').innerHTML = insightsHtml;
+
+    // Render anxiety insights
+    var anxietyInsightsHtml = renderInsightsHTML('anxiety', data);
+    var anxietyInsightsEl = document.getElementById('anxietyInsights');
+    if (anxietyInsightsEl) anxietyInsightsEl.innerHTML = anxietyInsightsHtml;
+
+    // Render irritability insights
+    var irritabilityInsightsHtml = renderInsightsHTML('irritability', data);
+    var irritabilityInsightsEl = document.getElementById('irritabilityInsights');
+    if (irritabilityInsightsEl) irritabilityInsightsEl.innerHTML = irritabilityInsightsHtml;
 
     // Render mood chart
     renderBarChart('moodChart', data, {
@@ -409,7 +425,9 @@ function renderOtherTab(container, data) {
     var patternInsights = analyzePatterns(data);
     var patternInsightsContainer = document.getElementById('patternInsights');
     if (patternInsightsContainer) {
-        patternInsightsContainer.innerHTML = patternInsights.html;
+        patternInsightsContainer.innerHTML = '<div class="insights-section">' +
+            patternInsights.html +
+            '</div>';
     }
 
     // Render activities pie chart
