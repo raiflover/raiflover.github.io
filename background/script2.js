@@ -7,7 +7,10 @@ let isTransitioning = false; // Flag for page transition animation
 
 // Environment / accessibility flags
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const isMobile = /Mobi|Android|iPhone|iPad/.test(navigator.userAgent) || window.innerWidth <= 768;
+
+function isMobileViewport() {
+    return /Mobi|Android|iPhone|iPad/.test(navigator.userAgent) || window.innerWidth <= 768;
+}
 
 function getAvailableYPosition() {
     const minSpacing = 80; // Minimum pixels between words
@@ -39,6 +42,10 @@ function getAvailableYPosition() {
 }
 
 function createWord() {
+    const background = document.getElementById('background');
+    if (!background) return;
+    const isMobile = isMobileViewport();
+
     const word = document.createElement('div');
     word.classList.add('word');
 
@@ -84,7 +91,7 @@ function createWord() {
     word.style.transform = 'translate3d(0,0,0)';
     word.style.willChange = 'transform, opacity';
 
-    document.getElementById('background').appendChild(word);
+    background.appendChild(word);
 
 
     // Randomize duration (in seconds). Shorter on mobile to reduce element lifetime
@@ -122,23 +129,24 @@ function speedUpAndFadeWords() {
 // Respect reduced motion preference by not spawning animated words
 let wordInterval = null;
 function startWordInterval() {
-    if (prefersReducedMotion) return;
+    if (prefersReducedMotion || wordInterval) return;
 
-    const spawnDelay = isMobile ? 1500 : 900;
     wordInterval = setInterval(() => {
-        // On mobile spawn fewer words to save CPU/GPU
         createWord();
-        if (!isMobile) createWord();
-    }, spawnDelay);
+        createWord();
+    }, 900);
 }
 
 startWordInterval();
 
 // Export function for HTML to use
 window.speedUpAndFadeWords = speedUpAndFadeWords;
-window.stopWordCreation = () => clearInterval(wordInterval);
+window.stopWordCreation = () => {
+    clearInterval(wordInterval);
+    wordInterval = null;
+};
 window.resumeWordCreation = () => {
-    // Restart with the appropriate spawn rate
+    // Restart with the appropriate spawn rate, but never duplicate intervals
     startWordInterval();
 };
 
