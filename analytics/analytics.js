@@ -331,10 +331,11 @@ function renderEnergyTab(container, data) {
     // Render energy chart
     renderBarChart('energyChart', data, {
         metric: 'energy',
-        colorLow: 'rgba(180,200,255,0.6)',
-        colorHigh: 'rgba(180,200,255,0.9)',
-        colorLowNeg: 'rgba(120,140,180,0.5)',
-        colorHighNeg: 'rgba(120,140,180,0.8)'
+        colorLow: 'rgba(197,230,168,0.66)',
+        colorHigh: 'rgba(197,230,168,0.88)',
+        colorLowNeg: 'rgba(197,230,168,0.66)',
+        colorHighNeg: 'rgba(197,230,168,0.88)',
+        outlineColor: 'rgba(197,230,168,0.38)'
     });
 
     // Render caffeine insights
@@ -364,8 +365,8 @@ function renderEnergyTab(container, data) {
  */
 function renderMoodTab(container, data) {
     container.innerHTML = '<div class="chart-wrapper"><div id="moodInsights"></div><div id="moodChart" class="chart-container"></div></div>' +
-        '<div class="chart-wrapper"><h3>Anxiety</h3><div id="anxietyInsights"></div><div id="anxietyChart" class="chart-container"></div></div>' +
-        '<div class="chart-wrapper"><h3>Irritability</h3><div id="irritabilityInsights"></div><div id="irritabilityChart" class="chart-container"></div></div>';
+        '<div class="chart-wrapper"><div id="anxietyInsights"></div><div id="anxietyChart" class="chart-container"></div></div>' +
+        '<div class="chart-wrapper"><div id="irritabilityInsights"></div><div id="irritabilityChart" class="chart-container"></div></div>';
 
     // Render insights
     var insightsHtml = renderInsightsHTML('mood', data);
@@ -384,10 +385,11 @@ function renderMoodTab(container, data) {
     // Render mood chart
     renderBarChart('moodChart', data, {
         metric: 'mood',
-        colorLow: 'rgba(237,191,231,0.6)',
-        colorHigh: 'rgba(237,191,231,0.9)',
-        colorLowNeg: 'rgba(180,140,180,0.5)',
-        colorHighNeg: 'rgba(180,140,180,0.8)'
+        colorLow: 'rgba(237,191,231,0.66)',
+        colorHigh: 'rgba(237,191,231,0.88)',
+        colorLowNeg: 'rgba(237,191,231,0.66)',
+        colorHighNeg: 'rgba(237,191,231,0.88)',
+        outlineColor: 'rgba(237,191,231,0.38)'
     });
 
     // Render anxiety chart

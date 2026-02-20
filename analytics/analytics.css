@@ -46,14 +46,14 @@
 .tab-btn {
     -webkit-appearance: none;
     appearance: none;
-    padding: 10px 20px;
+    padding: 8px 16px;
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.06);
     border-radius: 22px;
     color: #DFE4EB;
-    font-size: 0.95em;
+    font-size: 0.88em;
     cursor: pointer;
-    transition: background-color 0.24s, border-color 0.24s, transform 0.24s;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
     font-family: inherit;
 }
 
@@ -64,10 +64,10 @@
 }
 
 .tab-btn.active {
-    background: linear-gradient(135deg, rgba(237,191,231,0.15), rgba(244,227,179,0.1));
-    border: 1px solid rgba(237,191,231,0.3);
-    color: #EDBFE7;
-    box-shadow: 0 0 8px rgba(237,191,231,0.2);
+    background: rgba(183, 190, 250, 0.15);
+    border: 1px solid rgba(183, 190, 250, 0.35);
+    color: #B7BEFA;
+    box-shadow: 0 0 8px rgba(183, 190, 250, 0.18);
 }
 
 /* Time Period Selector */
@@ -150,7 +150,7 @@
 }
 
 .insights-section {
-    border-top: 1px solid rgba(255,255,255,0.05);
+    border-top: none;
     padding-top: 12px;
     margin-top: 4px;
     margin-bottom: 4px;
@@ -180,7 +180,7 @@
 }
 
 .insight-item {
-    color: rgba(223,228,235,0.78);
+    color: rgba(200,216,236,0.9);
     font-size: 0.84em;
     line-height: 1.5;
     font-style: normal;
@@ -1070,9 +1070,9 @@
 }
 
 .ha-section-cleaning        { border-color: rgba(168,230,217,0.18); }
-.ha-section-exercise        { border-color: rgba(237,182,140,0.18); }
-.ha-section-reading         { border-color: rgba(195,165,243,0.18); }
-.ha-section-writing         { border-color: rgba(244,227,179,0.18); }
+.ha-section-exercise        { border-color: rgba(197,230,168,0.18); }
+.ha-section-reading         { border-color: rgba(244,227,179,0.18); }
+.ha-section-writing         { border-color: rgba(237,182,140,0.18); }
 .ha-section-second-language { border-color: rgba(237,191,231,0.18); }
 
 .ha-toggle {
@@ -1106,7 +1106,7 @@
 .ha-arrow {
     display: inline-block;
     font-size: 1.2em;
-    color: rgba(223,228,235,0.4);
+    color: rgba(196,212,233,0.62);
     transition: transform 0.25s ease;
     transform: rotate(0deg);
 }
@@ -1159,7 +1159,7 @@
 
 .ha-day-lbl {
     font-size: 0.66em;
-    color: rgba(223,228,235,0.48);
+    color: rgba(196,212,233,0.72);
     letter-spacing: 0.03em;
     text-transform: uppercase;
 }
@@ -1173,7 +1173,7 @@
 
 .ha-day-tags {
     font-size: 0.59em;
-    color: rgba(223,228,235,0.42);
+    color: rgba(196,212,233,0.68);
     text-align: center;
     line-height: 1.3;
     word-break: break-word;
@@ -1191,7 +1191,7 @@
 
 .ha-month-hdr {
     font-size: 0.64em;
-    color: rgba(223,228,235,0.38);
+    color: rgba(196,212,233,0.64);
     text-align: center;
     padding: 2px 0 4px;
     letter-spacing: 0.03em;
@@ -1270,7 +1270,7 @@
 
 .ha-chart-wrap {
     margin-bottom: 14px;
-    border-top: 1px solid rgba(255,255,255,0.05);
+    border-top: none;
     padding-top: 12px;
 }
 
@@ -1292,7 +1292,7 @@
 
 .ha-bar-lbl {
     font-size: 0.74em;
-    color: rgba(223,228,235,0.62);
+    color: rgba(196,212,233,0.8);
     min-width: 80px;
     text-align: right;
 }
@@ -1314,14 +1314,14 @@
 
 .ha-bar-val {
     font-size: 0.74em;
-    color: rgba(223,228,235,0.5);
+    color: rgba(196,212,233,0.74);
     min-width: 44px;
 }
 
 /* ── Insights ───────────────────────────────────────────────────────────────── */
 
 .ha-insights {
-    border-top: 1px solid rgba(255,255,255,0.05);
+    border-top: none;
     padding-top: 12px;
     margin-top: 4px;
     display: -webkit-flex;
@@ -1365,7 +1365,7 @@
 
 .ha-stat-lbl {
     font-size: 0.67em;
-    color: rgba(223,228,235,0.6);
+    color: rgba(196,212,233,0.78);
     letter-spacing: 0.02em;
 }
 
@@ -1376,7 +1376,7 @@
 
 .ha-up      { color: #8ee8c0; }
 .ha-down    { color: #e8a89e; }
-.ha-neutral { color: rgba(223,228,235,0.38); }
+.ha-neutral { color: rgba(196,212,233,0.62); }
 
 .ha-cats {
     display: grid;
@@ -1387,7 +1387,7 @@
 
 .ha-cat {
     font-size: 0.76em;
-    color: rgba(223,228,235,0.75);
+    color: rgba(200,216,236,0.86);
 }
 
 .ha-cat strong {
@@ -1396,7 +1396,7 @@
 
 .ha-msg {
     font-size: 0.84em;
-    color: rgba(223,228,235,0.78);
+    color: rgba(200,216,236,0.88);
     margin: 0;
     font-style: normal;
     line-height: 1.5;
@@ -1404,7 +1404,7 @@
 
 .ha-msg-extra {
     font-size: 0.76em;
-    color: rgba(223,228,235,0.66);
+    color: rgba(196,212,233,0.8);
     margin-top: 0;
 }
 

@@ -12,9 +12,9 @@ var HA_MONTHS= ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov
 
 var HA_COLORS = {
     'cleaning':        { hex: '#A8E6D9', rgb: '168,230,217' },
-    'exercise':        { hex: '#EDB68C', rgb: '237,182,140' },
-    'reading':         { hex: '#C3A5F3', rgb: '195,165,243' },
-    'writing':         { hex: '#f4e3b3', rgb: '244,227,179' },
+    'exercise':        { hex: '#C5E6A8', rgb: '197,230,168' },
+    'reading':         { hex: '#F4E3B3', rgb: '244,227,179' },
+    'writing':         { hex: '#EDB68C', rgb: '237,182,140' },
     'second-language': { hex: '#EDBFE7', rgb: '237,191,231' }
 };
 
@@ -593,7 +593,7 @@ function haSection(id, entries, prevEntries, period, dateRange) {
     var existingBody = document.getElementById('ha-body-' + id);
     if (existingBody) wasOpen = !existingBody.classList.contains('ha-closed');
 
-    return '<div class="ha-section ha-section-' + id + '">' +
+    return '<div class="ha-section chart-wrapper ha-section-' + id + '">' +
         '<button class="ha-toggle' + (wasOpen ? ' ha-toggle-open' : '') + '" data-ha-id="' + id + '" onclick="toggleHaSection(\'' + id + '\')">' +
         '<span class="ha-name" style="color:' + color.hex + '">' + HA_NAMES[id] + '</span>' +
         '<span class="ha-arrow">&#8250;</span>' +
@@ -638,6 +638,11 @@ async function renderHabitsTab() {
     });
 
     content.innerHTML = html || '<p style="color:rgba(223,228,235,0.5);text-align:center;padding:24px 0">No habit data for this period.</p>';
+
+    // Match entry animations used by the other analytics tabs
+    if (typeof triggerChartAnimations === 'function') {
+        setTimeout(function() { triggerChartAnimations(); }, 50);
+    }
 }
 
 window.renderHabitsTab = renderHabitsTab;

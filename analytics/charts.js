@@ -181,7 +181,8 @@ function renderBarChart(containerId, data, options = {}) {
         colorLow = 'rgba(180,200,255,0.6)',
         colorHigh = 'rgba(180,200,255,0.9)',
         colorLowNeg = 'rgba(120,140,180,0.5)',
-        colorHighNeg = 'rgba(120,140,180,0.8)'
+        colorHighNeg = 'rgba(120,140,180,0.8)',
+        outlineColor = 'rgba(255,255,255,0.24)'
     } = options;
 
     // Aggregate into weekly/monthly averages for longer periods
@@ -312,7 +313,8 @@ function renderBarChart(containerId, data, options = {}) {
         // Determine color based on average position relative to baseline
         const average = (highest + lowest) / 2;
         const isAboveBaseline = average >= baseline;
-        const barColor = isAboveBaseline ? colorHigh : colorHighNeg;
+        const barTopColor = isAboveBaseline ? colorHigh : colorHighNeg;
+        const barBottomColor = isAboveBaseline ? colorLow : colorLowNeg;
 
         // Create gradient for the bar
         const gradientId = 'bar-gradient-' + containerId + '-' + index;
@@ -324,8 +326,8 @@ function renderBarChart(containerId, data, options = {}) {
             y2: '100%'
         });
         gradient.innerHTML = `
-            <stop offset="0%" style="stop-color:${colorHigh};stop-opacity:0.9" />
-            <stop offset="100%" style="stop-color:${colorLow};stop-opacity:0.6" />
+            <stop offset="0%" style="stop-color:${barTopColor};stop-opacity:0.6" />
+            <stop offset="100%" style="stop-color:${barBottomColor};stop-opacity:0.4" />
         `;
 
         // Add gradient to defs if not exists
@@ -336,20 +338,39 @@ function renderBarChart(containerId, data, options = {}) {
         }
         chartDefs.appendChild(gradient);
 
-        // Bars with a 2-unit gap (1 each side) and slight rounding
-        const bar = createSVGElement('rect', {
-            x: x - barGroupWidth / 2 + barGroupWidth * barGapFrac / 2,
-            y: barY,
-            width: Math.max(barGroupWidth * (1 - barGapFrac), 2),
-            height: Math.max(barHeight, 3),
-            fill: 'url(#' + gradientId + ')',
-            stroke: entry.isMissing ? 'rgba(255,255,255,0.2)' : 'none',
-            'stroke-width': entry.isMissing ? 1 : 0,
+        // Two-layer bar: outer outline + inner translucent fill (true inside-outline look)
+        const outerX = x - barGroupWidth / 2 + barGroupWidth * barGapFrac / 2;
+        const outerY = barY;
+        const outerW = Math.max(barGroupWidth * (1 - barGapFrac), 2);
+        const outerH = Math.max(barHeight, 3);
+        const inset = entry.isMissing ? 1.2 : 2.4;
+
+        const barOutline = createSVGElement('rect', {
+            x: outerX,
+            y: outerY,
+            width: outerW,
+            height: outerH,
+            fill: 'none',
+            stroke: entry.isMissing ? 'rgba(255,255,255,0.2)' : outlineColor,
+            'stroke-width': entry.isMissing ? 1 : 2.4,
             'stroke-dasharray': entry.isMissing ? '3,3' : 'none',
             rx: barRx,
             ry: barRx,
             class: 'chart-bar',
-            style: 'cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); opacity: 0; -webkit-animation-delay: ' + (index * staggerDelay) + 's; animation-delay: ' + (index * staggerDelay) + 's;'
+            style: 'pointer-events: none; opacity: 0; -webkit-animation-delay: ' + (index * staggerDelay) + 's; animation-delay: ' + (index * staggerDelay) + 's;'
+        });
+
+        const bar = createSVGElement('rect', {
+            x: outerX + inset,
+            y: outerY + inset,
+            width: Math.max(outerW - inset * 2, 2),
+            height: Math.max(outerH - inset * 2, 3),
+            fill: 'url(#' + gradientId + ')',
+            stroke: 'none',
+            rx: Math.max(barRx - 2, 2),
+            ry: Math.max(barRx - 2, 2),
+            class: 'chart-bar',
+            style: 'cursor: pointer; filter: url(#glow-' + containerId + ') drop-shadow(0 2px 4px rgba(0,0,0,0.2)); opacity: 0; -webkit-animation-delay: ' + (index * staggerDelay) + 's; animation-delay: ' + (index * staggerDelay) + 's;'
         });
 
         bar.addEventListener('mouseenter', (e) => {
@@ -357,6 +378,7 @@ function renderBarChart(containerId, data, options = {}) {
         });
         bar.addEventListener('mouseleave', hideTooltip);
 
+        barGroup.appendChild(barOutline);
         barGroup.appendChild(bar);
         chartGroup.appendChild(barGroup);
 
@@ -1227,10 +1249,13 @@ function renderSleepBarChart(containerId, data) {
         x2: '100%',
         y2: '0%'
     });
-    sleepGradient.innerHTML = '<stop offset="0%" style="stop-color:rgba(180,200,255,0.8);stop-opacity:1" />' +
-                              '<stop offset="50%" style="stop-color:rgba(237,191,231,0.7);stop-opacity:1" />' +
-                              '<stop offset="100%" style="stop-color:rgba(244,227,179,0.7);stop-opacity:1" />';
+    sleepGradient.innerHTML = '<stop offset="0%" style="stop-color:rgba(168,230,217,0.62);stop-opacity:1" />' +
+                              '<stop offset="100%" style="stop-color:rgba(168,230,217,0.42);stop-opacity:1" />';
+    var sleepGlow = createSVGElement('filter', { id: 'glow-sleep-' + containerId });
+    sleepGlow.innerHTML = '<feGaussianBlur stdDeviation="2" result="coloredBlur"/>' +
+                          '<feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>';
     defs.appendChild(sleepGradient);
+    defs.appendChild(sleepGlow);
     svg.appendChild(defs);
 
     var chartGroup = createSVGElement('g', {
@@ -1285,19 +1310,38 @@ function renderSleepBarChart(containerId, data) {
             barWidth = ((wakeMinutes - bedMinutes) / (hoursInDay * 60)) * chartWidth;
         }
 
-        // Sleep bar with gradient
-        var sleepBar = createSVGElement('rect', {
-            x: barX,
-            y: y + 2,
-            width: Math.max(barWidth, 5),
-            height: barHeight - 4,
-            fill: 'url(#sleepGradient-' + containerId + ')',
-            stroke: 'rgba(180,200,255,0.6)',
-            'stroke-width': 2,
+        // Sleep bar: outer outline + inset translucent fill
+        var sleepOuterX = barX;
+        var sleepOuterY = y + 2;
+        var sleepOuterW = Math.max(barWidth, 5);
+        var sleepOuterH = barHeight - 4;
+        var sleepInset = 2.6;
+
+        var sleepBarOutline = createSVGElement('rect', {
+            x: sleepOuterX,
+            y: sleepOuterY,
+            width: sleepOuterW,
+            height: sleepOuterH,
+            fill: 'none',
+            stroke: 'rgba(168,230,217,0.38)',
+            'stroke-width': 3,
             rx: 18,
             ry: 18,
             class: 'chart-sleep-bar',
-            style: 'cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); opacity: 0; -webkit-animation-delay: ' + (j * sleepStaggerDelay) + 's; animation-delay: ' + (j * sleepStaggerDelay) + 's;'
+            style: 'pointer-events: none; opacity: 0; -webkit-animation-delay: ' + (j * sleepStaggerDelay) + 's; animation-delay: ' + (j * sleepStaggerDelay) + 's;'
+        });
+
+        var sleepBar = createSVGElement('rect', {
+            x: sleepOuterX + sleepInset,
+            y: sleepOuterY + sleepInset,
+            width: Math.max(sleepOuterW - sleepInset * 2, 5),
+            height: Math.max(sleepOuterH - sleepInset * 2, 4),
+            fill: 'url(#sleepGradient-' + containerId + ')',
+            stroke: 'none',
+            rx: 15,
+            ry: 15,
+            class: 'chart-sleep-bar',
+            style: 'cursor: pointer; filter: url(#glow-sleep-' + containerId + ') drop-shadow(0 2px 4px rgba(0,0,0,0.3)); opacity: 0; -webkit-animation-delay: ' + (j * sleepStaggerDelay) + 's; animation-delay: ' + (j * sleepStaggerDelay) + 's;'
         });
 
         (function(itemData) {
@@ -1314,6 +1358,7 @@ function renderSleepBarChart(containerId, data) {
             sleepBar.addEventListener('mouseleave', hideTooltip);
         })(item);
 
+        chartGroup.appendChild(sleepBarOutline);
         chartGroup.appendChild(sleepBar);
 
         // Date label (left side)
