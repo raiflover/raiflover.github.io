@@ -421,13 +421,27 @@
 
             /* Give room below tracker content so bottom nav doesn't block access */
             #page2 {
-                padding-bottom: calc(124px + env(safe-area-inset-bottom));
+                padding-bottom: calc(138px + env(safe-area-inset-bottom));
             }
 
             /* Remove glass overlay edge on full-screen tracker page (mobile) */
             .container:has(#page2.active)::before,
             .container:has(#page2.active)::after {
                 display: none;
+            }
+        }
+
+        @media (display-mode: standalone) and (max-width: 430px) {
+            body:has(.container #page1.active),
+            body:has(.container #page2.active) {
+                align-items: flex-start;
+                justify-content: center;
+                padding-top: max(6px, env(safe-area-inset-top));
+            }
+
+            .container:has(#page1.active),
+            .container:has(#page2.active) {
+                transform: translateY(-8px);
             }
         }
 
@@ -1150,7 +1164,7 @@
 
         #symptomPanelSleep {
             padding: 0 12px;
-            overflow: hidden;
+            overflow: visible;
         }
 
         .autosave-status {
