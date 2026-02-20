@@ -435,21 +435,21 @@
             body:has(.container #page0.active),
             body:has(.container #page1.active),
             body:has(.container #page2.active) {
-                align-items: flex-start;
+                align-items: center;
                 justify-content: center;
-                padding-top: max(6px, env(safe-area-inset-top));
+                padding-top: 0;
             }
 
             .container:has(#page0.active) {
-                transform: translateY(-3px);
+                transform: none;
             }
 
             .container:has(#page1.active) {
-                transform: translateY(-4px);
+                transform: none;
             }
 
             .container:has(#page2.active) {
-                transform: translateY(-8px);
+                transform: translateY(-2px);
             }
         }
 
