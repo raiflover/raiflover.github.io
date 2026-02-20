@@ -432,6 +432,7 @@
         }
 
         @media (display-mode: standalone) and (max-width: 430px) {
+            body:has(.container #page0.active),
             body:has(.container #page1.active),
             body:has(.container #page2.active) {
                 align-items: flex-start;
@@ -439,7 +440,14 @@
                 padding-top: max(6px, env(safe-area-inset-top));
             }
 
-            .container:has(#page1.active),
+            .container:has(#page0.active) {
+                transform: translateY(-3px);
+            }
+
+            .container:has(#page1.active) {
+                transform: translateY(-4px);
+            }
+
             .container:has(#page2.active) {
                 transform: translateY(-8px);
             }
@@ -2045,7 +2053,7 @@
 
         /* States tab compact layout */
         #symptomPanelStates .form-content {
-            padding: 12px 20px;
+            padding: 12px 20px calc(34px + env(safe-area-inset-bottom));
         }
 
         #symptomPanelStates .tracker-section {
@@ -2063,7 +2071,7 @@
 
         @media (max-width: 480px) {
             #symptomPanelStates .form-content {
-                padding: 8px 16px;
+                padding: 8px 16px calc(40px + env(safe-area-inset-bottom));
             }
 
             #symptomPanelStates .tracker-section {
@@ -2552,7 +2560,6 @@
 
                 <div class="symptom-panel active" id="symptomPanelSleep">
                     <div class="sleep-tracker">
-                        <h2>Sleep</h2>
                         <div class="sleep-grid" id="sleepGrid"></div>
                     </div>
                 </div>
