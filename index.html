@@ -233,6 +233,7 @@
         .container:has(#page4.active),
         .container:has(#page5.active),
         .container:has(#page6.active),
+        .container:has(#page7.active),
         .container:has(#page8.active) {
             isolation: isolate;
             -webkit-backface-visibility: hidden;
@@ -245,6 +246,7 @@
         .container:has(#page4.active)::before,
         .container:has(#page5.active)::before,
         .container:has(#page6.active)::before,
+        .container:has(#page7.active)::before,
         .container:has(#page8.active)::before {
             background: linear-gradient(
                 180deg,
@@ -261,6 +263,7 @@
         .container:has(#page4.active)::after,
         .container:has(#page5.active)::after,
         .container:has(#page6.active)::after,
+        .container:has(#page7.active)::after,
         .container:has(#page8.active)::after {
             opacity: 0.25;
             filter: blur(10px);
@@ -1314,6 +1317,7 @@
             .slider-input {
                 height: 7px;
                 margin: 30px 0;
+                transition: background-color 0.2s ease, box-shadow 0.2s ease;
             }
             .slider-input::-webkit-slider-thumb {
                 width: 30px;
@@ -1323,7 +1327,8 @@
                 border-radius: 0;
                 box-shadow: none;
                 outline: none;
-                margin-top: -20px;
+                margin-top: -25px;
+                transition: none;
             }
             .slider-input::-moz-range-thumb {
                 width: 30px;
@@ -1334,6 +1339,7 @@
                 box-shadow: none;
                 outline: none;
                 transform: translateY(-10px);
+                transition: none;
             }
             .slider-input.active::-webkit-slider-thumb {
                 background: url('star2.svg') center/30px 30px no-repeat transparent !important;
@@ -1341,6 +1347,9 @@
                 border-radius: 0 !important;
                 box-shadow: none !important;
                 outline: none !important;
+                transform: none !important;
+                -webkit-filter: brightness(1.16) saturate(1.12) drop-shadow(0 0 4px rgba(244, 227, 179, 0.55)) !important;
+                filter: brightness(1.16) saturate(1.12) drop-shadow(0 0 4px rgba(244, 227, 179, 0.55)) !important;
             }
             .slider-input.active::-moz-range-thumb {
                 background: url('star2.svg') center/30px 30px no-repeat transparent !important;
@@ -1348,6 +1357,8 @@
                 border-radius: 0 !important;
                 box-shadow: none !important;
                 outline: none !important;
+                transform: translateY(-10px) !important;
+                filter: brightness(1.16) saturate(1.12) drop-shadow(0 0 4px rgba(244, 227, 179, 0.55)) !important;
             }
             .slider-row {
                 gap: 4px;
