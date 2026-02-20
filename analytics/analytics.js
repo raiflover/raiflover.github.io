@@ -320,8 +320,7 @@ function renderCurrentView() {
  * Render Energy tab content
  */
 function renderEnergyTab(container, data) {
-    container.innerHTML = '<div class="chart-wrapper"><div id="energyInsights"></div></div>' +
-        '<div class="chart-wrapper"><h3>Energy Levels</h3><div id="energyChart" class="chart-container"></div></div>' +
+    container.innerHTML = '<div class="chart-wrapper"><div id="energyInsights"></div><div id="energyChart" class="chart-container"></div></div>' +
         '<div class="chart-wrapper"><h3>Caffeine Insights</h3><div id="caffeineInsights"></div></div>' +
         '<div class="chart-wrapper"><h3>Sleep Patterns</h3><div id="sleepInsights"></div><div id="sleepChart" class="chart-container"></div></div>';
 
@@ -364,12 +363,9 @@ function renderEnergyTab(container, data) {
  * Render Mood tab content
  */
 function renderMoodTab(container, data) {
-    container.innerHTML = '<div class="chart-wrapper"><div id="moodInsights"></div></div>' +
-        '<div class="chart-wrapper"><h3>Mood Levels</h3><div id="moodChart" class="chart-container"></div></div>' +
-        '<div class="chart-wrapper"><div id="anxietyInsights"></div></div>' +
-        '<div class="chart-wrapper"><h3>Anxiety</h3><div id="anxietyChart" class="chart-container"></div></div>' +
-        '<div class="chart-wrapper"><div id="irritabilityInsights"></div></div>' +
-        '<div class="chart-wrapper"><h3>Irritability</h3><div id="irritabilityChart" class="chart-container"></div></div>';
+    container.innerHTML = '<div class="chart-wrapper"><div id="moodInsights"></div><div id="moodChart" class="chart-container"></div></div>' +
+        '<div class="chart-wrapper"><h3>Anxiety</h3><div id="anxietyInsights"></div><div id="anxietyChart" class="chart-container"></div></div>' +
+        '<div class="chart-wrapper"><h3>Irritability</h3><div id="irritabilityInsights"></div><div id="irritabilityChart" class="chart-container"></div></div>';
 
     // Render insights
     var insightsHtml = renderInsightsHTML('mood', data);
