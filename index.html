@@ -409,6 +409,19 @@
                 border-radius: 0;
                 margin: 0;
                 border: 0;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            #page2.active {
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                touch-action: pan-y;
+            }
+
+            /* Give room below tracker content so bottom nav doesn't block access */
+            #page2 {
+                padding-bottom: calc(98px + env(safe-area-inset-bottom));
             }
         }
 
@@ -1557,14 +1570,10 @@
             top: 52%;
             margin-left: -10px;
             margin-top: -10px;
-            background: url('star3.svg') center / contain no-repeat;
-            filter:
-                brightness(0) saturate(100%)
-                invert(86%) sepia(10%) saturate(620%)
-                hue-rotate(var(--burst-hue))
-                saturate(1.35)
-                brightness(1.08)
-                drop-shadow(0 0 10px var(--burst-color));
+            background-color: var(--burst-color);
+            -webkit-mask: url('star3.svg') center / contain no-repeat;
+            mask: url('star3.svg') center / contain no-repeat;
+            filter: drop-shadow(0 0 10px var(--burst-color));
             animation: manicBurst 920ms ease-out forwards;
         }
 
@@ -1634,6 +1643,11 @@
 
             .ghost-friend-wrap {
                 width: min(270px, 84vw);
+            }
+
+            .ghost-star {
+                width: 18px;
+                height: 18px;
             }
         }
 
