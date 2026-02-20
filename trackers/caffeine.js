@@ -10,6 +10,7 @@ function addCaffeine(amount) {
         document.getElementById('scoreValue').innerText = caffeineScore;
         document.getElementById('finalScoreInput').value = caffeineScore;
         updateMugFill();
+        if (typeof window.queueSymptomAutosave === 'function') window.queueSymptomAutosave();
     }
 }
 
@@ -19,6 +20,7 @@ function resetCaffeine() {
     document.getElementById('scoreValue').innerText = caffeineScore;
     document.getElementById('finalScoreInput').value = '';
     updateMugFill();
+    if (typeof window.queueSymptomAutosave === 'function') window.queueSymptomAutosave();
     
     // Reset liquid and stars to pink (remove done class)
     const mugLiquid = document.querySelector('.mug-liquid');
@@ -48,7 +50,7 @@ function saveCaffeine() {
         floatingStars.forEach(star => {
             star.classList.add('done');
         });
-        // TODO: Save score to database or localStorage
+        if (typeof window.queueSymptomAutosave === 'function') window.queueSymptomAutosave();
         console.log('Caffeine score saved:', caffeineScore);
     }
 }
@@ -75,6 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 caffeineScore = value;
                 document.getElementById('scoreValue').innerText = caffeineScore;
                 updateMugFill();
+                if (typeof window.queueSymptomAutosave === 'function') window.queueSymptomAutosave();
             }
         });
     }

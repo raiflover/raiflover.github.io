@@ -33,6 +33,9 @@ function initSleepTracker() {
     const toggleSleepSlot = () => {
       sleepData[i] = !sleepData[i];
       slot.classList.toggle("asleep");
+      if (typeof window.queueSymptomAutosave === "function") {
+        window.queueSymptomAutosave();
+      }
     };
 
     if (window.PointerEvent) {

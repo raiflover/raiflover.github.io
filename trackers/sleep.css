@@ -1,6 +1,12 @@
 .sleep-tracker {
   position: relative;
   isolation: isolate;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  margin: 0 0 16px;
 }
 
 .sleep-tracker h2 {
@@ -12,9 +18,11 @@
 
 .sleep-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 0;
+  width: 100%;
+  overflow: hidden;
 }
 
 .sleep-time {
@@ -28,14 +36,17 @@
 .sleep-slot {
   aspect-ratio: 1;
   min-width: 32px;
-  border-radius: 10px;
+  border-radius: 12px;
   background:
-    linear-gradient(165deg, rgba(220,235,255,0.08), rgba(220,235,255,0.015)),
-    linear-gradient(140deg, rgba(18,30,56,0.7), rgba(8,14,28,0.76));
-  border: 1px solid rgba(210,226,255,0.08);
+    linear-gradient(180deg, rgba(205,225,255,0.12), rgba(205,225,255,0.04)),
+    linear-gradient(90deg, rgba(68,104,178,0.18), rgba(18,26,46,0.28));
+  border: 1px solid rgba(210,226,255,0.14);
   cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease, box-shadow 0.2s ease;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+  transition: border-color 0.18s, box-shadow 0.18s, transform 0.12s, filter 0.2s;
+  box-shadow:
+    inset 0 1px 0 rgba(220,235,255,0.22),
+    inset 0 -12px 20px rgba(2, 8, 20, 0.34),
+    0 2px 8px rgba(0,0,0,0.16);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -51,13 +62,17 @@
 }
 
 .sleep-slot:hover {
-  transform: scale(1.05);
-  transition: transform 0.12s ease;
+  transform: translateY(-1px);
+  border-color: rgba(244,227,179,0.5);
+  box-shadow:
+    0 0 0 1px rgba(244,227,179,0.22),
+    0 8px 16px rgba(0,0,0,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.3);
 }
 
 .sleep-slot-time {
-  font-size: 0.65em;
-  color: #8a8a8a;
+  font-size: 0.72em;
+  color: rgba(223,228,235,0.68);
   font-weight: 500;
   line-height: 1;
   transition: color 0.15s;
@@ -69,25 +84,28 @@
 
 .sleep-slot.asleep {
   background:
-    linear-gradient(160deg, rgba(180,200,255,0.34), rgba(244,227,179,0.2)),
-    linear-gradient(140deg, rgba(28,44,82,0.72), rgba(12,20,38,0.8));
-  border-color: rgba(180,200,255,0.42);
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.2), 
-              inset 0 0 16px rgba(180,200,255,0.35),
-              0 0 16px rgba(244,227,179,0.4);
+    linear-gradient(180deg, rgba(237, 191, 231, 0.24), rgba(244, 227, 179, 0.14)),
+    linear-gradient(130deg, rgba(94,132,208,0.24), rgba(18,28,50,0.4));
+  border-color: rgba(244,227,179,0.5);
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,0.2),
+    inset 0 0 16px rgba(244,227,179,0.16),
+    0 0 14px rgba(244,227,179,0.26);
   animation: sleepGlow 2s cubic-bezier(0.34, 1.56, 0.64, 1) infinite alternate;
 }
 
 @keyframes sleepGlow {
   from {
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2), 
-                inset 0 0 16px rgba(180,200,255,0.35),
-                0 0 16px rgba(244,227,179,0.4);
+    box-shadow:
+      inset 0 2px 4px rgba(0,0,0,0.2),
+      inset 0 0 16px rgba(244,227,179,0.16),
+      0 0 14px rgba(244,227,179,0.26);
   }
   to {
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2), 
-                inset 0 0 16px rgba(180,200,255,0.35),
-                0 0 20px rgba(244,227,179,0.6);
+    box-shadow:
+      inset 0 2px 4px rgba(0,0,0,0.2),
+      inset 0 0 16px rgba(244,227,179,0.2),
+      0 0 20px rgba(244,227,179,0.4);
   }
 }
 
@@ -99,6 +117,6 @@
     min-width: 28px;
   }
   .sleep-slot-time {
-    font-size: 0.55em;
+    font-size: 0.62em;
   }
 }
