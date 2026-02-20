@@ -1,0 +1,17 @@
+{
+  "name": "tracker",
+  "short_name": "tracker",
+  "description": "Track mood, sleep, energy, habits, and analytics.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0d101a",
+  "theme_color": "#0d101a",
+  "icons": [
+    {
+      "src": "icon-bigger.png",
+      "sizes": "198x198",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

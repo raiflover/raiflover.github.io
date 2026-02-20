@@ -1,0 +1,67 @@
+Habit analytics:
+individual habit analytics are collapsable, same colors as on page 8.
+
+Week:
+- Cleaning: 
+ - visual representation of days when the habit was complited (calendar of weekdays + time)
+ - insight with total time spent, average time spent, trends compared to last week.
+ - inside insight messages: 
+  - "Eeew... Go clean, NOW!" if total time is less than 20 minutes or the habit was not completed that week;
+  - "Good job, keep it up!" if total time is between 20 and 60 minutes;
+  - "Wow, are you a roomba? That's impressive time spent cleaning!" if total time is between 60 and 100 minutes;
+  - "Are you overcompensating or procrastinating?" if total time is more that 100 minutes.
+- Exersise: 
+  - visual representation of days when the habit was complited, when each type of exersise was completed (calendar of weekdays with tags+time).
+  - insight with total time spent, average time spent, what type of exersise was done that week, trends compared to last week.
+  - tital steps, average steps, trends compared to last week.
+  - inside insight messages: 
+    - "Get up and move! Your body will thank you!" if total time is less than 20 minutes or the habit was not completed that week;
+    - "Nice work, keep it up!" if total time is between 20 and 60 minutes;
+    - "Wow, are you a Chloe Ting? That's impressive time spent exercising!" if total time is between 60 and 120 minutes;
+    - "That's suspicious... Keep it up." if total time is more that 120 minutes.
+- Reading:
+  - visual representation of days when the habit was complited (calendar of weekdays time+tags)
+  - insight with total time spent, average time spent, what type of content was consumed that week (for each type write total time spent on it, if none - hide), trends compared to last week.
+  - inside insight messages: 
+    - "What the fuck happened to you this week?" if total time is less than 20 minutes or the habit was not completed that week;
+    - "Go read something, NOW!" if total time is between 20 and 80 minutes;
+    - "You should be reading more." if total time is between 80 and 210 minutes;
+    - "Nice, but you can do better!" if total time is between 210 and 420 minutes;
+    - "Good job, little bookwormie! Knowledge is power even if the knowledge is questional." if total time is between 420 and 840 minutes.
+    - "Are you studying, researching or binge-reading romance? Either way GOOD JOB!" if total time is between 840 and 1260 minutes.
+    - "Holy fuck you're a bookworm. That is a compliment by the way." if total time is more than 1260 minutes.
+  - additional insight messages:
+    - "Mmm... yaoi" if total time spent reading fanfic is more than total time spent reading fiction, non-fiction and comic.
+    - "Woah, look at that equilibrium!" if total time spent reading fanfic is equal to total time spent reading fiction and comic.
+    - "Big brain energy this week!" if total time spent reading non-fiction is the highest.
+    - "Nice balance between entertaiment and knowledge." if total time spent reading comic, fiction and fanfic equals total time reading non-fiction.
+    - "Don't forget to log them books into Goodreads." if total time spent reading fiction is the highest and if it exeeds 120 minutes.
+    - otherwise no additional message.
+- Writing:
+  - visual representation of days when the habit was complited (calendar of weekdays time+tags) 
+  - insight with total time spent, average time spent, what type of content was written that week (for each type write total time spent on it, if none - hide), trends compared to last week.
+  - inside insight messages:
+    - "Go, little writer, go!" if total time spent writing prose or poetry is more than 210 minutes;
+    - "You should be writing more." if total time spent writing is less that 120 minutes.
+    - otherwise no message.
+- Second language:
+  - visual representation of days when the habit was complited (calendar of weekdays + time);
+  - insight with total time spent, average time spent, trends compared to last week.
+  - inside insight messages: 
+    - "Idiota." if total time is less than 30 minutes or the habit was completed less than 2 times that week;
+    - "Nice, but you can do better!" if total time is between 30 and 60 minutes;
+    - "Good job, keep it up!" if total time is between 60 and 120 minutes;
+    - "Let's do this every week!" if total time is more than 120 minutes.
+
+month:
+- same insights as for week but withoud additional insight messages, trends within a month and compared to past month.
+- visual representation of days when the habit was completed (calendar of days represented by @star1.svg (not completed) and @star3.svg (completed))
+- bar charts for habits with different tags (for reading and writing based on time, for exersise based on frequency)
+
+3 months:
+- same insights as for week but withoud additional insight messages, trends within 3 months and compared to previous 3 months.
+- visual representation of weeks when the habit was completed (block style, make weeeks more saturated/bright if the habit was sompleted more times during that week of if the time spent was higher)
+- bar charts for habits with different tags (for reading and writing based on time, for exersise based on frequency)
+
+year:
+same as 3 months, but visual representation of months when the habit was completed. 
