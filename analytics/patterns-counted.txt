@@ -1,0 +1,43 @@
+PATTERNS CURRENTLY COUNTED (analytics/insights.js)
+
+1) Sleep impact patterns
+- Source: analyzeSleepImpact(data)
+- Input requirement:
+  - uses entries where sleepDuration is present
+- Sleep groups:
+  - little sleep: 0-4h
+  - average sleep: 5-8h
+  - lots of sleep: >8h
+- Metrics checked:
+  - energy (uses energy.highest)
+  - mood (uses mood.highest)
+  - anxiety
+  - irritability
+- Trigger rules:
+  - if 2+ groups exist: pattern shown when best-vs-worst avg diff >= 0.3
+  - if only 1 group exists: informational "Sleep pattern" line is shown
+- Output format:
+  - "Sleep impact: <Metric> is best with <group> (avg A vs B with <group>)"
+  - or "Sleep pattern: <Metric> averages A with <group>"
+
+2) Activity impact patterns
+- Source: analyzeActivityImpact(data)
+- Activity selection:
+  - all activities found
+  - sorted by frequency
+  - only top 3 activities evaluated
+- Minimum data per activity:
+  - at least 1 day with the activity
+  - at least 1 day without the activity
+- Metric used:
+  - mood (uses mood.highest)
+- Trigger threshold:
+  - absolute mood difference >= 0.7 points
+- Output format:
+  - "Activity pattern: \"<activity>\" boosts/lowers mood by X%"
+
+3) Other tab display gating (analytics/analytics.js)
+- Pattern Insights block is shown only when:
+  - current period is NOT "week"
+  - and there are at least 7 tracked days (non-missing entries) in the filtered period
+- In week view, Pattern Insights are hidden.
