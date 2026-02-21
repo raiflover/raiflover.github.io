@@ -2470,7 +2470,7 @@
 
         .other-star-btn {
             --other-star-size: 32px;
-            --other-star-glow-size: 48px;
+            --other-star-glow-size: 40px;
             width: 40px;
             height: 40px;
             min-height: 40px;
@@ -2537,10 +2537,10 @@
             background: radial-gradient(circle, rgba(244, 227, 179, 0.72) 0%, rgba(244, 227, 179, 0.34) 48%, rgba(244, 227, 179, 0) 78%);
             pointer-events: none;
             z-index: 1;
-            opacity: 1;
+            opacity: 0.42;
             mix-blend-mode: screen;
-            -webkit-filter: blur(3px);
-            filter: blur(3px);
+            -webkit-filter: blur(2px);
+            filter: blur(2px);
         }
 
         .other-star-btn:active {
@@ -2555,14 +2555,17 @@
 
         @media (max-width: 768px) {
             .other-rating {
-                gap: 12px;
+                gap: 6px;
+                flex-wrap: nowrap;
+                justify-content: space-between;
             }
             .other-star-btn {
                 --other-star-size: 34px;
-                --other-star-glow-size: 56px;
+                --other-star-glow-size: 42px;
                 width: 44px;
                 height: 44px;
                 min-height: 44px;
+                flex: 0 1 auto;
             }
         }
 
@@ -2916,6 +2919,75 @@
             margin-bottom: 6px;
         }
 
+        #symptomPanelStates .states-mobile-rating {
+            display: none;
+        }
+
+        #symptomPanelStates .states-mobile-star-btn {
+            --states-star-size: 28px;
+            --states-star-glow-size: 36px;
+            width: 38px;
+            height: 38px;
+            min-height: 38px;
+            border: none;
+            background: transparent;
+            border-radius: 999px;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            -webkit-tap-highlight-color: transparent;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            box-shadow: none;
+            outline: none;
+        }
+
+        #symptomPanelStates .states-mobile-star-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: var(--states-star-size);
+            height: var(--states-star-size);
+            background: #9FAAD9;
+            -webkit-mask: url('star1.svg') center / var(--states-star-size) var(--states-star-size) no-repeat;
+            mask: url('star1.svg') center / var(--states-star-size) var(--states-star-size) no-repeat;
+            opacity: 0.95;
+        }
+
+        #symptomPanelStates .states-mobile-star-btn.active::before {
+            background: url('star2.svg') center / var(--states-star-size) var(--states-star-size) no-repeat transparent;
+            opacity: 1;
+            -webkit-filter: none;
+            filter: none;
+        }
+
+        #symptomPanelStates .states-mobile-star-btn.active::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: var(--states-star-glow-size);
+            height: var(--states-star-glow-size);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            border-radius: 999px;
+            background: radial-gradient(circle, rgba(244,227,179,0.32) 0%, rgba(244,227,179,0.12) 42%, rgba(244,227,179,0) 74%);
+            opacity: 0.22;
+            -webkit-filter: blur(1.25px);
+            filter: blur(1.25px);
+            mix-blend-mode: screen;
+        }
+
+        #symptomPanelStates .states-mobile-star-btn:focus,
+        #symptomPanelStates .states-mobile-star-btn:focus-visible {
+            outline: none;
+            box-shadow: none;
+        }
+
         @media (max-width: 480px) {
             #symptomPanelStates .form-content {
                 padding: 8px 16px calc(94px + env(safe-area-inset-bottom));
@@ -2936,6 +3008,22 @@
             #symptomPanelStates .slider-group {
                 gap: 0;
                 margin-bottom: 4px;
+            }
+        }
+
+        @media (max-width: 768px), (display-mode: standalone) and (max-width: 1024px) {
+            #symptomPanelStates .slider-row .slider-input,
+            #symptomPanelStates .slider-row .slider-marks {
+                display: none;
+            }
+
+            #symptomPanelStates .states-mobile-rating {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 2px;
+                width: 100%;
+                padding: 2px 0;
             }
         }
 
@@ -3565,11 +3653,29 @@
                                     <label class="slider-label">Highest</label>
                                     <input type="range" class="slider-input" id="energyHighest" min="1" max="7" value="4" data-default="4">
                                     <div class="slider-marks"><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div></div>
+                                    <div class="states-mobile-rating" data-slider="energyHighest" data-value="4">
+                                        <button type="button" class="states-mobile-star-btn" data-value="1" aria-label="Energy highest 1"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="2" aria-label="Energy highest 2"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="3" aria-label="Energy highest 3"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="4" aria-label="Energy highest 4"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="5" aria-label="Energy highest 5"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="6" aria-label="Energy highest 6"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="7" aria-label="Energy highest 7"></button>
+                                    </div>
                                 </div>
                                 <div class="slider-row">
                                     <label class="slider-label">Lowest</label>
                                     <input type="range" class="slider-input" id="energyLowest" min="1" max="7" value="4" data-default="4">
                                     <div class="slider-marks"><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div></div>
+                                    <div class="states-mobile-rating" data-slider="energyLowest" data-value="4">
+                                        <button type="button" class="states-mobile-star-btn" data-value="1" aria-label="Energy lowest 1"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="2" aria-label="Energy lowest 2"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="3" aria-label="Energy lowest 3"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="4" aria-label="Energy lowest 4"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="5" aria-label="Energy lowest 5"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="6" aria-label="Energy lowest 6"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="7" aria-label="Energy lowest 7"></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -3580,11 +3686,29 @@
                                     <label class="slider-label">Highest</label>
                                     <input type="range" class="slider-input" id="moodHighest" min="1" max="7" value="4" data-default="4">
                                     <div class="slider-marks"><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div></div>
+                                    <div class="states-mobile-rating" data-slider="moodHighest" data-value="4">
+                                        <button type="button" class="states-mobile-star-btn" data-value="1" aria-label="Mood highest 1"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="2" aria-label="Mood highest 2"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="3" aria-label="Mood highest 3"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="4" aria-label="Mood highest 4"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="5" aria-label="Mood highest 5"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="6" aria-label="Mood highest 6"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="7" aria-label="Mood highest 7"></button>
+                                    </div>
                                 </div>
                                 <div class="slider-row">
                                     <label class="slider-label">Lowest</label>
                                     <input type="range" class="slider-input" id="moodLowest" min="1" max="7" value="4" data-default="4">
                                     <div class="slider-marks"><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div></div>
+                                    <div class="states-mobile-rating" data-slider="moodLowest" data-value="4">
+                                        <button type="button" class="states-mobile-star-btn" data-value="1" aria-label="Mood lowest 1"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="2" aria-label="Mood lowest 2"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="3" aria-label="Mood lowest 3"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="4" aria-label="Mood lowest 4"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="5" aria-label="Mood lowest 5"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="6" aria-label="Mood lowest 6"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="7" aria-label="Mood lowest 7"></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -3594,6 +3718,15 @@
                                 <div class="slider-row">
                                     <input type="range" class="slider-input" id="anxiety" min="1" max="7" value="4" data-default="4">
                                     <div class="slider-marks"><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div></div>
+                                    <div class="states-mobile-rating" data-slider="anxiety" data-value="4">
+                                        <button type="button" class="states-mobile-star-btn" data-value="1" aria-label="Anxiety 1"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="2" aria-label="Anxiety 2"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="3" aria-label="Anxiety 3"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="4" aria-label="Anxiety 4"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="5" aria-label="Anxiety 5"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="6" aria-label="Anxiety 6"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="7" aria-label="Anxiety 7"></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -3603,6 +3736,15 @@
                                 <div class="slider-row">
                                     <input type="range" class="slider-input" id="irritability" min="1" max="7" value="4" data-default="4">
                                     <div class="slider-marks"><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div></div>
+                                    <div class="states-mobile-rating" data-slider="irritability" data-value="4">
+                                        <button type="button" class="states-mobile-star-btn" data-value="1" aria-label="Irritability 1"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="2" aria-label="Irritability 2"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="3" aria-label="Irritability 3"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="4" aria-label="Irritability 4"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="5" aria-label="Irritability 5"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="6" aria-label="Irritability 6"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="7" aria-label="Irritability 7"></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -4108,6 +4250,36 @@
                 delete slider.dataset.everMoved;
                 slider.classList.remove('active');
             }
+            syncStatesMobileRating(sliderId);
+        }
+
+        function syncStatesMobileRating(sliderId) {
+            const rating = document.querySelector(`.states-mobile-rating[data-slider="${sliderId}"]`);
+            const slider = document.getElementById(sliderId);
+            if (!rating || !slider) return;
+            const value = Number(slider.value);
+            const normalized = Number.isFinite(value) ? Math.max(1, Math.min(7, Math.round(value))) : 4;
+            rating.dataset.value = String(normalized);
+            rating.querySelectorAll('.states-mobile-star-btn').forEach((btn) => {
+                const btnValue = Number(btn.dataset.value);
+                btn.classList.toggle('active', btnValue <= normalized);
+            });
+        }
+
+        function initializeStatesMobileRatings() {
+            document.querySelectorAll('.states-mobile-rating').forEach((rating) => {
+                if (rating.dataset.bound === '1') return;
+                rating.dataset.bound = '1';
+                const sliderId = rating.dataset.slider;
+                if (!sliderId) return;
+                rating.querySelectorAll('.states-mobile-star-btn').forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        const value = Number(btn.dataset.value);
+                        setTrackerSliderValue(sliderId, value, true);
+                        queueSymptomAutosave();
+                    });
+                });
+            });
         }
 
         function setOtherRatingValue(field, value, hasSavedValue) {
@@ -4699,8 +4871,12 @@
         function initializeSliders() {
             const sliders = document.querySelectorAll('.slider-input');
 
+            initializeStatesMobileRatings();
             sliders.forEach(slider => {
-                if (slider.dataset.bound === '1') return;
+                if (slider.dataset.bound === '1') {
+                    syncStatesMobileRating(slider.id);
+                    return;
+                }
                 slider.dataset.bound = '1';
                 const defaultValue = parseInt(slider.dataset.default, 10);
 
@@ -4709,6 +4885,7 @@
                     slider.classList.add('active');
                     slider.dataset.everMoved = 'true';
                 }
+                syncStatesMobileRating(slider.id);
 
                 // Add event listener for real-time changes
                 slider.addEventListener('input', function(e) {
@@ -4717,6 +4894,7 @@
                         this.dataset.everMoved = 'true';
                     }
                     this.classList.add('active');
+                    syncStatesMobileRating(this.id);
                     queueSymptomAutosave();
                 }, { passive: true });
 
@@ -4724,6 +4902,7 @@
                 slider.addEventListener('change', function(e) {
                     // Once moved, always stay lit up
                     this.classList.add('active');
+                    syncStatesMobileRating(this.id);
                     queueSymptomAutosave();
                 }, { passive: true });
             });
