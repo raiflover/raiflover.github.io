@@ -186,15 +186,15 @@
 .insights-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .insight-item {
     color: rgba(200,216,236,0.9);
     font-size: 0.84em;
-    line-height: 1.5;
+    line-height: 1.38;
     font-style: normal;
-    margin: 4px 0 0;
+    margin: 2px 0 0;
 }
 
 .insight-item strong {
@@ -214,6 +214,17 @@
 #page7 .chart-wrapper h3 { padding-left: 0; padding-right: 0; text-align: center; }
 
 #page7 .insights-section { padding-left: 0; padding-right: 0; }
+
+#page7 #caffeineInsights .insights-section,
+#page7 #sleepInsights .insights-section {
+    padding-top: 8px;
+    margin-top: 0;
+}
+
+#page7 #caffeineInsights .insights-title,
+#page7 #sleepInsights .insights-title {
+    margin: 0 0 8px;
+}
 
 #page7 .notes-collapsible { padding-left: 0; padding-right: 0; }
 
@@ -386,6 +397,17 @@
 
     .chart-wrapper {
         margin: 12px 0;
+    }
+
+    /* Keep bar intensity/glow on mobile aligned with desktop */
+    #page7 .chart-svg .chart-bar {
+        opacity: 1;
+        filter: drop-shadow(0 0 10px rgba(237,191,231,0.35)) drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    }
+
+    #page7 .chart-svg .chart-sleep-bar {
+        opacity: 1;
+        filter: drop-shadow(0 0 10px rgba(168,230,217,0.32)) drop-shadow(0 2px 4px rgba(0,0,0,0.3));
     }
 
 
