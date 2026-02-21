@@ -4,6 +4,29 @@ let caffeineScore = 0;
 const maxCaffeine = 1000; // Maximum mg displayed on mug
 let isLiquidPink = false; // Track if liquid is pink
 
+function setCaffeineDoneState(done) {
+    isLiquidPink = !!done;
+    const mugLiquid = document.querySelector('.mug-liquid');
+    const floatingStars = document.querySelectorAll('.floating-star');
+    if (mugLiquid) {
+        mugLiquid.classList.toggle('done', !!done);
+    }
+    floatingStars.forEach(star => {
+        star.classList.toggle('done', !!done);
+    });
+}
+
+function setCaffeineScoreValue(value, done) {
+    const parsed = Number(value);
+    caffeineScore = Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
+    const scoreEl = document.getElementById('scoreValue');
+    const finalInput = document.getElementById('finalScoreInput');
+    if (scoreEl) scoreEl.innerText = caffeineScore;
+    if (finalInput) finalInput.value = caffeineScore > 0 ? String(caffeineScore) : '';
+    updateMugFill();
+    setCaffeineDoneState(done);
+}
+
 function addCaffeine(amount) {
     if (caffeineScore < maxCaffeine) {
         caffeineScore = Math.min(caffeineScore + amount, maxCaffeine);
@@ -15,41 +38,14 @@ function addCaffeine(amount) {
 }
 
 function resetCaffeine() {
-    caffeineScore = 0;
-    isLiquidPink = false;
-    document.getElementById('scoreValue').innerText = caffeineScore;
-    document.getElementById('finalScoreInput').value = '';
-    updateMugFill();
+    setCaffeineScoreValue(0, false);
     if (typeof window.queueSymptomAutosave === 'function') window.queueSymptomAutosave();
-    
-    // Reset liquid and stars to pink (remove done class)
-    const mugLiquid = document.querySelector('.mug-liquid');
-    const floatingStars = document.querySelectorAll('.floating-star');
-    if (mugLiquid) {
-        mugLiquid.classList.remove('done');
-    }
-    floatingStars.forEach(star => {
-        star.classList.remove('done');
-    });
 }
 
 function saveCaffeine() {
     const finalScore = document.getElementById('finalScoreInput').value;
     if (finalScore) {
-        caffeineScore = parseInt(finalScore);
-        document.getElementById('scoreValue').innerText = caffeineScore;
-        updateMugFill();
-        
-        // Change liquid to yellow with glowing stars when done
-        isLiquidPink = true;
-        const mugLiquid = document.querySelector('.mug-liquid');
-        const floatingStars = document.querySelectorAll('.floating-star');
-        if (mugLiquid) {
-            mugLiquid.classList.add('done');
-        }
-        floatingStars.forEach(star => {
-            star.classList.add('done');
-        });
+        setCaffeineScoreValue(parseInt(finalScore, 10), true);
         if (typeof window.queueSymptomAutosave === 'function') window.queueSymptomAutosave();
         console.log('Caffeine score saved:', caffeineScore);
     }
@@ -74,11 +70,11 @@ document.addEventListener('DOMContentLoaded', function() {
         finalScoreInput.addEventListener('input', function(e) {
             const value = parseInt(this.value) || 0;
             if (value >= 0 && value <= maxCaffeine * 2) {
-                caffeineScore = value;
-                document.getElementById('scoreValue').innerText = caffeineScore;
-                updateMugFill();
+                setCaffeineScoreValue(value, isLiquidPink);
                 if (typeof window.queueSymptomAutosave === 'function') window.queueSymptomAutosave();
             }
         });
     }
 });
+
+window.setCaffeineScoreValue = setCaffeineScoreValue;

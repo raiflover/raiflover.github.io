@@ -48,6 +48,20 @@ function initSleepTracker() {
   }
 }
 
+function setSleepData(nextData) {
+  initSleepTracker();
+  const normalized = Array.isArray(nextData)
+    ? nextData.slice(0, 48).map(slot => !!slot)
+    : [];
+  while (normalized.length < 48) normalized.push(false);
+
+  sleepData = normalized;
+  const slots = document.querySelectorAll("#sleepGrid .sleep-slot");
+  slots.forEach((slot, idx) => {
+    slot.classList.toggle("asleep", !!sleepData[idx]);
+  });
+}
+
 // Calculate sleep duration from sleepData array
 function calculateSleepDuration() {
   if (!sleepData || sleepData.length === 0) return 0;
@@ -58,4 +72,6 @@ function calculateSleepDuration() {
   // Convert to hours (2 slots = 1 hour)
   return sleepSlots / 2;
 }
+
+window.setSleepData = setSleepData;
 
