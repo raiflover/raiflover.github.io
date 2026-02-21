@@ -161,6 +161,104 @@
             -moz-transform: translate3d(0, 0, 0);
         }
 
+        .app-loading-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 1200;
+            background: #0d101a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            visibility: visible;
+            pointer-events: all;
+            transition: opacity 560ms cubic-bezier(0.22, 1, 0.36, 1), visibility 560ms linear;
+        }
+
+        .app-loading-screen.is-hiding {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .app-loading-screen.is-hidden {
+            display: none;
+        }
+
+        .words-only-exit {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 1300;
+            min-height: 36px;
+            padding: 0 12px;
+            border-radius: 14px;
+            border: 1px solid rgba(183,190,250,0.45);
+            background: rgba(11, 18, 33, 0.78);
+            color: #B7BEFA;
+            font-size: 0.84em;
+            font-weight: 700;
+            display: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        body.words-only-mode .words-only-exit {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body.words-only-mode .container,
+        body.words-only-mode {
+            overflow: hidden;
+        }
+
+        body.words-only-mode .container {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        body.words-only-mode #bottomNav {
+            display: grid !important;
+            opacity: 1;
+            pointer-events: auto;
+            z-index: 1300;
+            background: rgba(11, 18, 33, 0.9);
+            border-color: rgba(183,190,250,0.38);
+            box-shadow: 0 10px 26px rgba(0,0,0,0.35), 0 0 14px rgba(183,190,250,0.18);
+        }
+
+        .words-corner-arrow {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: auto;
+            height: auto;
+            border: none;
+            background: transparent;
+            color: #B7BEFA;
+            display: inline;
+            font-size: 1.15em;
+            line-height: 1;
+            padding: 0;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-appearance: none;
+            appearance: none;
+            box-shadow: none;
+            outline: none;
+        }
+
+        .words-corner-arrow:focus,
+        .words-corner-arrow:focus-visible,
+        .words-corner-arrow:active {
+            outline: none;
+            box-shadow: none;
+            border: none;
+            background: transparent;
+        }
+
         @media (max-width: 768px) {
             #fadeOverlay {
                 transition: opacity 2.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -247,7 +345,8 @@
         .container:has(#page5.active),
         .container:has(#page6.active),
         .container:has(#page7.active),
-        .container:has(#page8.active) {
+        .container:has(#page8.active),
+        .container:has(#page9.active) {
             isolation: isolate;
             -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
@@ -261,7 +360,8 @@
         .container:has(#page5.active)::before,
         .container:has(#page6.active)::before,
         .container:has(#page7.active)::before,
-        .container:has(#page8.active)::before {
+        .container:has(#page8.active)::before,
+        .container:has(#page9.active)::before {
             background: linear-gradient(
                 180deg,
                 var(--glass-frost-1),
@@ -279,7 +379,8 @@
         .container:has(#page5.active)::after,
         .container:has(#page6.active)::after,
         .container:has(#page7.active)::after,
-        .container:has(#page8.active)::after {
+        .container:has(#page8.active)::after,
+        .container:has(#page9.active)::after {
             opacity: 0.25;
             filter: blur(10px);
             animation: liquidSheenSoft 14s cubic-bezier(0.26, 0.73, 0.23, 0.98) infinite alternate;
@@ -1315,7 +1416,8 @@
         #page1,
         #page2,
         #page7,
-        #page8 {
+        #page8,
+        #page9 {
             padding-bottom: 74px;
         }
 
@@ -1332,6 +1434,10 @@
         }
 
         #page1 {
+            position: relative;
+        }
+
+        #page0 {
             position: relative;
         }
 
@@ -1361,6 +1467,349 @@
             transform: translateZ(0);
         }
 
+        .ghost-heart-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(183, 190, 250, 0.48);
+            border-radius: 10px;
+            background: rgba(183, 190, 250, 0.24);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 6;
+            padding: 0;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .ghost-heart-btn .heart-icon {
+            width: 18px;
+            height: 18px;
+            display: block;
+            background: url('heart.svg') center / contain no-repeat;
+            filter:
+                brightness(0) saturate(100%) invert(79%) sepia(7%) saturate(2488%) hue-rotate(197deg) brightness(103%) contrast(96%)
+                drop-shadow(0 0 6px rgba(183,190,250,0.65));
+        }
+
+        .simple-page {
+            align-items: flex-start;
+            justify-content: flex-start;
+            gap: 14px;
+            padding-top: 16px;
+            padding-bottom: 22px;
+        }
+
+        .simple-page h1 {
+            margin-bottom: 0;
+        }
+
+        #page9 h1,
+        #page9 .subtitle {
+            width: 100%;
+            text-align: center;
+        }
+
+        .simple-section {
+            width: 100%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.006));
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 18px;
+            padding: 12px;
+            overflow: hidden;
+        }
+
+        .simple-section h2 {
+            color: #EDBFE7;
+            margin-bottom: 14px;
+        }
+
+        .simple-field-label {
+            display: block;
+            font-size: 0.88em;
+            margin-bottom: 6px;
+            color: rgba(223,228,235,0.88);
+        }
+
+        .simple-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .simple-row input[type="time"] {
+            -webkit-appearance: none;
+            appearance: none;
+            min-height: 42px;
+            border-radius: 10px;
+            border: 1px solid rgba(223,228,235,0.2);
+            background: rgba(255,255,255,0.04);
+            color: #DFE4EB;
+            padding: 0 10px;
+            font-family: inherit;
+            font-size: 16px;
+        }
+
+        .simple-row input[type="time"]::-webkit-calendar-picker-indicator {
+            filter: invert(86%) sepia(10%) saturate(620%) hue-rotate(210deg);
+            opacity: 0.9;
+        }
+
+        .simple-nap-toggle {
+            margin-top: 4px;
+            min-height: 38px;
+            border-radius: 10px;
+            border: 1px solid rgba(183,190,250,0.25);
+            background: rgba(183,190,250,0.12);
+            color: #DFE4EB;
+            font-weight: 600;
+        }
+
+        .simple-nap-row[hidden] {
+            display: none !important;
+        }
+
+        .simple-caffeine-value {
+            margin-top: 10px;
+            color: #B7BEFA;
+            font-weight: 700;
+        }
+
+        .simple-caffeine-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            margin-top: 4px;
+            accent-color: #B7BEFA;
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+            outline: none;
+            padding: 0;
+            transition: none !important;
+            animation: none !important;
+            transform: none !important;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .simple-caffeine-slider:focus,
+        .simple-caffeine-slider:focus-visible,
+        .simple-caffeine-slider:active {
+            outline: none !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .simple-caffeine-slider::-webkit-slider-runnable-track {
+            height: 10px;
+            border: none;
+            border-radius: 999px;
+            background: rgba(223, 228, 235, 0.26);
+            box-shadow: none;
+        }
+
+        .simple-caffeine-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            margin-top: -6px;
+            border: none;
+            border-radius: 999px;
+            background: #B7BEFA;
+            box-shadow: none;
+        }
+
+        .simple-caffeine-slider::-moz-range-track {
+            height: 10px;
+            border: none;
+            border-radius: 999px;
+            background: rgba(223, 228, 235, 0.26);
+            box-shadow: none;
+        }
+
+        .simple-caffeine-slider::-moz-range-thumb {
+            width: 22px;
+            height: 22px;
+            border: none;
+            border-radius: 999px;
+            background: #B7BEFA;
+            box-shadow: none;
+        }
+
+        .simple-caffeine-slider::-moz-focus-outer {
+            border: 0;
+        }
+
+        .simple-mood-row {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .simple-scale-label {
+            color: #DFE4EB;
+            font-size: 0.86em;
+        }
+
+        .simple-scale-buttons {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 6px;
+        }
+
+        .simple-scale-btn {
+            width: 30px;
+            height: 30px;
+            min-height: 30px;
+            border-radius: 999px;
+            border: 1px solid rgba(223,228,235,0.22);
+            background: rgba(255,255,255,0.04);
+            color: #DFE4EB;
+            font-size: 0.82em;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .simple-scale-btn.active {
+            background: rgba(183,190,250,0.22);
+            border-color: rgba(183,190,250,0.48);
+            color: #B7BEFA;
+            font-weight: 700;
+        }
+
+        .simple-collapse-toggle {
+            width: 100%;
+            min-height: 0;
+            border-radius: 0;
+            border: none;
+            background: none;
+            color: #EDBFE7;
+            text-align: left;
+            padding: 14px 18px;
+            font-weight: 700;
+            margin-bottom: 2px;
+            box-shadow: none;
+        }
+
+        .simple-collapsible[hidden] {
+            display: none !important;
+        }
+
+        .simple-collapsible {
+            border-radius: 0;
+            padding: 6px 12px 14px;
+        }
+
+        #simpleTagsWrap .simple-field-label {
+            color: #DFE4EB;
+            margin-top: 10px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        #simpleTagsWrap .simple-tag-container {
+            margin-bottom: 18px;
+        }
+
+        #simpleTagsWrap .simple-tag-container:last-child {
+            margin-bottom: 6px;
+        }
+
+        .simple-tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .simple-tag {
+            padding: 8px 16px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.006));
+            border: 1px solid rgba(255,255,255,0.035);
+            color: #EDBFE7;
+            border-radius: 24px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.07),
+                0 1px 4px rgba(0,0,0,0.22);
+        }
+
+        .simple-tag.selected {
+            background: rgba(183,190,250,0.22);
+            border-color: rgba(183,190,250,0.48);
+            color: #B7BEFA;
+            box-shadow: none;
+            font-weight: 400;
+        }
+
+        .simple-tag:hover {
+            transform: translateY(-2px) scale(1.05);
+            border-color: rgba(237, 191, 231, 0.3);
+        }
+
+        .simple-tag.selected:hover {
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        .simple-note {
+            width: 100%;
+            min-height: 100px;
+            border-radius: 10px;
+            border: 1px solid rgba(223,228,235,0.2);
+            background: rgba(255,255,255,0.04);
+            color: #DFE4EB;
+            padding: 10px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 16px;
+            margin-top: 8px;
+        }
+
+        #simpleNoteWrap .simple-note:focus,
+        #simpleNoteWrap .simple-note:focus-visible {
+            outline: none;
+            border: 1px solid #B7BEFA;
+            box-shadow: none;
+        }
+
+        .simple-row input[type="time"]::placeholder,
+        .simple-note::placeholder {
+            color: rgba(183,190,250,0.62);
+        }
+
+        .simple-autosave-status {
+            width: 100%;
+            text-align: right;
+            color: rgba(223,228,235,0.74);
+            font-size: 0.8em;
+        }
+
+        .simple-section.simple-section-plain {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            padding: 0;
+        }
+
+        .simple-section.simple-section-collapsible {
+            border-radius: 22px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.006));
+            border: 1px solid rgba(255,255,255,0.06);
+            overflow: hidden;
+        }
+
         .ghost-page-heading {
             position: absolute;
             top: 10px;
@@ -1387,7 +1836,7 @@
 
         .ghost-tap-counter {
             position: absolute;
-            bottom: 20px;
+            bottom: 12px;
             left: 50%;
             transform: translateX(-50%);
             color: #DFE4EB;
@@ -1401,13 +1850,40 @@
             font-variant-numeric: tabular-nums;
         }
 
+        .ghost-progress-row {
+            position: absolute;
+            bottom: 52px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            width: min(560px, 96%);
+            justify-content: center;
+        }
+
+        .ghost-progress-chip {
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.04);
+            color: #DFE4EB;
+            font-size: 0.8em;
+            padding: 6px 14px;
+            text-align: center;
+            font-weight: 700;
+            white-space: nowrap;
+            font-variant-numeric: tabular-nums;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
         .ghost-friend-wrap {
             --ghost-accent: #B7BEFA;
             --ghost-glow: rgba(183, 190, 250, 0.55);
             --ghost-hue: 210deg;
             --ghost-sat: 1.12;
             position: relative;
-            width: min(320px, 74vw);
+            width: min(300px, 70vw);
             aspect-ratio: 1 / 1.12;
             display: flex;
             align-items: center;
@@ -1417,7 +1893,7 @@
             outline: none;
             isolation: isolate;
             animation: ghostLevitate 3.6s ease-in-out infinite;
-            margin-top: 42px;
+            margin-top: 30px;
         }
 
         .ghost-friend-wrap:focus-visible {
@@ -1476,7 +1952,7 @@
         }
 
         .ghost-friend-img {
-            width: 82%;
+            width: 78%;
             max-width: 260px;
             height: auto;
             position: relative;
@@ -1491,10 +1967,6 @@
             user-select: none;
             -webkit-user-drag: none;
             pointer-events: none;
-        }
-
-        .ghost-friend-img.pop-scale {
-            animation: ghostTapShrink 280ms linear;
         }
 
         .ghost-friend-wrap[data-state="anxious"] .ghost-friend-img {
@@ -1610,12 +2082,6 @@
             50% { transform: translateY(-14px); }
         }
 
-        @keyframes ghostTapShrink {
-            0% { transform: scale(1); }
-            50% { transform: scale(0.96); }
-            100% { transform: scale(1); }
-        }
-
         @keyframes ghostAnxiousShake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-2px); }
@@ -1714,6 +2180,18 @@
 
             .ghost-friend-wrap {
                 width: min(270px, 84vw);
+                margin-top: 22px;
+            }
+
+            .ghost-progress-row {
+                width: min(520px, 94%);
+                gap: 8px;
+                bottom: 50px;
+            }
+
+            .ghost-progress-chip {
+                padding: 6px 8px;
+                font-size: 0.75em;
             }
 
             .ghost-star {
@@ -2182,6 +2660,27 @@
             background-clip: padding-box;
         }
 
+        #page9 .simple-section,
+        #page9 .simple-collapse-toggle,
+        #page9 .simple-tag,
+        #page9 .simple-scale-btn,
+        #page9 .simple-nap-toggle,
+        #page9 .simple-caffeine-slider,
+        #page9 .simple-row input[type="time"],
+        #page9 .simple-note {
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+            background-clip: padding-box;
+        }
+
+        @media (hover: none) {
+            .simple-tag:hover,
+            .simple-tag.selected:hover {
+                transform: none;
+            }
+        }
+
         .habit-day:hover {
             background: rgba(255,255,255,0.06);
         }
@@ -2465,6 +2964,11 @@
             /* Prevent double-tap zoom on clickable elements */
             button,
             .tag,
+            .simple-tag,
+            .simple-scale-btn,
+            .simple-collapse-toggle,
+            .simple-nap-toggle,
+            .simple-caffeine-slider,
             .btn-primary,
             .btn-back,
             .btn-next {
@@ -2473,13 +2977,29 @@
 
             /* Prevent iOS zoom on number input focus */
             .habit-num-input,
-            .habit-hm-input {
+            .habit-hm-input,
+            #page9 .simple-row input[type="time"],
+            #page9 .simple-note {
                 font-size: 16px;
+            }
+
+            #page9 {
+                padding-bottom: calc(74px + env(safe-area-inset-bottom));
+            }
+
+            .ghost-progress-row {
+                bottom: calc(52px + env(safe-area-inset-bottom));
+            }
+
+            .ghost-tap-counter {
+                bottom: calc(12px + env(safe-area-inset-bottom));
             }
         }
     </style>
 </head>
 <body>
+    <div class="app-loading-screen" id="appLoadingScreen" aria-hidden="true"></div>
+    <button type="button" class="words-only-exit" id="wordsOnlyExitBtn" onclick="disableWordsOnlyMode()">Exit words only</button>
     <div class="background" id="background"></div>
     <div id="fadeOverlay"></div>
 
@@ -2487,6 +3007,7 @@
         <div class="form-content">
             <!-- Page 0: Login Page -->
             <div class="page active" id="page0">
+                <button type="button" class="words-corner-arrow" onclick="toggleWordsOnlyMode()" aria-label="Toggle words only">&#8595;</button>
                 <h1>Everything Tracker</h1>
                 <p class="subtitle">˚.✦ ⵢ₊˚.₍ᐢ..ᐢ₎⊹ ˓𓄹 ָ࣪ ⸰</p>
 
@@ -2510,8 +3031,16 @@
             <!-- Page 1: Menu -->
             <div class="page" id="page1">
                 <button type="button" class="ghost-back-arrow" onclick="goToPage(0)" aria-label="Back to login">&#8592;</button>
+                <button type="button" class="ghost-heart-btn" onclick="goToPage(9)" aria-label="Open simplified tracker">
+                    <span class="heart-icon"></span>
+                </button>
                 <h1 class="ghost-page-heading">Everything tracker</h1>
                 <p class="ghost-page-subtitle" id="ghostPageSubtitle"></p>
+                <div class="ghost-progress-row" id="ghostProgressRow">
+                    <div class="ghost-progress-chip" id="trackerStreakChip">Streak: --</div>
+                    <div class="ghost-progress-chip" id="trackerXpChip">XP: --</div>
+                    <div class="ghost-progress-chip" id="trackerDaysChip">Days: --</div>
+                </div>
                 <div class="ghost-tap-counter" id="ghostTapCounter">Tap counter: --</div>
                 <div class="ghost-friend-wrap" id="ghostFriendWrap" data-state="unhappy" role="button" tabindex="0" aria-label="Ghost friend">
                     <div class="ghost-blob" id="ghostBlob"></div>
@@ -2794,6 +3323,91 @@
                 <!-- Habit Sections -->
                 <div class="habits-content" id="habitsContent"></div>
 </div>
+
+            <!-- Page 9: Simple Tracker -->
+            <div class="page simple-page" id="page9">
+                <button type="button" class="ghost-back-arrow" onclick="goToPage(1)" aria-label="Back to menu">&#8592;</button>
+                <h1>Quick Tracker</h1>
+                <p class="subtitle">Simplified daily entry</p>
+
+                <div class="simple-section">
+                    <h2>Sleep</h2>
+                    <div class="simple-row">
+                        <div>
+                            <label class="simple-field-label" for="simpleSleepAsleep">Asleep time</label>
+                            <input type="time" id="simpleSleepAsleep" step="60" lang="en-GB">
+                        </div>
+                        <div>
+                            <label class="simple-field-label" for="simpleSleepWake">Wake time</label>
+                            <input type="time" id="simpleSleepWake" step="60" lang="en-GB">
+                        </div>
+                    </div>
+                    <button type="button" class="simple-nap-toggle" id="simpleNapToggle">Add nap</button>
+                    <div class="simple-row simple-nap-row" id="simpleNapRow" hidden>
+                        <div>
+                            <label class="simple-field-label" for="simpleNapStart">Nap start</label>
+                            <input type="time" id="simpleNapStart" step="60" lang="en-GB">
+                        </div>
+                        <div>
+                            <label class="simple-field-label" for="simpleNapEnd">Nap end</label>
+                            <input type="time" id="simpleNapEnd" step="60" lang="en-GB">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="simple-section">
+                    <h2>Coffee</h2>
+                    <input type="range" id="simpleCaffeineSlider" class="simple-caffeine-slider" min="0" max="800" step="50" value="0">
+                    <div class="simple-caffeine-value" id="simpleCaffeineValue">0 mg</div>
+                </div>
+
+                <div class="simple-section">
+                    <h2>Mood Trackers</h2>
+                    <div id="simpleMoodRows"></div>
+                </div>
+
+                <div class="simple-section simple-section-collapsible">
+                    <button type="button" class="simple-collapse-toggle" data-target="simpleTagsWrap" aria-expanded="false">Tags</button>
+                    <div id="simpleTagsWrap" class="simple-collapsible" hidden>
+                        <label class="simple-field-label">Activities</label>
+                        <div class="simple-tag-container" id="simpleActivitiesTagContainer">
+                            <button type="button" class="simple-tag" data-tag="art">Art</button>
+                            <button type="button" class="simple-tag" data-tag="cleaning">Cleaning</button>
+                            <button type="button" class="simple-tag" data-tag="creativity">Creativity</button>
+                            <button type="button" class="simple-tag" data-tag="daydreaming">Daydreaming</button>
+                            <button type="button" class="simple-tag" data-tag="exercise">Exercise</button>
+                            <button type="button" class="simple-tag" data-tag="gaming">Gaming</button>
+                            <button type="button" class="simple-tag" data-tag="other">Other</button>
+                            <button type="button" class="simple-tag" data-tag="procrastination">Procrastination</button>
+                            <button type="button" class="simple-tag" data-tag="reading">Reading</button>
+                            <button type="button" class="simple-tag" data-tag="shopping">Shopping</button>
+                            <button type="button" class="simple-tag" data-tag="socializing">Socializing</button>
+                            <button type="button" class="simple-tag" data-tag="studying">Studying</button>
+                            <button type="button" class="simple-tag" data-tag="therapy">Therapy</button>
+                            <button type="button" class="simple-tag" data-tag="travel">Travel</button>
+                            <button type="button" class="simple-tag" data-tag="writing">Writing</button>
+                        </div>
+                        <label class="simple-field-label" style="margin-top:10px;">People</label>
+                        <div class="simple-tag-container" id="simplePeopleTagContainer">
+                            <button type="button" class="simple-tag" data-tag="family">Family</button>
+                            <button type="button" class="simple-tag" data-tag="friends">Friends</button>
+                            <button type="button" class="simple-tag" data-tag="FP">Favorite Person</button>
+                            <button type="button" class="simple-tag" data-tag="colleagues">Colleagues</button>
+                            <button type="button" class="simple-tag" data-tag="alone">Alone</button>
+                            <button type="button" class="simple-tag" data-tag="other">Other</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="simple-section simple-section-collapsible">
+                    <button type="button" class="simple-collapse-toggle" data-target="simpleNoteWrap" aria-expanded="false">Note</button>
+                    <div id="simpleNoteWrap" class="simple-collapsible" hidden>
+                        <textarea id="simpleNoteText" class="simple-note" placeholder="Write your note..."></textarea>
+                    </div>
+                </div>
+
+                <div class="simple-autosave-status" id="simpleAutosaveStatus">Auto-save enabled</div>
+            </div>
         </div>
     </div>
 
@@ -2813,15 +3427,33 @@
     </nav>
 
     <script>
-        const TOTAL_PAGES = 9;
+        const TOTAL_PAGES = 10;
         let currentPage = 0;
         let currentUser = null; // Will store Firebase user after authentication
         let currentSymptomTab = 'sleep';
         let symptomAutosaveTimer = null;
+        let trackerHydrating = false;
+        let trackerLoadToken = 0;
         let latestUploadedSymptomImage = null;
         let currentGhostState = 'unhappy';
         let ghostHappyLingerTimer = null;
         let ghostTapCount = null;
+        let trackerStatsRefreshTimer = null;
+        let wordsOnlyMode = false;
+        let simpleTrackerHydrating = false;
+        let simpleTrackerAutosaveTimer = null;
+        const SIMPLE_MOOD_FIELDS = [
+            { key: 'energyHighest', label: 'Energy Highest' },
+            { key: 'energyLowest', label: 'Energy Lowest' },
+            { key: 'moodHighest', label: 'Mood Highest' },
+            { key: 'moodLowest', label: 'Mood Lowest' },
+            { key: 'anxiety', label: 'Anxiety' },
+            { key: 'irritability', label: 'Irritability' }
+        ];
+        const LOADER_CACHE_KEY = 'everythingTrackerLoaderCachedV1';
+        const loaderBootStartedAt = (window.performance && typeof window.performance.now === 'function')
+            ? window.performance.now()
+            : Date.now();
 
         const GHOST_STATES = ['happy', 'unhappy', 'manic', 'sad', 'anxious', 'numb'];
         const GHOST_STATE_ASSETS = {
@@ -2896,13 +3528,102 @@
             }
         }
 
-        // Set today's date on page load
-        function initializeDate() {
+        function renderTrackerStats(streak, xp, days) {
+            const streakEl = document.getElementById('trackerStreakChip');
+            const xpEl = document.getElementById('trackerXpChip');
+            const daysEl = document.getElementById('trackerDaysChip');
+            if (streakEl) streakEl.textContent = `Streak: ${streak}`;
+            if (xpEl) xpEl.textContent = `XP: ${xp}`;
+            if (daysEl) daysEl.textContent = `Days: ${days}`;
+        }
+
+        function isIsoDateKey(value) {
+            return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value);
+        }
+
+        function shiftDateString(dateStr, deltaDays) {
+            const d = new Date(`${dateStr}T00:00:00`);
+            d.setDate(d.getDate() + deltaDays);
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        }
+
+        function calculateTrackerStreak(dateSet) {
+            let streak = 0;
+            let cursor = getTodayDateString();
+            while (dateSet.has(cursor)) {
+                streak += 1;
+                cursor = shiftDateString(cursor, -1);
+            }
+            return streak;
+        }
+
+        function calculateTrackerXp(totalEntries, streak) {
+            let bonus = 0;
+            if (streak >= 7) bonus += 10;
+            if (streak >= 14) bonus += 50;
+            if (streak >= 30) bonus += 300;
+            return totalEntries + bonus;
+        }
+
+        async function refreshTrackerStats() {
+            currentUser = currentUser || window.currentUser;
+            if (!currentUser || !window.firebaseDb || !window.firebaseCollection || !window.firebaseGetDocs) {
+                renderTrackerStats('--', '--', '--');
+                return;
+            }
+
+            try {
+                const colRef = window.firebaseCollection(window.firebaseDb, 'users', currentUser.uid, 'entriesSymptoms');
+                const snap = await window.firebaseGetDocs(colRef);
+                const dateSet = new Set();
+                const addDate = (v) => { if (isIsoDateKey(v)) dateSet.add(v); };
+
+                if (snap && Array.isArray(snap.docs)) {
+                    snap.docs.forEach((docSnap) => {
+                        addDate(docSnap.id);
+                        const data = typeof docSnap.data === 'function' ? docSnap.data() : null;
+                        if (data && typeof data.date === 'string') addDate(data.date);
+                    });
+                } else if (snap && typeof snap.forEach === 'function') {
+                    snap.forEach((docSnap) => {
+                        addDate(docSnap.id);
+                        const data = typeof docSnap.data === 'function' ? docSnap.data() : null;
+                        if (data && typeof data.date === 'string') addDate(data.date);
+                    });
+                }
+
+                const totalEntries = dateSet.size;
+                const streak = calculateTrackerStreak(dateSet);
+                const xp = calculateTrackerXp(totalEntries, streak);
+                renderTrackerStats(streak, xp, totalEntries);
+            } catch (e) {
+                console.error('Tracker stats load error:', e);
+                renderTrackerStats('--', '--', '--');
+            }
+        }
+
+        function queueTrackerStatsRefresh() {
+            clearTimeout(trackerStatsRefreshTimer);
+            trackerStatsRefreshTimer = setTimeout(() => {
+                refreshTrackerStats();
+            }, 800);
+        }
+        window.refreshTrackerStats = refreshTrackerStats;
+
+        function getTodayDateString() {
             const today = new Date();
             const year = today.getFullYear();
             const month = String(today.getMonth() + 1).padStart(2, '0');
             const day = String(today.getDate()).padStart(2, '0');
-            const dateString = `${year}-${month}-${day}`;
+            return `${year}-${month}-${day}`;
+        }
+
+        // Set today's date on page load
+        function initializeDate() {
+            const dateString = getTodayDateString();
 
             const dateInput = document.getElementById('date');
             if (dateInput && !dateInput.value) {
@@ -2932,17 +3653,574 @@
             const day = String(d.getDate()).padStart(2, '0');
             dateInput.value = `${y}-${m}-${day}`;
             updateTrackerDateButtons();
-            queueSymptomAutosave();
+            loadTrackerDataForDate(dateInput.value);
+        }
+
+        function setTrackerSliderValue(sliderId, value, hasSavedValue) {
+            const slider = document.getElementById(sliderId);
+            if (!slider) return;
+            const min = parseInt(slider.min, 10);
+            const max = parseInt(slider.max, 10);
+            const fallback = parseInt(slider.dataset.default, 10) || 4;
+            const parsed = Number(value);
+            const normalized = Number.isFinite(parsed)
+                ? Math.max(min, Math.min(max, Math.round(parsed)))
+                : fallback;
+            slider.value = String(normalized);
+            if (hasSavedValue) {
+                slider.dataset.everMoved = 'true';
+                slider.classList.add('active');
+            } else {
+                delete slider.dataset.everMoved;
+                slider.classList.remove('active');
+            }
+        }
+
+        function resetTrackerInputsToDefaults() {
+            if (typeof window.setSleepData === 'function') {
+                window.setSleepData([]);
+            } else {
+                sleepData = new Array(48).fill(false);
+            }
+
+            if (typeof window.setCaffeineScoreValue === 'function') {
+                window.setCaffeineScoreValue(0, false);
+            } else {
+                caffeineScore = 0;
+                const scoreEl = document.getElementById('scoreValue');
+                const caffeineInput = document.getElementById('finalScoreInput');
+                if (scoreEl) scoreEl.innerText = '0';
+                if (caffeineInput) caffeineInput.value = '';
+                if (typeof updateMugFill === 'function') updateMugFill();
+            }
+
+            ['energyHighest', 'energyLowest', 'moodHighest', 'moodLowest', 'anxiety', 'irritability']
+                .forEach((sliderId) => setTrackerSliderValue(sliderId, null, false));
+
+            document.querySelectorAll('#activitiesTagContainer .tag, #peopleTagContainer .tag')
+                .forEach((tag) => tag.classList.remove('selected'));
+
+            const noteText = document.getElementById('noteText');
+            if (noteText) noteText.value = '';
+            const noteImage = document.getElementById('noteImage');
+            if (noteImage) noteImage.value = '';
+            latestUploadedSymptomImage = null;
+        }
+
+        function applyTrackerDataToInputs(data) {
+            if (!data || typeof data !== 'object') return;
+
+            if (typeof window.setSleepData === 'function') {
+                window.setSleepData(Array.isArray(data.sleep) ? data.sleep : []);
+            }
+
+            const savedCaffeine = Number(data.caffeine);
+            if (typeof window.setCaffeineScoreValue === 'function') {
+                window.setCaffeineScoreValue(
+                    Number.isFinite(savedCaffeine) ? savedCaffeine : 0,
+                    Number.isFinite(savedCaffeine) && savedCaffeine > 0
+                );
+            }
+
+            const energy = data.energy || {};
+            const mood = data.mood || {};
+            setTrackerSliderValue('energyHighest', energy.highest, energy.highest != null);
+            setTrackerSliderValue('energyLowest', energy.lowest, energy.lowest != null);
+            setTrackerSliderValue('moodHighest', mood.highest, mood.highest != null);
+            setTrackerSliderValue('moodLowest', mood.lowest, mood.lowest != null);
+            setTrackerSliderValue('anxiety', data.anxiety, data.anxiety != null);
+            setTrackerSliderValue('irritability', data.irritability, data.irritability != null);
+
+            const activities = Array.isArray(data.activities) ? data.activities : [];
+            const people = Array.isArray(data.people) ? data.people : [];
+            document.querySelectorAll('#activitiesTagContainer .tag').forEach((tag) => {
+                tag.classList.toggle('selected', activities.includes(tag.dataset.tag));
+            });
+            document.querySelectorAll('#peopleTagContainer .tag').forEach((tag) => {
+                tag.classList.toggle('selected', people.includes(tag.dataset.tag));
+            });
+
+            const noteText = document.getElementById('noteText');
+            if (noteText) noteText.value = typeof data.note === 'string' ? data.note : '';
+            latestUploadedSymptomImage = data.imageUrl
+                ? { url: data.imageUrl, metadata: data.imageMetadata || null }
+                : null;
+        }
+
+        async function loadTrackerDataForDate(dateStr, options) {
+            options = options || {};
+            const silent = !!options.silent;
+            const token = ++trackerLoadToken;
+
+            currentUser = currentUser || window.currentUser;
+            if (!dateStr) return;
+            if (!silent) setSymptomAutosaveStatus('Loading...', 'saving');
+
+            clearTimeout(symptomAutosaveTimer);
+            trackerHydrating = true;
+            try {
+                initSleepTracker();
+                resetTrackerInputsToDefaults();
+
+                if (!currentUser || !window.firebaseDb || !window.firebaseDoc || !window.firebaseGetDoc) {
+                    if (!silent) setSymptomAutosaveStatus('Auto-save enabled', '');
+                    return;
+                }
+
+                const ref = window.firebaseDoc(window.firebaseDb, 'users', currentUser.uid, 'entriesSymptoms', dateStr);
+                const snap = await window.firebaseGetDoc(ref);
+                if (token !== trackerLoadToken) return;
+
+                if (snap.exists()) {
+                    applyTrackerDataToInputs(snap.data());
+                    if (!silent) setSymptomAutosaveStatus('Loaded', 'saved');
+                } else if (!silent) {
+                    setSymptomAutosaveStatus('No saved data', '');
+                }
+            } catch (e) {
+                console.error('Tracker load error:', e);
+                if (!silent) setSymptomAutosaveStatus('Load failed', 'error');
+            } finally {
+                if (token === trackerLoadToken) trackerHydrating = false;
+            }
+        }
+
+        async function loadTrackerPage() {
+            const dateInput = document.getElementById('date');
+            const today = getTodayDateString();
+            if (dateInput) dateInput.value = today;
+            updateTrackerDateButtons();
+            initializeTags();
+            initializeSliders();
+            await loadTrackerDataForDate(today);
+            switchSymptomTab(currentSymptomTab || 'sleep');
+        }
+
+        async function preloadTodayDocuments() {
+            const today = getTodayDateString();
+            await Promise.all([
+                loadTrackerDataForDate(today, { silent: true }),
+                loadHabitsDayData(today, true)
+            ]);
+        }
+        window.preloadTodayDocuments = preloadTodayDocuments;
+
+        function simpleTimeToSlot(timeStr) {
+            if (!timeStr || !timeStr.includes(':')) return null;
+            const parts = timeStr.split(':');
+            const h = parseInt(parts[0], 10);
+            const m = parseInt(parts[1], 10);
+            if (!Number.isFinite(h) || !Number.isFinite(m)) return null;
+            const total = (h * 60) + m;
+            return Math.max(0, Math.min(47, Math.round(total / 30) % 48));
+        }
+
+        function simpleSlotToTime(slot) {
+            const normalized = ((slot % 48) + 48) % 48;
+            const h = Math.floor(normalized / 2);
+            const m = (normalized % 2) * 30;
+            return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+        }
+
+        function simpleApplySleepSegment(arr, start, end) {
+            if (start == null || end == null || start === end) return;
+            let cursor = start;
+            for (let i = 0; i < 48; i++) {
+                if (cursor === end) break;
+                arr[cursor] = true;
+                cursor = (cursor + 1) % 48;
+            }
+        }
+
+        function buildSimpleSleepArray() {
+            const asleep = simpleTimeToSlot(document.getElementById('simpleSleepAsleep')?.value || '');
+            const wake = simpleTimeToSlot(document.getElementById('simpleSleepWake')?.value || '');
+            const arr = new Array(48).fill(false);
+            simpleApplySleepSegment(arr, asleep, wake);
+
+            const napRow = document.getElementById('simpleNapRow');
+            if (napRow && !napRow.hidden) {
+                const napStart = simpleTimeToSlot(document.getElementById('simpleNapStart')?.value || '');
+                const napEnd = simpleTimeToSlot(document.getElementById('simpleNapEnd')?.value || '');
+                simpleApplySleepSegment(arr, napStart, napEnd);
+            }
+            return arr;
+        }
+
+        function sleepSegmentsFromSlots(slots) {
+            if (!Array.isArray(slots) || slots.length !== 48) return [];
+            const segments = [];
+            let i = 0;
+            while (i < 48) {
+                if (!slots[i]) { i += 1; continue; }
+                const start = i;
+                while (i < 48 && slots[i]) i += 1;
+                const end = i % 48;
+                segments.push({ start, end, len: i - start });
+            }
+            if (segments.length > 1 && slots[0] && slots[47]) {
+                const first = segments[0];
+                const last = segments[segments.length - 1];
+                const merged = { start: last.start, end: first.end, len: last.len + first.len };
+                segments.shift();
+                segments.pop();
+                segments.unshift(merged);
+            }
+            return segments.sort((a, b) => b.len - a.len);
+        }
+
+        function setSimpleAutosaveStatus(text, state) {
+            const el = document.getElementById('simpleAutosaveStatus');
+            if (!el) return;
+            el.textContent = text;
+            el.dataset.state = state || '';
+        }
+
+        function updateSimpleCaffeineLabel() {
+            const slider = document.getElementById('simpleCaffeineSlider');
+            const label = document.getElementById('simpleCaffeineValue');
+            if (!slider || !label) return;
+            label.textContent = `${slider.value || 0} mg`;
+        }
+
+        function renderSimpleMoodRows() {
+            const wrap = document.getElementById('simpleMoodRows');
+            if (!wrap || wrap.dataset.built === '1') return;
+            wrap.dataset.built = '1';
+            let html = '';
+            SIMPLE_MOOD_FIELDS.forEach((field) => {
+                html += `<div class="simple-mood-row"><div class="simple-scale-label">${field.label}</div><div class="simple-scale-buttons" data-metric="${field.key}">`;
+                for (let i = 1; i <= 7; i++) {
+                    html += `<button type="button" class="simple-scale-btn" data-metric="${field.key}" data-value="${i}">${i}</button>`;
+                }
+                html += '</div></div>';
+            });
+            wrap.innerHTML = html;
+        }
+
+        function setSimpleMoodValue(metric, value) {
+            const buttons = document.querySelectorAll(`.simple-scale-btn[data-metric="${metric}"]`);
+            buttons.forEach((btn) => {
+                btn.classList.toggle('active', Number(btn.dataset.value) === Number(value));
+            });
+        }
+
+        function getSimpleMoodValue(metric) {
+            const active = document.querySelector(`.simple-scale-btn[data-metric="${metric}"].active`);
+            return active ? Number(active.dataset.value) : 4;
+        }
+
+        function initializeSimpleTrackerBindings() {
+            const page = document.getElementById('page9');
+            if (!page || page.dataset.bound === '1') return;
+            page.dataset.bound = '1';
+
+            const moodWrap = document.getElementById('simpleMoodRows');
+            if (moodWrap) {
+                moodWrap.addEventListener('click', function(e) {
+                    const btn = e.target.closest('.simple-scale-btn');
+                    if (!btn) return;
+                    setSimpleMoodValue(btn.dataset.metric, btn.dataset.value);
+                    queueSimpleTrackerAutosave();
+                });
+            }
+
+            const napToggle = document.getElementById('simpleNapToggle');
+            const napRow = document.getElementById('simpleNapRow');
+            if (napToggle && napRow) {
+                napToggle.addEventListener('click', function() {
+                    napRow.hidden = !napRow.hidden;
+                    napToggle.textContent = napRow.hidden ? 'Add nap' : 'Remove nap';
+                    queueSimpleTrackerAutosave();
+                });
+            }
+
+            document.querySelectorAll('.simple-collapse-toggle').forEach((btn) => {
+                btn.addEventListener('click', function() {
+                    const target = document.getElementById(this.dataset.target);
+                    if (!target) return;
+                    const nextHidden = !target.hidden;
+                    target.hidden = nextHidden;
+                    this.setAttribute('aria-expanded', String(!nextHidden));
+                });
+            });
+
+            document.querySelectorAll('#page9 input, #page9 textarea').forEach((el) => {
+                el.addEventListener('input', function() {
+                    if (this.id === 'simpleCaffeineSlider') updateSimpleCaffeineLabel();
+                    queueSimpleTrackerAutosave();
+                }, { passive: true });
+            });
+
+            document.querySelectorAll('.simple-tag').forEach((tag) => {
+                tag.addEventListener('click', function() {
+                    this.classList.toggle('selected');
+                    queueSimpleTrackerAutosave();
+                });
+            });
+        }
+
+        function collectSimpleTrackerData(dateStr) {
+            const activities = Array.from(document.querySelectorAll('#simpleActivitiesTagContainer .simple-tag.selected')).map(el => el.dataset.tag);
+            const people = Array.from(document.querySelectorAll('#simplePeopleTagContainer .simple-tag.selected')).map(el => el.dataset.tag);
+            const caffeine = Number(document.getElementById('simpleCaffeineSlider')?.value || 0);
+            return {
+                date: dateStr,
+                sleep: buildSimpleSleepArray(),
+                caffeine: caffeine,
+                energy: {
+                    highest: getSimpleMoodValue('energyHighest'),
+                    lowest: getSimpleMoodValue('energyLowest')
+                },
+                mood: {
+                    highest: getSimpleMoodValue('moodHighest'),
+                    lowest: getSimpleMoodValue('moodLowest')
+                },
+                anxiety: getSimpleMoodValue('anxiety'),
+                irritability: getSimpleMoodValue('irritability'),
+                activities: activities,
+                people: people,
+                note: document.getElementById('simpleNoteText')?.value || ''
+            };
+        }
+
+        async function saveSimpleTrackerSnapshot() {
+            if (simpleTrackerHydrating) return;
+            currentUser = currentUser || window.currentUser;
+            if (!currentUser || !window.firebaseDb || !window.firebaseDoc || !window.firebaseSetDoc) return;
+
+            const dateStr = getTodayDateString();
+            const data = collectSimpleTrackerData(dateStr);
+            const ref = window.firebaseDoc(window.firebaseDb, 'users', currentUser.uid, 'entriesSymptoms', dateStr);
+            const payload = {
+                userId: currentUser.uid,
+                userEmail: currentUser.email,
+                date: dateStr,
+                timestamp: window.firebaseTimestamp.now(),
+                sleep: data.sleep,
+                caffeine: data.caffeine,
+                energy: data.energy,
+                mood: data.mood,
+                anxiety: data.anxiety,
+                irritability: data.irritability,
+                activities: data.activities,
+                people: data.people,
+                note: data.note
+            };
+            await window.firebaseSetDoc(ref, payload, { merge: true });
+            queueTrackerStatsRefresh();
+        }
+
+        function queueSimpleTrackerAutosave() {
+            if (simpleTrackerHydrating) return;
+            setSimpleAutosaveStatus('Saving...', 'saving');
+            clearTimeout(simpleTrackerAutosaveTimer);
+            simpleTrackerAutosaveTimer = setTimeout(async () => {
+                try {
+                    await saveSimpleTrackerSnapshot();
+                    setSimpleAutosaveStatus('Saved', 'saved');
+                } catch (err) {
+                    console.error('Simple tracker autosave error:', err);
+                    setSimpleAutosaveStatus('Save failed', 'error');
+                }
+            }, 350);
+        }
+
+        function resetSimpleTrackerDefaults() {
+            const asleep = document.getElementById('simpleSleepAsleep');
+            const wake = document.getElementById('simpleSleepWake');
+            const napStart = document.getElementById('simpleNapStart');
+            const napEnd = document.getElementById('simpleNapEnd');
+            const napToggle = document.getElementById('simpleNapToggle');
+            const napRow = document.getElementById('simpleNapRow');
+            if (asleep) asleep.value = '';
+            if (wake) wake.value = '';
+            if (napStart) napStart.value = '';
+            if (napEnd) napEnd.value = '';
+            if (napRow) napRow.hidden = true;
+            if (napToggle) napToggle.textContent = 'Add nap';
+
+            const caffeine = document.getElementById('simpleCaffeineSlider');
+            if (caffeine) caffeine.value = '0';
+            updateSimpleCaffeineLabel();
+
+            SIMPLE_MOOD_FIELDS.forEach((f) => setSimpleMoodValue(f.key, 4));
+            document.querySelectorAll('.simple-tag.selected').forEach((el) => el.classList.remove('selected'));
+            const note = document.getElementById('simpleNoteText');
+            if (note) note.value = '';
+        }
+
+        function applySimpleTrackerFromDoc(data) {
+            if (!data || typeof data !== 'object') return;
+            resetSimpleTrackerDefaults();
+
+            const segments = sleepSegmentsFromSlots(Array.isArray(data.sleep) ? data.sleep.slice(0, 48).map(Boolean) : []);
+            const main = segments[0];
+            const nap = segments[1];
+            if (main) {
+                const asleep = document.getElementById('simpleSleepAsleep');
+                const wake = document.getElementById('simpleSleepWake');
+                if (asleep) asleep.value = simpleSlotToTime(main.start);
+                if (wake) wake.value = simpleSlotToTime(main.end);
+            }
+            if (nap) {
+                const napRow = document.getElementById('simpleNapRow');
+                const napToggle = document.getElementById('simpleNapToggle');
+                if (napRow) napRow.hidden = false;
+                if (napToggle) napToggle.textContent = 'Remove nap';
+                const napStart = document.getElementById('simpleNapStart');
+                const napEnd = document.getElementById('simpleNapEnd');
+                if (napStart) napStart.value = simpleSlotToTime(nap.start);
+                if (napEnd) napEnd.value = simpleSlotToTime(nap.end);
+            }
+
+            const caffeine = document.getElementById('simpleCaffeineSlider');
+            if (caffeine && Number.isFinite(Number(data.caffeine))) {
+                caffeine.value = String(Math.max(0, Math.min(800, Number(data.caffeine))));
+            }
+            updateSimpleCaffeineLabel();
+
+            setSimpleMoodValue('energyHighest', data.energy && data.energy.highest != null ? data.energy.highest : 4);
+            setSimpleMoodValue('energyLowest', data.energy && data.energy.lowest != null ? data.energy.lowest : 4);
+            setSimpleMoodValue('moodHighest', data.mood && data.mood.highest != null ? data.mood.highest : 4);
+            setSimpleMoodValue('moodLowest', data.mood && data.mood.lowest != null ? data.mood.lowest : 4);
+            setSimpleMoodValue('anxiety', data.anxiety != null ? data.anxiety : 4);
+            setSimpleMoodValue('irritability', data.irritability != null ? data.irritability : 4);
+
+            const activities = Array.isArray(data.activities) ? data.activities : [];
+            const people = Array.isArray(data.people) ? data.people : [];
+            document.querySelectorAll('#simpleActivitiesTagContainer .simple-tag').forEach((tag) => {
+                tag.classList.toggle('selected', activities.includes(tag.dataset.tag));
+            });
+            document.querySelectorAll('#simplePeopleTagContainer .simple-tag').forEach((tag) => {
+                tag.classList.toggle('selected', people.includes(tag.dataset.tag));
+            });
+
+            const note = document.getElementById('simpleNoteText');
+            if (note) note.value = typeof data.note === 'string' ? data.note : '';
+        }
+
+        async function loadSimpleTrackerForToday() {
+            const dateStr = getTodayDateString();
+            currentUser = currentUser || window.currentUser;
+            clearTimeout(simpleTrackerAutosaveTimer);
+            simpleTrackerHydrating = true;
+            setSimpleAutosaveStatus('Loading...', 'saving');
+            try {
+                resetSimpleTrackerDefaults();
+                if (!currentUser || !window.firebaseDb || !window.firebaseDoc || !window.firebaseGetDoc) {
+                    setSimpleAutosaveStatus('Auto-save enabled', '');
+                    return;
+                }
+                const ref = window.firebaseDoc(window.firebaseDb, 'users', currentUser.uid, 'entriesSymptoms', dateStr);
+                const snap = await window.firebaseGetDoc(ref);
+                if (snap.exists()) {
+                    applySimpleTrackerFromDoc(snap.data());
+                    setSimpleAutosaveStatus('Loaded', 'saved');
+                } else {
+                    setSimpleAutosaveStatus('No saved data', '');
+                }
+            } catch (e) {
+                console.error('Simple tracker load error:', e);
+                setSimpleAutosaveStatus('Load failed', 'error');
+            } finally {
+                simpleTrackerHydrating = false;
+            }
+        }
+
+        async function initSimpleTrackerPage() {
+            renderSimpleMoodRows();
+            initializeSimpleTrackerBindings();
+            await loadSimpleTrackerForToday();
         }
 
         function updateBottomNav(pageNumber) {
             const nav = document.getElementById('bottomNav');
             if (!nav) return;
-            const show = pageNumber === 1 || pageNumber === 2 || pageNumber === 7 || pageNumber === 8;
+            const show = pageNumber === 1 || pageNumber === 2 || pageNumber === 7 || pageNumber === 8 || pageNumber === 9;
             nav.style.display = show ? 'grid' : 'none';
             nav.querySelectorAll('.bottom-nav-btn').forEach(btn => {
                 btn.classList.toggle('active', Number(btn.dataset.page) === pageNumber);
             });
+        }
+
+        function isMobileTapContext() {
+            try {
+                if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) return true;
+            } catch (e) {}
+            return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        }
+
+        function triggerMobileHaptic(type) {
+            if (!isMobileTapContext()) return;
+            const pattern = (type === 'heavy') ? 18 : 10;
+
+            // Standard vibration API (Android, some browsers)
+            try {
+                if (navigator && typeof navigator.vibrate === 'function') {
+                    navigator.vibrate(pattern);
+                    return;
+                }
+            } catch (e) {}
+
+            // Best-effort fallback for iOS WKWebView host apps that expose native haptics
+            try {
+                if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.haptic) {
+                    window.webkit.messageHandlers.haptic.postMessage({ style: type === 'heavy' ? 'medium' : 'light' });
+                }
+            } catch (e) {}
+        }
+
+        function enableWordsOnlyMode() {
+            if (currentPage !== 0) return;
+            wordsOnlyMode = true;
+            document.body.classList.add('words-only-mode');
+            const backgroundWords = document.getElementById('backgroundWords');
+            if (backgroundWords) backgroundWords.classList.remove('hidden');
+            if (typeof window.resumeWordCreation === 'function') window.resumeWordCreation();
+        }
+
+        function disableWordsOnlyMode() {
+            wordsOnlyMode = false;
+            document.body.classList.remove('words-only-mode');
+        }
+        window.disableWordsOnlyMode = disableWordsOnlyMode;
+
+        function toggleWordsOnlyMode() {
+            if (wordsOnlyMode) {
+                disableWordsOnlyMode();
+            } else {
+                enableWordsOnlyMode();
+            }
+        }
+
+        function getLoaderMinimumMs() {
+            try {
+                return localStorage.getItem(LOADER_CACHE_KEY) === '1' ? 240 : 1150;
+            } catch (e) {
+                return 900;
+            }
+        }
+
+        async function hideAppLoadingScreen() {
+            const loader = document.getElementById('appLoadingScreen');
+            if (!loader || loader.dataset.done === '1') return;
+
+            const now = (window.performance && typeof window.performance.now === 'function')
+                ? window.performance.now()
+                : Date.now();
+            const elapsed = now - loaderBootStartedAt;
+            const waitMs = Math.max(0, getLoaderMinimumMs() - elapsed);
+            if (waitMs > 0) {
+                await new Promise((resolve) => setTimeout(resolve, waitMs));
+            }
+
+            loader.dataset.done = '1';
+            loader.classList.add('is-hiding');
+            try { localStorage.setItem(LOADER_CACHE_KEY, '1'); } catch (e) {}
+            setTimeout(() => {
+                loader.classList.add('is-hidden');
+            }, 620);
         }
 
         function initializeSliders() {
@@ -3014,6 +4292,8 @@
                 currentUser = userCredential.user;
                 console.log('Successfully signed in:', currentUser.email);
                 loadGhostTapCounter();
+                await preloadTodayDocuments();
+                await refreshTrackerStats();
 
                 // Start fade animation
                 window.speedUpAndFadeWords();
@@ -3124,9 +4404,11 @@
 
             const ref = window.firebaseDoc(window.firebaseDb, 'users', currentUser.uid, 'entriesSymptoms', data.date);
             await window.firebaseSetDoc(ref, payload, { merge: true });
+            queueTrackerStatsRefresh();
         }
 
         function queueSymptomAutosave() {
+            if (trackerHydrating) return;
             setSymptomAutosaveStatus('Saving...', 'saving');
             clearTimeout(symptomAutosaveTimer);
             symptomAutosaveTimer = setTimeout(async () => {
@@ -3247,13 +4529,7 @@
         }
 
         function changeGhostStateRandom() {
-            const image = document.getElementById('ghostFriendImage');
-            if (image) {
-                image.classList.remove('pop-scale');
-                void image.offsetWidth;
-                image.classList.add('pop-scale');
-                setTimeout(() => image.classList.remove('pop-scale'), 460);
-            }
+            triggerMobileHaptic('light');
             if (ghostTapCount === null) loadGhostTapCounter();
             ghostTapCount += 1;
             saveGhostTapCounter();
@@ -3281,7 +4557,10 @@
         }
 
         function goToPage(pageNumber) {
-            if (pageNumber < 0 || pageNumber > 8) return;
+            if (pageNumber < 0 || pageNumber > 9) return;
+            if (wordsOnlyMode && pageNumber !== 0) {
+                disableWordsOnlyMode();
+            }
 
             // Hide all pages
             document.querySelectorAll('.page').forEach(page => {
@@ -3306,10 +4585,16 @@
                 }
             }
 
-            // Overlay logic: fade to 0.001 on pages 0, 1, 7, 8 (background visible), stay at 1 on tracker page
-            if (pageNumber === 0 || pageNumber === 1 || pageNumber === 7 || pageNumber === 8) {
+            if (pageNumber === 9) {
+                if (typeof window.stopWordCreation === 'function') window.stopWordCreation();
+            } else if (currentPage === 9) {
+                if (typeof window.resumeWordCreation === 'function') window.resumeWordCreation();
+            }
+
+            // Overlay logic: fade to 0.001 on non-tracker pages, stay at 1 on tracker page
+            if (pageNumber === 0 || pageNumber === 1 || pageNumber === 7 || pageNumber === 8 || pageNumber === 9) {
                 fadeOverlay.style.opacity = '0.001';
-                if (currentPage === 2) {
+                if (currentPage === 2 && pageNumber !== 9) {
                     window.resumeWordCreation();
                 }
                 if (pageNumber === 0) {
@@ -3320,11 +4605,7 @@
                 // Tracker page: keep background faded out
                 // Don't change opacity here - it transitions from page 0 during validateAndProceed
                 setTimeout(() => {
-                    initSleepTracker();
-                    initializeSliders();
-                    initializeTags();
-                    updateTrackerDateButtons();
-                    switchSymptomTab(currentSymptomTab || 'sleep');
+                    loadTrackerPage();
                 }, 50);
             }
 
@@ -3335,10 +4616,22 @@
                 }, 100);
             }
 
+            if (pageNumber === 1) {
+                setTimeout(() => {
+                    refreshTrackerStats();
+                }, 80);
+            }
+
             // Initialize habits when going to page 8
             if (pageNumber === 8) {
                 setTimeout(() => {
                     initHabitsPage();
+                }, 50);
+            }
+
+            if (pageNumber === 9) {
+                setTimeout(() => {
+                    initSimpleTrackerPage();
                 }, 50);
             }
 
@@ -3383,6 +4676,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             initializeDate();
             updateBottomNav(0);
+            renderTrackerStats('--', '--', '--');
             const page0Subtitle = document.querySelector('#page0 .subtitle');
             const page1Subtitle = document.getElementById('ghostPageSubtitle');
             if (page0Subtitle && page1Subtitle) {
@@ -3414,6 +4708,14 @@
             const backgroundEl = document.getElementById('background');
             backgroundEl.style.display = 'block';
 
+            document.querySelectorAll('.bottom-nav-btn').forEach(function(btn) {
+                if (btn.dataset.hapticBound === '1') return;
+                btn.dataset.hapticBound = '1';
+                btn.addEventListener('pointerup', function() {
+                    triggerMobileHaptic('light');
+                }, { passive: true });
+            });
+
             // Initialize sliders on page load
             initGhostFriend();
             initializeSliders();
@@ -3429,7 +4731,7 @@
             if (dateInput) {
                 dateInput.addEventListener('change', function() {
                     updateTrackerDateButtons();
-                    queueSymptomAutosave();
+                    loadTrackerDataForDate(this.value);
                 }, { passive: true });
             }
 
@@ -3440,7 +4742,13 @@
                     if (file) uploadSymptomImageAndSave(file);
                 });
             }
+
+            hideAppLoadingScreen();
         });
+
+        window.addEventListener('load', function() {
+            hideAppLoadingScreen();
+        }, { once: true });
 
         // Helper function to get slider value or default
         function getSliderValue(sliderId) {
@@ -3540,6 +4848,7 @@
                 // Save to Firestore under users/{uid}/entriesSymptoms/{date}
                 const entryRef = window.firebaseDoc(window.firebaseDb, 'users', currentUser.uid, 'entriesSymptoms', formData.date);
                 await window.firebaseSetDoc(entryRef, entry, { merge: false });
+                queueTrackerStatsRefresh();
 
                 console.log('Entry saved successfully:', entry);
                 alert('Data submitted successfully! ✓');
@@ -3924,11 +5233,11 @@
             updateWritingTotal(dateStr);
         }
 
-        async function loadAndRenderHabitsDay() {
+        async function loadAndRenderHabitsDay(force) {
             var token = ++habitsRenderToken;
             var d = new Date();
             d.setDate(d.getDate() + habitsDayOffset);
-            await loadHabitsDayData(habitsDateStr(d));
+            await loadHabitsDayData(habitsDateStr(d), !!force);
             if (token !== habitsRenderToken) return;
             renderHabitsDayView();
         }
@@ -4073,7 +5382,7 @@
             document.querySelectorAll('.habit-tab-btn').forEach(function(btn) {
                 btn.classList.toggle('active', btn.dataset.tab === 'day');
             });
-            await loadAndRenderHabitsDay();
+            await loadAndRenderHabitsDay(true);
         }
 
         async function submitHabits() {
@@ -4159,6 +5468,14 @@
             if (user) {
                 console.log('User is signed in:', user.email);
                 window.currentUser = user;
+                if (window.refreshTrackerStats) {
+                    window.refreshTrackerStats();
+                }
+                if (window.preloadTodayDocuments) {
+                    window.preloadTodayDocuments().catch((err) => {
+                        console.error('Startup preload failed:', err);
+                    });
+                }
                 var page0 = document.getElementById('page0');
                 if (page0 && page0.classList.contains('active') && window.goToPage) {
                     window.goToPage(1);
@@ -4279,6 +5596,14 @@
                 if (user) {
                     console.log('User is signed in:', user.email);
                     window.currentUser = user;
+                    if (window.refreshTrackerStats) {
+                        window.refreshTrackerStats();
+                    }
+                    if (window.preloadTodayDocuments) {
+                        window.preloadTodayDocuments().catch(function(err) {
+                            console.error('Startup preload failed:', err);
+                        });
+                    }
                     var page0 = document.getElementById('page0');
                     if (page0 && page0.classList.contains('active') && window.goToPage) {
                         window.goToPage(1);
