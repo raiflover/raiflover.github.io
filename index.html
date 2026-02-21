@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="trackers/sleep.css">
     <link rel="stylesheet" href="analytics/analytics.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
         :root {
             --glass-bg-1: rgba(16, 28, 52, 0.56);
             --glass-bg-2: rgba(6, 12, 24, 0.68);
@@ -32,7 +34,8 @@
         }
 
         body {
-            font-family: Helvetica, sans-serif;
+            font-family: 'Outfit', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-weight: 400;
             background: #0d101a;
             min-height: 100vh;
             min-height: 100svh;
@@ -197,7 +200,7 @@
             background: rgba(11, 18, 33, 0.78);
             color: #B7BEFA;
             font-size: 0.84em;
-            font-weight: 700;
+            font-weight: 600;
             display: none;
             -webkit-appearance: none;
             appearance: none;
@@ -212,6 +215,22 @@
         body.words-only-mode .container,
         body.words-only-mode {
             overflow: hidden;
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-weight: 500;
         }
 
         body.words-only-mode .container {
@@ -239,7 +258,7 @@
             background: transparent;
             color: #B7BEFA;
             display: inline;
-            font-size: 1.15em;
+            font-size: 1.28em;
             line-height: 1;
             padding: 0;
             cursor: pointer;
@@ -489,7 +508,8 @@
         @media (max-width: 768px) {
             body:has(.container #page2.active),
             body:has(.container #page7.active),
-            body:has(.container #page8.active) {
+            body:has(.container #page8.active),
+            body:has(.container #page9.active) {
                 padding: 0;
                 align-items: stretch;
                 justify-content: stretch;
@@ -497,7 +517,8 @@
 
             .container:has(#page2.active),
             .container:has(#page7.active),
-            .container:has(#page8.active) {
+            .container:has(#page8.active),
+            .container:has(#page9.active) {
                 width: 100vw;
                 min-width: 100vw;
                 max-width: 100vw;
@@ -520,6 +541,31 @@
                 touch-action: pan-y;
             }
 
+            #page9.active {
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                touch-action: pan-y;
+                min-height: 100%;
+                animation: none;
+            }
+
+            #page7,
+            #page8 {
+                padding-top: 6px;
+            }
+
+            #page7 h1,
+            #page8 h1 {
+                font-size: 1.4em;
+                margin-bottom: 6px;
+            }
+
+            #page7 .subtitle,
+            #page8 .subtitle {
+                font-size: 0.85em;
+                margin-bottom: 14px;
+            }
+
             /* Give room below tracker content so bottom nav doesn't block access */
             #page2 {
                 padding-bottom: calc(138px + env(safe-area-inset-bottom));
@@ -527,7 +573,9 @@
 
             /* Remove glass overlay edge on full-screen tracker page (mobile) */
             .container:has(#page2.active)::before,
-            .container:has(#page2.active)::after {
+            .container:has(#page2.active)::after,
+            .container:has(#page9.active)::before,
+            .container:has(#page9.active)::after {
                 display: none;
             }
         }
@@ -535,7 +583,10 @@
         @media (display-mode: standalone) and (max-width: 430px) {
             body:has(.container #page0.active),
             body:has(.container #page1.active),
-            body:has(.container #page2.active) {
+            body:has(.container #page2.active),
+            body:has(.container #page7.active),
+            body:has(.container #page8.active),
+            body:has(.container #page9.active) {
                 align-items: center;
                 justify-content: center;
                 padding-top: 0;
@@ -551,6 +602,25 @@
 
             .container:has(#page2.active) {
                 transform: translateY(-2px);
+            }
+
+            .container:has(#page7.active) {
+                transform: translateY(-2px);
+            }
+
+            .container:has(#page8.active) {
+                transform: translateY(-2px);
+            }
+
+            .container:has(#page9.active) {
+                transform: translateY(-2px);
+            }
+
+            #page9 .simple-row input[type="time"] {
+                min-height: 44px;
+                height: 44px;
+                block-size: 44px;
+                line-height: 44px;
             }
         }
 
@@ -1392,8 +1462,8 @@
         }
 
         .bottom-nav-glyph {
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             background: rgba(223,228,235,0.82);
             -webkit-mask-image: var(--nav-icon);
             -webkit-mask-position: center;
@@ -1467,6 +1537,31 @@
             transform: translateZ(0);
         }
 
+        #page1 .ghost-back-arrow {
+            top: 18px;
+            width: auto;
+            height: auto;
+            display: inline;
+            border: none;
+            background: transparent;
+            color: #B7BEFA;
+            font-size: 1.28em;
+            font-weight: 700;
+            line-height: 1;
+            padding: 0;
+            box-shadow: none;
+            outline: none;
+        }
+
+        #page1 .ghost-back-arrow:focus,
+        #page1 .ghost-back-arrow:focus-visible,
+        #page1 .ghost-back-arrow:active {
+            outline: none;
+            box-shadow: none;
+            border: none;
+            background: transparent;
+        }
+
         .ghost-heart-btn {
             position: absolute;
             top: 10px;
@@ -1502,6 +1597,9 @@
             gap: 14px;
             padding-top: 16px;
             padding-bottom: 22px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-y: contain;
         }
 
         .simple-page h1 {
@@ -1525,6 +1623,8 @@
 
         .simple-section h2 {
             color: #EDBFE7;
+            font-size: 1.02em;
+            font-weight: 600;
             margin-bottom: 14px;
         }
 
@@ -1546,6 +1646,8 @@
             -webkit-appearance: none;
             appearance: none;
             min-height: 42px;
+            height: 42px;
+            block-size: 42px;
             border-radius: 10px;
             border: 1px solid rgba(223,228,235,0.2);
             background: rgba(255,255,255,0.04);
@@ -1577,7 +1679,7 @@
         .simple-caffeine-value {
             margin-top: 10px;
             color: #B7BEFA;
-            font-weight: 700;
+            font-weight: 600;
         }
 
         .simple-caffeine-slider {
@@ -1617,13 +1719,22 @@
         .simple-caffeine-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 22px;
-            height: 22px;
-            margin-top: -6px;
+            width: 28px;
+            height: 28px;
+            margin-top: -9px;
             border: none;
-            border-radius: 999px;
+            border-radius: 0;
             background: #B7BEFA;
+            -webkit-mask-image: url('star2.svg');
+            -webkit-mask-position: center;
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-size: contain;
+            mask-image: url('star2.svg');
+            mask-position: center;
+            mask-repeat: no-repeat;
+            mask-size: contain;
             box-shadow: none;
+            filter: drop-shadow(0 0 6px rgba(183,190,250,0.55));
         }
 
         .simple-caffeine-slider::-moz-range-track {
@@ -1635,12 +1746,14 @@
         }
 
         .simple-caffeine-slider::-moz-range-thumb {
-            width: 22px;
-            height: 22px;
+            width: 28px;
+            height: 28px;
             border: none;
-            border-radius: 999px;
-            background: #B7BEFA;
+            border-radius: 0;
+            background: url('star2.svg') center / contain no-repeat transparent;
             box-shadow: none;
+            filter: brightness(0) saturate(100%) invert(79%) sepia(7%) saturate(2488%) hue-rotate(197deg) brightness(103%) contrast(96%)
+                drop-shadow(0 0 6px rgba(183,190,250,0.55));
         }
 
         .simple-caffeine-slider::-moz-focus-outer {
@@ -1649,7 +1762,7 @@
 
         .simple-mood-row {
             display: grid;
-            grid-template-columns: 140px 1fr;
+            grid-template-columns: 126px minmax(0, 1fr);
             align-items: center;
             gap: 8px;
             margin-bottom: 8px;
@@ -1662,8 +1775,10 @@
 
         .simple-scale-buttons {
             display: grid;
-            grid-template-columns: repeat(7, minmax(0, 1fr));
-            gap: 6px;
+            grid-auto-flow: column;
+            grid-auto-columns: 30px;
+            justify-content: start;
+            gap: 8px;
         }
 
         .simple-scale-btn {
@@ -1685,7 +1800,7 @@
             background: rgba(183,190,250,0.22);
             border-color: rgba(183,190,250,0.48);
             color: #B7BEFA;
-            font-weight: 700;
+            font-weight: 600;
         }
 
         .simple-collapse-toggle {
@@ -1696,8 +1811,9 @@
             background: none;
             color: #EDBFE7;
             text-align: left;
-            padding: 14px 18px;
-            font-weight: 700;
+            padding: 2px 0 12px;
+            font-size: 1.02em;
+            font-weight: 600;
             margin-bottom: 2px;
             box-shadow: none;
         }
@@ -1739,6 +1855,7 @@
             color: #EDBFE7;
             border-radius: 24px;
             font-size: 0.9em;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             box-shadow:
@@ -1751,7 +1868,7 @@
             border-color: rgba(183,190,250,0.48);
             color: #B7BEFA;
             box-shadow: none;
-            font-weight: 400;
+            font-weight: 500;
         }
 
         .simple-tag:hover {
@@ -1810,6 +1927,36 @@
             overflow: hidden;
         }
 
+        @media (max-width: 480px) {
+            #page9 .simple-caffeine-slider::-webkit-slider-thumb {
+                width: 30px;
+                height: 30px;
+                margin-top: -10px;
+            }
+
+            #page9 .simple-caffeine-slider::-moz-range-thumb {
+                width: 30px;
+                height: 30px;
+                background-size: 30px 30px;
+            }
+
+            #page9 .simple-mood-row {
+                grid-template-columns: 1fr;
+                gap: 6px;
+                margin-bottom: 12px;
+            }
+
+            #page9 .simple-scale-buttons {
+                grid-auto-columns: 28px;
+                gap: 7px;
+                justify-content: start;
+            }
+
+            #page9 .simple-scale-label {
+                padding-left: 2px;
+            }
+        }
+
         .ghost-page-heading {
             position: absolute;
             top: 10px;
@@ -1817,7 +1964,7 @@
             transform: translateX(-50%);
             color: #DFE4EB;
             font-size: 2em;
-            font-weight: 700;
+            font-weight: 500;
             text-align: center;
             white-space: nowrap;
         }
@@ -1842,7 +1989,7 @@
             color: #DFE4EB;
             width: 240px;
             font-size: 1.04em;
-            font-weight: 700;
+            font-weight: 400;
             opacity: 0.94;
             letter-spacing: 0.01em;
             text-align: center;
@@ -1870,7 +2017,7 @@
             font-size: 0.8em;
             padding: 6px 14px;
             text-align: center;
-            font-weight: 700;
+            font-weight: 400;
             white-space: nowrap;
             font-variant-numeric: tabular-nums;
             overflow: hidden;
@@ -1892,8 +2039,16 @@
             border-radius: 28px;
             outline: none;
             isolation: isolate;
+            -webkit-animation: ghostLevitate 3.6s ease-in-out infinite;
             animation: ghostLevitate 3.6s ease-in-out infinite;
+            will-change: transform;
+            transform: translate3d(0, 0, 0);
             margin-top: 30px;
+        }
+
+        .ghost-friend-wrap.is-restarting-float {
+            -webkit-animation: none !important;
+            animation: none !important;
         }
 
         .ghost-friend-wrap:focus-visible {
@@ -2077,9 +2232,13 @@
             animation: manicBurst 920ms ease-out forwards;
         }
 
+        @-webkit-keyframes ghostLevitate {
+            0%, 100% { -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+            50% { -webkit-transform: translate3d(0, -14px, 0); transform: translate3d(0, -14px, 0); }
+        }
         @keyframes ghostLevitate {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-14px); }
+            0%, 100% { transform: translate3d(0, 0, 0); }
+            50% { transform: translate3d(0, -14px, 0); }
         }
 
         @keyframes ghostAnxiousShake {
@@ -2570,7 +2729,7 @@
             }
         }
 
-        /* ── Habits Page ─────────────────────────────────────── */
+        /* в”Ђв”Ђ Habits Page в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
         .habits-content {
             display: flex;
             flex-direction: column;
@@ -2706,8 +2865,8 @@
             line-height: 1;
         }
 
-        /* ── Per-habit colors ─────────────────────────────────── */
-        /* Cleaning — Mint */
+        /* в”Ђв”Ђ Per-habit colors в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
+        /* Cleaning вЂ” Mint */
         .habit-section-cleaning {
             background: linear-gradient(180deg, rgba(168,230,217,0.05), rgba(168,230,217,0.015));
             border-color: rgba(168,230,217,0.12);
@@ -2720,7 +2879,7 @@
             color: #A8E6D9;
         }
 
-        /* Exercise — Light Green */
+        /* Exercise вЂ” Light Green */
         .habit-section-exercise {
             background: linear-gradient(180deg, rgba(197,230,168,0.05), rgba(197,230,168,0.015));
             border-color: rgba(197,230,168,0.12);
@@ -2733,7 +2892,7 @@
             color: #C5E6A8;
         }
 
-        /* Reading — Gold */
+        /* Reading вЂ” Gold */
         .habit-section-reading {
             background: linear-gradient(180deg, rgba(244,227,179,0.05), rgba(244,227,179,0.015));
             border-color: rgba(244,227,179,0.12);
@@ -2746,7 +2905,7 @@
             color: #F4E3B3;
         }
 
-        /* Writing — Peach */
+        /* Writing вЂ” Peach */
         .habit-section-writing {
             background: linear-gradient(180deg, rgba(237,182,140,0.05), rgba(237,182,140,0.015));
             border-color: rgba(237,182,140,0.12);
@@ -2759,14 +2918,14 @@
             color: #EDB68C;
         }
 
-        /* Second Language — Pink (matches existing palette) */
+        /* Second Language вЂ” Pink (matches existing palette) */
         .habit-section-second-language {
             background: linear-gradient(180deg, rgba(237,191,231,0.05), rgba(237,191,231,0.015));
             border-color: rgba(237,191,231,0.12);
         }
         .habit-section-second-language .habit-toggle { color: #EDBFE7; }
 
-        /* ── Habit Tabs ───────────────────────────────────────── */
+        /* в”Ђв”Ђ Habit Tabs в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
         .habit-tabs {
             display: flex;
             gap: 8px;
@@ -2779,7 +2938,7 @@
             border-radius: 22px;
         }
 
-        /* ── Day view fields ──────────────────────────────────── */
+        /* в”Ђв”Ђ Day view fields в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
         .habit-day-fields {
             display: flex;
             flex-direction: column;
@@ -2933,6 +3092,11 @@
                 min-height: 48px;
             }
 
+            .bottom-nav-glyph {
+                width: 30px;
+                height: 30px;
+            }
+
             .habit-toggle {
                 padding: 12px 14px;
                 font-size: 0.95em;
@@ -2987,6 +3151,17 @@
                 padding-bottom: calc(74px + env(safe-area-inset-bottom));
             }
 
+            #page9 .simple-section,
+            #page9 .simple-collapse-toggle,
+            #page9 .simple-tag,
+            #page9 .simple-scale-btn,
+            #page9 .simple-nap-toggle,
+            #page9 .simple-caffeine-slider,
+            #page9 .simple-row input[type="time"],
+            #page9 .simple-note {
+                transform: none;
+            }
+
             .ghost-progress-row {
                 bottom: calc(52px + env(safe-area-inset-bottom));
             }
@@ -3009,7 +3184,7 @@
             <div class="page active" id="page0">
                 <button type="button" class="words-corner-arrow" onclick="toggleWordsOnlyMode()" aria-label="Toggle words only">&#8595;</button>
                 <h1>Everything Tracker</h1>
-                <p class="subtitle">˚.✦ ⵢ₊˚.₍ᐢ..ᐢ₎⊹ ˓𓄹 ָ࣪ ⸰</p>
+                <p class="subtitle">˚.✦ ⵢ₊˚.₍ᐢ..ᐢ₎⊹ ˓𓄹 ָ࣪ ⸰</p>
 
                 <form id="loginForm">
                     <div class="form-group">
@@ -3270,7 +3445,7 @@
             <!-- Page 7: Analytics -->
             <div class="page" id="page7">
                 <h1>Analytics</h1>
-                <p class="subtitle">˚.✦ ⵢ₊˚.₍ᐢ..ᐢ₎⊹ ˓𓄹 ָ࣪ ⸰</p>
+                <p class="subtitle">˚.✦ ⵢ₊˚.₍ᐢ..ᐢ₎⊹ ˓𓄹 ָ࣪ ⸰</p>
 
                 <!-- Category Tab Navigation -->
                 <div class="analytics-tabs">
@@ -3305,7 +3480,7 @@
             <!-- Page 8: Habits -->
             <div class="page" id="page8">
                 <h1>Habits</h1>
-                <p class="subtitle">˚.✦ ⵢ₊˚.₍ᐢ..ᐢ₎⊹ ˓𓄹 ָ࣪ ⸰</p>
+                <p class="subtitle">˚.✦ ⵢ₊˚.₍ᐢ..ᐢ₎⊹ ˓𓄹 ָ࣪ ⸰</p>
 
                 <!-- Tabs -->
                 <div class="habit-tabs">
@@ -3328,7 +3503,7 @@
             <div class="page simple-page" id="page9">
                 <button type="button" class="ghost-back-arrow" onclick="goToPage(1)" aria-label="Back to menu">&#8592;</button>
                 <h1>Quick Tracker</h1>
-                <p class="subtitle">Simplified daily entry</p>
+                <p class="subtitle">˚.✦ ⵢ₊˚.₍ᐢ..ᐢ₎⊹ ˓𓄹 ָ࣪ ⸰</p>
 
                 <div class="simple-section">
                     <h2>Sleep</h2>
@@ -3451,6 +3626,7 @@
             { key: 'irritability', label: 'Irritability' }
         ];
         const LOADER_CACHE_KEY = 'everythingTrackerLoaderCachedV1';
+        const STANDARD_SUBTITLE = '˚.✦ ⵢ₊˚.₍ᐢ..ᐢ₎⊹ ˓𓄹 ָ࣪ ⸰';
         const loaderBootStartedAt = (window.performance && typeof window.performance.now === 'function')
             ? window.performance.now()
             : Date.now();
@@ -4526,6 +4702,18 @@
             if (!options.suppressBurst && previousState !== nextState && nextState === 'manic') {
                 spawnStateBurst(nextState);
             }
+
+            restartGhostFloatAnimation();
+        }
+
+        function restartGhostFloatAnimation() {
+            const wrap = document.getElementById('ghostFriendWrap');
+            if (!wrap) return;
+            const isMobileViewport = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+            if (!isMobileViewport) return;
+            wrap.classList.add('is-restarting-float');
+            void wrap.offsetWidth;
+            wrap.classList.remove('is-restarting-float');
         }
 
         function changeGhostStateRandom() {
@@ -4554,6 +4742,7 @@
 
             setGhostState(currentGhostState, { suppressBurst: true });
             if (ghostTapCount === null) loadGhostTapCounter();
+            restartGhostFloatAnimation();
         }
 
         function goToPage(pageNumber) {
@@ -4619,6 +4808,7 @@
             if (pageNumber === 1) {
                 setTimeout(() => {
                     refreshTrackerStats();
+                    restartGhostFloatAnimation();
                 }, 80);
             }
 
@@ -4677,15 +4867,18 @@
             initializeDate();
             updateBottomNav(0);
             renderTrackerStats('--', '--', '--');
-            const page0Subtitle = document.querySelector('#page0 .subtitle');
-            const page1Subtitle = document.getElementById('ghostPageSubtitle');
-            if (page0Subtitle && page1Subtitle) {
-                page1Subtitle.textContent = page0Subtitle.textContent;
-            }
-            const trackerSubtitle = document.getElementById('trackerPageSubtitle');
-            if (trackerSubtitle) {
-                trackerSubtitle.textContent = '\u02DA.\u2726 \u2D62\u208A\u02DA.\u208D\u1422..\u1422\u208E\u22B9 \u02D3\uD80C\uDD39 \u08EA\u05B8 \u2E30';
-            }
+            const subtitleSelectors = [
+                '#page0 .subtitle',
+                '#page7 .subtitle',
+                '#page8 .subtitle',
+                '#page9 .subtitle',
+                '#ghostPageSubtitle',
+                '#trackerPageSubtitle'
+            ];
+            subtitleSelectors.forEach((selector) => {
+                const el = document.querySelector(selector);
+                if (el) el.textContent = STANDARD_SUBTITLE;
+            });
 
             const passwordInput = document.getElementById('password');
             const emailInput = document.getElementById('email');
@@ -4749,6 +4942,18 @@
         window.addEventListener('load', function() {
             hideAppLoadingScreen();
         }, { once: true });
+
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden && currentPage === 1) {
+                restartGhostFloatAnimation();
+            }
+        });
+
+        window.addEventListener('pageshow', function() {
+            if (currentPage === 1) {
+                restartGhostFloatAnimation();
+            }
+        });
 
         // Helper function to get slider value or default
         function getSliderValue(sliderId) {
@@ -4851,7 +5056,7 @@
                 queueTrackerStatsRefresh();
 
                 console.log('Entry saved successfully:', entry);
-                alert('Data submitted successfully! ✓');
+                alert('Data submitted successfully! вњ“');
                 goToPage(7);
 
             } catch (error) {
@@ -4860,7 +5065,7 @@
             }
         }
 
-        // ── Habits Page ────────────────────────────────────────────
+        // в”Ђв”Ђ Habits Page в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
         var habitsWeekOffset = 0;
         var habitsDayOffset  = 0;
         var habitCurrentTab  = 'day';
@@ -4874,7 +5079,7 @@
         function habitsWeekStart(offset) {
             var now = new Date();
             now.setHours(0, 0, 0, 0);
-            var dow = now.getDay();                          // 0=Sun … 6=Sat
+            var dow = now.getDay();                          // 0=Sun вЂ¦ 6=Sat
             var toMonday = (dow === 0 ? -6 : 1 - dow);      // shift to Monday
             var mon = new Date(now);
             mon.setDate(now.getDate() + toMonday + offset * 7);
@@ -4935,7 +5140,7 @@
             return DAYS[d.getDay()] + ', ' + MONTHS[d.getMonth()] + ' ' + d.getDate();
         }
 
-        // ── Day view: localStorage helpers ─────────────────────
+        // в”Ђв”Ђ Day view: localStorage helpers в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
         function getDayKey(habitId, field, dateStr) {
             return 'hday-' + habitId + '-' + field + '-' + dateStr;
         }
@@ -4955,9 +5160,9 @@
             catch(e) { return []; }
         }
 
-        // ── Day view: UI event handlers ─────────────────────────
+        // в”Ђв”Ђ Day view: UI event handlers в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
         function formatDuration(min) {
-            if (!min || min <= 0) return '—';
+            if (!min || min <= 0) return 'вЂ”';
             if (min < 60) return min + ' min';
             var h = Math.floor(min / 60), m = min % 60;
             return h + 'h' + (m ? ' ' + m + 'min' : '');
@@ -5063,7 +5268,7 @@
             if (el) el.textContent = formatDuration(total);
         }
 
-        // ── Day view: Firebase save ─────────────────────────────
+        // в”Ђв”Ђ Day view: Firebase save в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
         async function saveDayFieldToFirebase(habitId, field, dateStr, value) {
             var user = currentUser || window.currentUser;
             if (!user || !window.firebaseDb) return;
@@ -5075,7 +5280,7 @@
             } catch(e) { console.error('Habits day save error:', e); }
         }
 
-        // ── Day view: Firebase load ─────────────────────────────
+        // в”Ђв”Ђ Day view: Firebase load в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
         async function loadHabitsDayData(dateStr, force) {
             if (!force && habitsLoadedDays[dateStr]) return;
             var user = currentUser || window.currentUser;
@@ -5116,7 +5321,7 @@
             } catch(e) { console.error('Habits day load error:', e); }
         }
 
-        // ── Day view: HTML builders ─────────────────────────────
+        // в”Ђв”Ђ Day view: HTML builders в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
         function _inp(habitId, field, sub, dateStr, placeholder) {
             var val = getDayVal(habitId, field + '_' + sub, dateStr);
             var fn = sub === 'h' ? 'onDayHrChange' : 'onDayMinChange';
@@ -5165,7 +5370,7 @@
 
         function habitTotalRow(id, label) {
             return '<div class="habit-field"><span class="habit-field-label">' + label + '</span>' +
-                '<span class="habit-field-total" id="' + id + '">—</span></div>';
+                '<span class="habit-field-total" id="' + id + '">вЂ”</span></div>';
         }
 
         function buildDayHabitFields(habitId, dateStr) {
@@ -5196,7 +5401,7 @@
             return html;
         }
 
-        // ── Day view: render ────────────────────────────────────
+        // в”Ђв”Ђ Day view: render в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ
         function renderHabitsDayView() {
             var d = new Date();
             d.setDate(d.getDate() + habitsDayOffset);
@@ -5405,7 +5610,7 @@
                     var docRef = window.firebaseDoc(window.firebaseDb, 'users', user.uid, 'entriesHabits', dateStr);
                     await window.firebaseSetDoc(docRef, dayData, { merge: true });
                 }
-                alert('Habits saved! ✓');
+                alert('Habits saved! вњ“');
                 goToPage(1);
             } catch(e) {
                 console.error('Habits submit error:', e);
@@ -5626,6 +5831,7 @@
     <script src="analytics/habits-analytics.js"></script>
 </body>
 </html>
+
 
 
 
