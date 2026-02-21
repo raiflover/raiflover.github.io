@@ -326,8 +326,8 @@ function renderBarChart(containerId, data, options = {}) {
             y2: '100%'
         });
         gradient.innerHTML = `
-            <stop offset="0%" style="stop-color:${barTopColor};stop-opacity:0.6" />
-            <stop offset="100%" style="stop-color:${barBottomColor};stop-opacity:0.4" />
+            <stop offset="0%" style="stop-color:${barTopColor};stop-opacity:0.92" />
+            <stop offset="100%" style="stop-color:${barBottomColor};stop-opacity:0.78" />
         `;
 
         // Add gradient to defs if not exists
@@ -370,7 +370,7 @@ function renderBarChart(containerId, data, options = {}) {
             rx: Math.max(barRx - 2, 2),
             ry: Math.max(barRx - 2, 2),
             class: 'chart-bar',
-            style: 'cursor: pointer; filter: url(#glow-' + containerId + ') drop-shadow(0 2px 4px rgba(0,0,0,0.2)); opacity: 0; -webkit-animation-delay: ' + (index * staggerDelay) + 's; animation-delay: ' + (index * staggerDelay) + 's;'
+            style: 'cursor: pointer; filter: url(#glow-' + containerId + ') drop-shadow(0 0 10px rgba(237,191,231,0.35)) drop-shadow(0 2px 4px rgba(0,0,0,0.2)); opacity: 0; -webkit-animation-delay: ' + (index * staggerDelay) + 's; animation-delay: ' + (index * staggerDelay) + 's;'
         });
 
         bar.addEventListener('mouseenter', (e) => {
@@ -1249,8 +1249,8 @@ function renderSleepBarChart(containerId, data) {
         x2: '100%',
         y2: '0%'
     });
-    sleepGradient.innerHTML = '<stop offset="0%" style="stop-color:rgba(168,230,217,0.62);stop-opacity:1" />' +
-                              '<stop offset="100%" style="stop-color:rgba(168,230,217,0.42);stop-opacity:1" />';
+    sleepGradient.innerHTML = '<stop offset="0%" style="stop-color:rgba(168,230,217,0.9);stop-opacity:1" />' +
+                              '<stop offset="100%" style="stop-color:rgba(168,230,217,0.7);stop-opacity:1" />';
     var sleepGlow = createSVGElement('filter', { id: 'glow-sleep-' + containerId });
     sleepGlow.innerHTML = '<feGaussianBlur stdDeviation="2" result="coloredBlur"/>' +
                           '<feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>';
@@ -1341,7 +1341,7 @@ function renderSleepBarChart(containerId, data) {
             rx: 15,
             ry: 15,
             class: 'chart-sleep-bar',
-            style: 'cursor: pointer; filter: url(#glow-sleep-' + containerId + ') drop-shadow(0 2px 4px rgba(0,0,0,0.3)); opacity: 0; -webkit-animation-delay: ' + (j * sleepStaggerDelay) + 's; animation-delay: ' + (j * sleepStaggerDelay) + 's;'
+            style: 'cursor: pointer; filter: url(#glow-sleep-' + containerId + ') drop-shadow(0 0 10px rgba(168,230,217,0.32)) drop-shadow(0 2px 4px rgba(0,0,0,0.3)); opacity: 0; -webkit-animation-delay: ' + (j * sleepStaggerDelay) + 's; animation-delay: ' + (j * sleepStaggerDelay) + 's;'
         });
 
         (function(itemData) {

@@ -471,7 +471,7 @@ function haBarChart(id, entries) {
         var pct = maxVal > 0 ? (bar.val / maxVal * 100).toFixed(0) : 0;
         html += '<div class="ha-bar-row">' +
             '<span class="ha-bar-lbl">' + bar.label + '</span>' +
-            '<div class="ha-bar-track"><div class="ha-bar-fill" style="width:' + pct + '%;background:rgba(' + rgb + ',0.6)"></div></div>' +
+            '<div class="ha-bar-track"><div class="ha-bar-fill" style="width:' + pct + '%;background:rgba(' + rgb + ',0.84)"></div></div>' +
             '<span class="ha-bar-val">' + bar.display + '</span>' +
             '</div>';
     });

@@ -46,12 +46,17 @@
 .tab-btn {
     -webkit-appearance: none;
     appearance: none;
+    min-height: 40px;
     padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.06);
     border-radius: 22px;
     color: #DFE4EB;
     font-size: 0.88em;
+    font-weight: 400;
     cursor: pointer;
     transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
     font-family: inherit;
@@ -82,16 +87,21 @@
 .period-btn {
     -webkit-appearance: none;
     appearance: none;
-    padding: 6px 14px;
+    min-height: 40px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.06);
     border-radius: 22px;
     color: #DFE4EB;
-    font-size: 0.85em;
+    font-size: 0.88em;
+    font-weight: 400;
     cursor: pointer;
     transition: background-color 0.24s, border-color 0.24s, transform 0.24s, opacity 0.24s;
     font-family: inherit;
-    opacity: 0.7;
+    opacity: 1;
 }
 
 .period-btn:hover {
@@ -102,11 +112,11 @@
 }
 
 .period-btn.active {
-    background: linear-gradient(135deg, rgba(237,191,231,0.15), rgba(244,227,179,0.1));
-    border: 1px solid rgba(237,191,231,0.25);
+    background: rgba(237,191,231,0.16);
+    border: 1px solid rgba(237,191,231,0.38);
     color: #EDBFE7;
     opacity: 1;
-    box-shadow: 0 0 8px rgba(237,191,231,0.15);
+    box-shadow: 0 0 8px rgba(237,191,231,0.22);
 }
 
 /* Insights Toggle Section */
@@ -276,7 +286,7 @@
 
     .tab-btn {
         padding: 8px 14px;
-        font-size: 0.9em;
+        font-size: 0.88em;
     }
 
     .insight-btn {
@@ -379,12 +389,9 @@
     }
 
 
-    /* iOS-specific: Ensure buttons don't zoom and enable smooth scrolling */
     .tab-btn,
-    .insight-btn,
-    .period-btn,
-    .notes-toggle-btn {
-        font-size: 16px; /* Prevent iOS zoom on focus */
+    .period-btn {
+        font-size: 0.88em;
     }
 
     #chartsContainer {
@@ -710,11 +717,14 @@
         user-select: none;
     }
 
-    /* Fix button font size to prevent zoom on focus */
+    /* Keep tracker/habits-scale typography on iOS */
     .tab-btn,
-    .notes-toggle-btn,
     .period-btn {
-        font-size: 16px;
+        font-size: 0.88em;
+    }
+
+    .notes-toggle-btn {
+        font-size: 0.85em;
     }
 }
 
@@ -1020,11 +1030,11 @@
     background: linear-gradient(165deg, rgba(255,255,255,0.14), rgba(255,255,255,0.03)), linear-gradient(135deg, var(--analytics-glass-1), var(--analytics-glass-2));
     border: 1px solid var(--analytics-stroke);
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
+    width: 34px;
+    height: 34px;
     color: #DFE4EB;
-    font-size: 1.3em;
-    line-height: 30px; /* fallback for browsers that ignore flex centering on buttons */
+    font-size: 1.45em;
+    line-height: 34px; /* fallback for browsers that ignore flex centering on buttons */
     text-align: center;
     cursor: pointer;
     display: -webkit-flex;
@@ -1067,6 +1077,15 @@
     border-radius: 18px;
     margin-bottom: 16px;
     overflow: hidden;
+}
+
+@media (max-width: 480px) {
+    .period-nav-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 1.35em;
+        line-height: 32px;
+    }
 }
 
 .ha-section-cleaning        { border-color: rgba(168,230,217,0.18); }
@@ -1310,6 +1329,7 @@
     height: 100%;
     border-radius: 4px;
     transition: width 0.4s ease;
+    box-shadow: 0 0 10px rgba(237,191,231,0.28);
 }
 
 .ha-bar-val {
