@@ -15,6 +15,26 @@ var AnalyticsState = {
 var analyticsListenersBound = false;
 var chartAnimationSafetyTimeout = null;
 var chartAnimationForceTimeout = null;
+var analyticsRevealObserver = null;
+
+function afterTwoFrames(callback) {
+    if (typeof requestAnimationFrame !== 'function') {
+        setTimeout(callback, 34);
+        return;
+    }
+    requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+            callback();
+        });
+    });
+}
+
+function disconnectAnalyticsRevealObserver() {
+    if (analyticsRevealObserver && typeof analyticsRevealObserver.disconnect === 'function') {
+        analyticsRevealObserver.disconnect();
+    }
+    analyticsRevealObserver = null;
+}
 
 /**
  * Initialize analytics when page 7 loads
@@ -411,21 +431,60 @@ function renderMoodTab(container, data) {
  * Render Other tab content (Notes, Pattern Insights, Activities, People)
  */
 function renderOtherTab(container, data) {
-    container.innerHTML = '<div class="chart-wrapper"><div id="notesDisplay" class="chart-container"></div></div>' +
-        '<div class="chart-wrapper"><h3>Pattern Insights</h3><div id="patternInsights"></div></div>' +
-        '<div class="chart-wrapper"><h3>Activities Distribution</h3><div id="activitiesPie" class="chart-container"></div></div>' +
+    var validDays = data.filter(function(entry) { return !entry.isMissing; }).length;
+    var showPatterns = AnalyticsState.currentPeriod !== 'week' && validDays >= 7;
+
+    var html = '<div class="chart-wrapper"><div id="productivityInsights"></div><div id="productivityChart" class="chart-container"></div></div>' +
+        '<div class="chart-wrapper"><div id="satisfactionInsights"></div><div id="satisfactionChart" class="chart-container"></div></div>' +
+        '<div class="chart-wrapper"><div id="socialActivityInsights"></div><div id="socialActivityChart" class="chart-container"></div></div>' +
+        '<div class="chart-wrapper"><div id="notesDisplay" class="chart-container"></div></div>';
+    if (showPatterns) {
+        html += '<div class="chart-wrapper"><h3>Pattern Insights</h3><div id="patternInsights"></div></div>';
+    }
+    html += '<div class="chart-wrapper"><h3>Activities Distribution</h3><div id="activitiesPie" class="chart-container"></div></div>' +
         '<div class="chart-wrapper"><h3>People Distribution</h3><div id="peoplePie" class="chart-container"></div></div>';
+    container.innerHTML = html;
+
+    // Render new Other metric insights and charts
+    var productivityInsightsHtml = renderInsightsHTML('productivity', data);
+    var productivityInsightsNode = document.getElementById('productivityInsights');
+    if (productivityInsightsNode) productivityInsightsNode.innerHTML = productivityInsightsHtml;
+    renderLineChart('productivityChart', data, {
+        metric: 'productivity',
+        color: 'rgba(244,227,179,0.8)',
+        fillColor: 'rgba(244,227,179,0.24)'
+    });
+
+    var satisfactionInsightsHtml = renderInsightsHTML('satisfaction', data);
+    var satisfactionInsightsNode = document.getElementById('satisfactionInsights');
+    if (satisfactionInsightsNode) satisfactionInsightsNode.innerHTML = satisfactionInsightsHtml;
+    renderLineChart('satisfactionChart', data, {
+        metric: 'satisfaction',
+        color: 'rgba(237,191,231,0.84)',
+        fillColor: 'rgba(237,191,231,0.24)'
+    });
+
+    var socialInsightsHtml = renderInsightsHTML('socialActivity', data);
+    var socialInsightsNode = document.getElementById('socialActivityInsights');
+    if (socialInsightsNode) socialInsightsNode.innerHTML = socialInsightsHtml;
+    renderLineChart('socialActivityChart', data, {
+        metric: 'socialActivity',
+        color: 'rgba(183,190,250,0.84)',
+        fillColor: 'rgba(183,190,250,0.24)'
+    });
 
     // Render notes
     renderNotes('notesDisplay', data);
 
-    // Render pattern insights
-    var patternInsights = analyzePatterns(data);
-    var patternInsightsContainer = document.getElementById('patternInsights');
-    if (patternInsightsContainer) {
-        patternInsightsContainer.innerHTML = '<div class="insights-section">' +
-            patternInsights.html +
-            '</div>';
+    // Render pattern insights (hidden for week view and for less than 7 tracked days)
+    if (showPatterns) {
+        var patternInsights = analyzePatterns(data);
+        var patternInsightsContainer = document.getElementById('patternInsights');
+        if (patternInsightsContainer) {
+            patternInsightsContainer.innerHTML = '<div class="insights-section">' +
+                patternInsights.html +
+                '</div>';
+        }
     }
 
     // Render activities pie chart
@@ -562,47 +621,15 @@ window.toggleNotesSection = toggleNotesSection;
  * Initialize intersection observer for typing animations
  */
 function initInsightAnimations() {
-    // Check if IntersectionObserver is supported
-    if (!window.IntersectionObserver) {
-        // Fallback: just show all insights without animation
-        var insights = document.querySelectorAll('.insights-section, .insight-item');
-        for (var i = 0; i < insights.length; i++) {
-            insights[i].style.opacity = '1';
+    var insightSections = document.querySelectorAll('.insights-section');
+    for (var i = 0; i < insightSections.length; i++) {
+        insightSections[i].classList.remove('animate-in');
+        insightSections[i].style.transitionDelay = '';
+        var itemsReset = insightSections[i].querySelectorAll('.insight-item');
+        for (var j = 0; j < itemsReset.length; j++) {
+            itemsReset[j].classList.remove('typing');
+            itemsReset[j].style.transitionDelay = '';
         }
-        return;
-    }
-
-    var observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.2
-    };
-
-    var observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-            if (entry.isIntersecting) {
-                var target = entry.target;
-
-                if (target.classList.contains('insights-section')) {
-                    target.classList.add('animate-in');
-
-                    // Trigger typing effect on child insight items
-                    var insightItems = target.querySelectorAll('.insight-item');
-                    for (var i = 0; i < insightItems.length; i++) {
-                        insightItems[i].classList.add('typing');
-                    }
-                }
-
-                // Unobserve after animation is triggered
-                observer.unobserve(target);
-            }
-        });
-    }, observerOptions);
-
-    // Observe all insights sections
-    var insightsSections = document.querySelectorAll('.insights-section');
-    for (var j = 0; j < insightsSections.length; j++) {
-        observer.observe(insightsSections[j]);
     }
 }
 
@@ -619,113 +646,85 @@ function initChartAnimations() {
         chartAnimationForceTimeout = null;
     }
 
-    // Check if IntersectionObserver is supported
+    var chartContainers = document.querySelectorAll('.chart-container');
+    for (var i = 0; i < chartContainers.length; i++) {
+        chartContainers[i].classList.remove('animate-in');
+    }
+}
+
+function observeAnalyticsAnimationsOnScroll() {
+    disconnectAnalyticsRevealObserver();
+
+    var wrappers = document.querySelectorAll('.chart-wrapper');
+    var sections = document.querySelectorAll('.insights-section');
+    var containers = document.querySelectorAll('.chart-container');
+    var allTargets = [];
+    for (var i = 0; i < wrappers.length; i++) allTargets.push(wrappers[i]);
+    for (var j = 0; j < sections.length; j++) allTargets.push(sections[j]);
+    for (var k = 0; k < containers.length; k++) allTargets.push(containers[k]);
+
+    if (!allTargets.length) return;
+
     if (!window.IntersectionObserver) {
-        // Fallback: just show all charts without animation
-        var chartContainers = document.querySelectorAll('.chart-container');
-        for (var i = 0; i < chartContainers.length; i++) {
-            chartContainers[i].classList.add('animate-in');
+        for (var f = 0; f < wrappers.length; f++) wrappers[f].classList.add('animate-in');
+        for (var g = 0; g < sections.length; g++) {
+            sections[g].classList.add('animate-in');
+            var itemsNow = sections[g].querySelectorAll('.insight-item');
+            for (var h = 0; h < itemsNow.length; h++) itemsNow[h].classList.add('typing');
         }
+        for (var m = 0; m < containers.length; m++) containers[m].classList.add('animate-in');
         return;
     }
 
-    var observerOptions = {
+    analyticsRevealObserver = new IntersectionObserver(function(entries, observer) {
+        for (var e = 0; e < entries.length; e++) {
+            var entry = entries[e];
+            if (!entry.isIntersecting) continue;
+            var target = entry.target;
+
+            if (target.classList.contains('chart-wrapper')) {
+                target.classList.add('animate-in');
+            } else if (target.classList.contains('insights-section')) {
+                target.classList.add('animate-in');
+                var items = target.querySelectorAll('.insight-item');
+                for (var q = 0; q < items.length; q++) {
+                    items[q].style.transitionDelay = (0.14 + q * 0.08) + 's';
+                    items[q].classList.add('typing');
+                }
+            } else if (target.classList.contains('chart-container')) {
+                target.classList.add('animate-in');
+            }
+
+            observer.unobserve(target);
+        }
+    }, {
         root: null,
-        rootMargin: '0px',
-        threshold: 0.1
-    };
+        rootMargin: '0px 0px -8% 0px',
+        threshold: 0.12
+    });
 
-    var observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-            if (entry.isIntersecting) {
-                var target = entry.target;
-
-                if (target.classList.contains('chart-container')) {
-                    // Delay animation by 500ms
-                    setTimeout(function() {
-                        target.classList.add('animate-in');
-                    }, 500);
-                }
-
-                // Unobserve after animation is triggered
-                observer.unobserve(target);
-            }
-        });
-    }, observerOptions);
-
-    // Observe all chart containers
-    var chartContainers = document.querySelectorAll('.chart-container');
-    for (var j = 0; j < chartContainers.length; j++) {
-        var container = chartContainers[j];
-        observer.observe(container);
-
-        // Immediate check: If container is already visible, trigger animation after delay
-        // This handles cases where observer might not fire right away
-        var rect = container.getBoundingClientRect();
-        var isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-        if (isVisible) {
-            // Delay animation by 500ms to match observer delay
-            setTimeout(function(cont) {
-                // Only trigger if observer hasn't already done so
-                if (!cont.classList.contains('animate-in')) {
-                    cont.classList.add('animate-in');
-                }
-            }, 500, container);
-        }
+    for (var t = 0; t < allTargets.length; t++) {
+        analyticsRevealObserver.observe(allTargets[t]);
     }
-
-    // Safety fallback: If charts are still not animated after 2 seconds, trigger the animation
-    // This handles edge cases where observer doesn't trigger (browser bugs, timing issues, etc.)
-    chartAnimationSafetyTimeout = setTimeout(function() {
-        var containers = document.querySelectorAll('.chart-container');
-        for (var k = 0; k < containers.length; k++) {
-            // Add animate-in class if not present (this will trigger CSS animations)
-            if (!containers[k].classList.contains('animate-in')) {
-                containers[k].classList.add('animate-in');
-            }
-        }
-
-        // Final emergency fallback: After another second, if elements are still invisible, force them visible
-        // This only happens if CSS animations completely fail
-        chartAnimationForceTimeout = setTimeout(function() {
-            var allContainers = document.querySelectorAll('.chart-container');
-            for (var i = 0; i < allContainers.length; i++) {
-                var chartElements = allContainers[i].querySelectorAll('.chart-bar, .chart-line, .chart-point, .chart-pie-slice, .chart-sleep-bar, .jar-star');
-                for (var j = 0; j < chartElements.length; j++) {
-                    var element = chartElements[j];
-                    var computedOpacity = window.getComputedStyle(element).opacity;
-                    // Only force visibility if element is still invisible (opacity < 0.1)
-                    if (parseFloat(computedOpacity) < 0.1) {
-                        element.style.opacity = '1';
-                    }
-                }
-            }
-        }, 1000);
-    }, 2000);
 }
 
 /**
  * Re-trigger animations when tab is switched
  */
 function triggerChartAnimations() {
-    // Remove and re-add animation class to chart wrappers
+    // Reset card wrappers for scroll-triggered reveal.
     var chartWrappers = document.querySelectorAll('.chart-wrapper');
     for (var i = 0; i < chartWrappers.length; i++) {
-        var wrapper = chartWrappers[i];
-        wrapper.style.animation = 'none';
-        wrapper.offsetHeight; // Trigger reflow
-        wrapper.style.animation = '';
-    }
-
-    // Remove animate-in class from all chart containers
-    var chartContainers = document.querySelectorAll('.chart-container');
-    for (var j = 0; j < chartContainers.length; j++) {
-        chartContainers[j].classList.remove('animate-in');
+        chartWrappers[i].classList.remove('animate-in');
+        chartWrappers[i].style.transitionDelay = (i * 0.03) + 's';
     }
 
     // Re-initialize animations immediately (delay is in the observer itself)
     initInsightAnimations();
     initChartAnimations();
+    afterTwoFrames(function() {
+        observeAnalyticsAnimationsOnScroll();
+    });
 }
 
 

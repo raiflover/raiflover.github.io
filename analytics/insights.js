@@ -36,12 +36,6 @@ function calculateInsights(data, metric) {
         insights.push('Average highest: <strong>' + avgHighest.toFixed(1) + '/7</strong>');
         insights.push('Average lowest: <strong>' + avgLowest.toFixed(1) + '/7</strong>');
 
-        // Find best day of week
-        const bestDay = findBestDayOfWeek(validData, metric, 'highest');
-        if (bestDay) {
-            insights.push('Best day: <strong>' + bestDay.day + '</strong> (avg ' + bestDay.avg.toFixed(1) + ')');
-        }
-
         // Find trend
         const trend = findTrend(highestValues);
         const trendIcon = trend === 'Increasing' ? '&uarr;' : trend === 'Decreasing' ? '&darr;' : '&rarr;';
@@ -51,8 +45,8 @@ function calculateInsights(data, metric) {
         const volatility = calculateVolatility(validData, metric);
         insights.push('Average range: <strong>' + volatility.toFixed(1) + '</strong> points');
 
-    } else {
-        // Anxiety or Irritability
+    } else if (metric === 'anxiety' || metric === 'irritability') {
+        // Anxiety or Irritability (lower is better)
         const values = validData.map(e => e[metric] || 4);
 
         const avg = calculateAverage(values);
@@ -77,11 +71,26 @@ function calculateInsights(data, metric) {
             ? (trend === 'Increasing' ? 'Rising' : trend === 'Decreasing' ? 'Declining' : 'Stable')
             : trend;
         insights.push('Trend: <strong>' + trendLabel + ' ' + trendIcon + '</strong>');
+    } else {
+        // Generic single-value metric on 1-7 scale (higher is better)
+        const values = validData.map(e => e[metric] || 4);
 
-        // Days below average
-        const belowAvg = values.filter(v => v < avg).length;
-        const pctBelow = (belowAvg / values.length * 100).toFixed(0);
-        insights.push('Days below average: <strong>' + pctBelow + '%</strong>');
+        const avg = calculateAverage(values);
+        insights.push('Average level: <strong>' + avg.toFixed(1) + '/7</strong>');
+
+        const lowestEntry = validData.reduce((min, entry) =>
+            (entry[metric] || 4) < (min[metric] || 4) ? entry : min
+        );
+        insights.push('Lowest on: <strong>' + formatDate(lowestEntry.date, 'MMM DD') + '</strong> (' + lowestEntry[metric] + '/7)');
+
+        const highestEntry = validData.reduce((max, entry) =>
+            (entry[metric] || 4) > (max[metric] || 4) ? entry : max
+        );
+        insights.push('Highest on: <strong>' + formatDate(highestEntry.date, 'MMM DD') + '</strong> (' + highestEntry[metric] + '/7)');
+
+        const trend = findTrend(values);
+        const trendIcon = trend === 'Increasing' ? '&uarr;' : trend === 'Decreasing' ? '&darr;' : '&rarr;';
+        insights.push('Trend: <strong>' + trend + ' ' + trendIcon + '</strong>');
     }
 
     // Format as HTML
@@ -289,7 +298,10 @@ function renderInsightsHTML(category, data) {
         energy: 'Energy Insights',
         mood: 'Mood Insights',
         anxiety: 'Anxiety Insights',
-        irritability: 'Irritability Insights'
+        irritability: 'Irritability Insights',
+        productivity: 'Productivity Insights',
+        satisfaction: 'Satisfaction Insights',
+        socialActivity: 'Social Activity Insights'
     };
 
     return '<div class="insights-section" id="insights-' + category + '">' +
@@ -367,10 +379,6 @@ function analyzePatterns(data) {
 
     var insights = [];
 
-    // Analyze caffeine impact
-    var caffeineInsights = analyzeCaffeineImpact(validData);
-    insights = insights.concat(caffeineInsights);
-
     // Analyze sleep impact
     var sleepInsights = analyzeSleepImpact(validData);
     insights = insights.concat(sleepInsights);
@@ -378,10 +386,6 @@ function analyzePatterns(data) {
     // Analyze activity impact
     var activityInsights = analyzeActivityImpact(validData);
     insights = insights.concat(activityInsights);
-
-    // Analyze people impact
-    var peopleInsights = analyzePeopleImpact(validData);
-    insights = insights.concat(peopleInsights);
 
     if (insights.length === 0) {
         return {

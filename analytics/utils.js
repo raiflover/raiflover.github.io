@@ -133,6 +133,9 @@ function fillMissingDates(data, startDate, endDate) {
                 mood: { highest: 4, lowest: 4 },
                 anxiety: 4,
                 irritability: 4,
+                productivity: 4,
+                satisfaction: 4,
+                socialActivity: 4,
                 isMissing: true // Flag for visual indication
             });
         }
