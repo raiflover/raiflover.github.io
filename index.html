@@ -36,6 +36,7 @@
         body {
             font-family: 'Outfit', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
             font-weight: 400;
+            font-size: 16.5px;
             background: #0d101a;
             min-height: 100vh;
             min-height: 100svh;
@@ -403,6 +404,26 @@
             opacity: 0.25;
             filter: blur(10px);
             animation: liquidSheenSoft 14s cubic-bezier(0.26, 0.73, 0.23, 0.98) infinite alternate;
+        }
+
+        /* Seam fix on tracker pages (regular + quick): remove moving sheen/repeating stroke lines */
+        .container:has(#page2.active)::before,
+        .container:has(#page9.active)::before {
+            background: linear-gradient(
+                180deg,
+                var(--glass-frost-1),
+                rgba(220, 235, 255, 0.06) 34%,
+                rgba(220, 235, 255, 0.015) 64%,
+                var(--glass-frost-2)
+            );
+            border: 0;
+            opacity: 0.18;
+        }
+        .container:has(#page2.active)::after,
+        .container:has(#page9.active)::after {
+            display: none;
+            opacity: 0;
+            animation: none;
         }
 
 
@@ -1352,6 +1373,11 @@
             padding-bottom: calc(78px + env(safe-area-inset-bottom));
         }
 
+        /* Keep main caffeine tracker typography at base size when global text is scaled. */
+        #symptomPanelCaffeine {
+            font-size: 16px;
+        }
+
         .autosave-status {
             margin-top: 12px;
             margin-bottom: 8px;
@@ -1799,16 +1825,17 @@
 
         .simple-scale-buttons {
             display: grid;
-            grid-auto-flow: column;
-            grid-auto-columns: 30px;
-            justify-content: start;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            justify-content: stretch;
             gap: 8px;
+            width: 100%;
         }
 
         .simple-scale-btn {
-            width: 30px;
-            height: 30px;
-            min-height: 30px;
+            width: 100%;
+            min-width: 0;
+            height: 36px;
+            min-height: 36px;
             border-radius: 999px;
             border: 1px solid rgba(223,228,235,0.22);
             background: rgba(255,255,255,0.04);
@@ -1835,11 +1862,30 @@
             background: none;
             color: #EDBFE7;
             text-align: left;
-            padding: 2px 0 12px;
-            font-size: 1.02em;
+            padding: 14px 18px;
+            font-size: 1em;
             font-weight: 600;
-            margin-bottom: 2px;
+            margin-bottom: 0;
             box-shadow: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            -webkit-appearance: none;
+            appearance: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .simple-collapse-toggle::after {
+            content: '\203A';
+            font-size: 1.2em;
+            opacity: 0.5;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+            transform: translateX(0);
+        }
+
+        .simple-collapse-toggle[aria-expanded="true"]::after {
+            transform: rotate(90deg);
+            opacity: 1;
         }
 
         .simple-collapsible[hidden] {
@@ -1848,7 +1894,8 @@
 
         .simple-collapsible {
             border-radius: 0;
-            padding: 6px 12px 14px;
+            padding: 0 12px 14px;
+            background: transparent;
         }
 
         #simpleTagsWrap .simple-field-label {
@@ -1949,6 +1996,7 @@
             background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.006));
             border: 1px solid rgba(255,255,255,0.06);
             overflow: hidden;
+            padding: 0;
         }
 
         @media (max-width: 480px) {
@@ -1971,9 +2019,16 @@
             }
 
             #page9 .simple-scale-buttons {
-                grid-auto-columns: 28px;
+                grid-template-columns: repeat(7, minmax(0, 1fr));
                 gap: 7px;
-                justify-content: start;
+                justify-content: stretch;
+            }
+
+            #page9 .simple-scale-btn {
+                width: 100%;
+                height: 40px;
+                min-height: 40px;
+                font-size: 0.9em;
             }
 
             #page9 .simple-scale-label {
@@ -2406,6 +2461,111 @@
             margin-bottom: 12px;
         }
 
+        .other-rating {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .other-star-btn {
+            --other-star-size: 32px;
+            --other-star-glow-size: 48px;
+            width: 40px;
+            height: 40px;
+            min-height: 40px;
+            border-radius: 0;
+            border: 0 !important;
+            border-top: 0 !important;
+            background: transparent;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            -webkit-tap-highlight-color: transparent;
+            transition: transform 0.16s ease;
+            padding: 0;
+            outline: none;
+            box-shadow: none !important;
+            line-height: 0;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            overflow: visible;
+            position: relative;
+            isolation: isolate;
+        }
+
+        .other-star-btn::before {
+            content: '';
+            display: block;
+            width: var(--other-star-size);
+            height: var(--other-star-size);
+            background: #B7BEFA;
+            -webkit-mask: url('star1.svg') center / var(--other-star-size) var(--other-star-size) no-repeat;
+            mask: url('star1.svg') center / var(--other-star-size) var(--other-star-size) no-repeat;
+            -webkit-filter: none;
+            filter: none;
+            position: relative;
+            z-index: 2;
+        }
+
+        .other-star-btn.active {
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        .other-star-btn.active::before {
+            background: url('star2.svg') center / var(--other-star-size) var(--other-star-size) no-repeat transparent;
+            -webkit-mask: none;
+            mask: none;
+            -webkit-filter: brightness(1.08) saturate(1.04);
+            filter: brightness(1.08) saturate(1.04);
+        }
+
+        .other-star-btn.active::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: var(--other-star-glow-size);
+            height: var(--other-star-glow-size);
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(244, 227, 179, 0.72) 0%, rgba(244, 227, 179, 0.34) 48%, rgba(244, 227, 179, 0) 78%);
+            pointer-events: none;
+            z-index: 1;
+            opacity: 1;
+            mix-blend-mode: screen;
+            -webkit-filter: blur(3px);
+            filter: blur(3px);
+        }
+
+        .other-star-btn:active {
+            transform: scale(0.95);
+        }
+
+        .other-star-btn:focus,
+        .other-star-btn:focus-visible {
+            outline: none;
+            box-shadow: none;
+        }
+
+        @media (max-width: 768px) {
+            .other-rating {
+                gap: 12px;
+            }
+            .other-star-btn {
+                --other-star-size: 34px;
+                --other-star-glow-size: 56px;
+                width: 44px;
+                height: 44px;
+                min-height: 44px;
+            }
+        }
+
         .slider-row {
             display: grid;
             grid-template-columns: 1fr;
@@ -2620,6 +2780,16 @@
             resize: vertical;
             transition: border-color 0.18s;
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+        }
+
+        .note-textarea::placeholder {
+            color: #9FAAD9;
+            opacity: 1;
+        }
+
+        .note-textarea::-webkit-input-placeholder {
+            color: #9FAAD9;
+            opacity: 1;
         }
 
         .note-textarea:focus {
@@ -2869,8 +3039,20 @@
         #page9 .simple-note {
             -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
-            transform: translateZ(0);
             background-clip: padding-box;
+        }
+
+        #page9 .simple-caffeine-slider {
+            display: block;
+            border: 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        #page9 .simple-caffeine-slider::-webkit-slider-container {
+            border: 0;
+            background: transparent;
         }
 
         @media (hover: none) {
@@ -3298,6 +3480,7 @@
                     <button class="symptom-tab-btn active" data-symptom-tab="sleep" onclick="switchSymptomTab('sleep')">Sleep</button>
                     <button class="symptom-tab-btn" data-symptom-tab="caffeine" onclick="switchSymptomTab('caffeine')">Caffeine</button>
                     <button class="symptom-tab-btn" data-symptom-tab="states" onclick="switchSymptomTab('states')">States</button>
+                    <button class="symptom-tab-btn" data-symptom-tab="other" onclick="switchSymptomTab('other')">Other</button>
                     <button class="symptom-tab-btn" data-symptom-tab="tags" onclick="switchSymptomTab('tags')">Tags</button>
                     <button class="symptom-tab-btn" data-symptom-tab="note" onclick="switchSymptomTab('note')">Note</button>
                 </div>
@@ -3462,17 +3645,53 @@
                     </div>
                 </div>
 
+                <div class="symptom-panel" id="symptomPanelOther">
+                    <div class="form-content" style="padding: 20px;">
+                        <div class="tracker-section">
+                            <h2>Productivity</h2>
+                            <div class="other-rating" data-field="productivity" data-value="4">
+                                <button type="button" class="other-star-btn" data-value="1" aria-label="Productivity 1"></button>
+                                <button type="button" class="other-star-btn" data-value="2" aria-label="Productivity 2"></button>
+                                <button type="button" class="other-star-btn" data-value="3" aria-label="Productivity 3"></button>
+                                <button type="button" class="other-star-btn" data-value="4" aria-label="Productivity 4"></button>
+                                <button type="button" class="other-star-btn" data-value="5" aria-label="Productivity 5"></button>
+                                <button type="button" class="other-star-btn" data-value="6" aria-label="Productivity 6"></button>
+                                <button type="button" class="other-star-btn" data-value="7" aria-label="Productivity 7"></button>
+                            </div>
+                        </div>
+                        <div class="tracker-section">
+                            <h2>Satisfaction</h2>
+                            <div class="other-rating" data-field="satisfaction" data-value="4">
+                                <button type="button" class="other-star-btn" data-value="1" aria-label="Satisfaction 1"></button>
+                                <button type="button" class="other-star-btn" data-value="2" aria-label="Satisfaction 2"></button>
+                                <button type="button" class="other-star-btn" data-value="3" aria-label="Satisfaction 3"></button>
+                                <button type="button" class="other-star-btn" data-value="4" aria-label="Satisfaction 4"></button>
+                                <button type="button" class="other-star-btn" data-value="5" aria-label="Satisfaction 5"></button>
+                                <button type="button" class="other-star-btn" data-value="6" aria-label="Satisfaction 6"></button>
+                                <button type="button" class="other-star-btn" data-value="7" aria-label="Satisfaction 7"></button>
+                            </div>
+                        </div>
+                        <div class="tracker-section">
+                            <h2>Social Activity</h2>
+                            <div class="other-rating" data-field="socialActivity" data-value="4">
+                                <button type="button" class="other-star-btn" data-value="1" aria-label="Social activity 1"></button>
+                                <button type="button" class="other-star-btn" data-value="2" aria-label="Social activity 2"></button>
+                                <button type="button" class="other-star-btn" data-value="3" aria-label="Social activity 3"></button>
+                                <button type="button" class="other-star-btn" data-value="4" aria-label="Social activity 4"></button>
+                                <button type="button" class="other-star-btn" data-value="5" aria-label="Social activity 5"></button>
+                                <button type="button" class="other-star-btn" data-value="6" aria-label="Social activity 6"></button>
+                                <button type="button" class="other-star-btn" data-value="7" aria-label="Social activity 7"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="symptom-panel" id="symptomPanelNote">
                     <div class="form-content" style="padding: 20px;">
                         <div class="tracker-section">
                             <h2>Note</h2>
                             <div class="form-group">
-                                <label class="slider-label">Text</label>
                                 <textarea class="note-textarea" id="noteText" placeholder="Write your note here..." rows="6"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label class="slider-label">Image</label>
-                                <input type="file" class="note-file-input" id="noteImage" accept="image/*">
                             </div>
                         </div>
                     </div>
@@ -3649,7 +3868,6 @@
         let symptomAutosaveTimer = null;
         let trackerHydrating = false;
         let trackerLoadToken = 0;
-        let latestUploadedSymptomImage = null;
         let currentGhostState = 'unhappy';
         let ghostHappyLingerTimer = null;
         let ghostTapCount = null;
@@ -3892,6 +4110,46 @@
             }
         }
 
+        function setOtherRatingValue(field, value, hasSavedValue) {
+            const rating = document.querySelector(`.other-rating[data-field="${field}"]`);
+            if (!rating) return;
+            const fallback = 4;
+            const parsed = Number(value);
+            const normalized = Number.isFinite(parsed)
+                ? Math.max(1, Math.min(7, Math.round(parsed)))
+                : fallback;
+            rating.dataset.value = String(normalized);
+            rating.querySelectorAll('.other-star-btn').forEach((btn) => {
+                const btnValue = Number(btn.dataset.value);
+                btn.classList.toggle('active', btnValue <= normalized);
+            });
+            rating.dataset.everMoved = hasSavedValue ? 'true' : 'false';
+        }
+
+        function getOtherRatingValue(field) {
+            const rating = document.querySelector(`.other-rating[data-field="${field}"]`);
+            if (!rating) return 4;
+            const value = Number(rating.dataset.value);
+            return Number.isFinite(value) ? Math.max(1, Math.min(7, Math.round(value))) : 4;
+        }
+
+        function initializeOtherRatings() {
+            document.querySelectorAll('.other-rating').forEach((rating) => {
+                if (rating.dataset.bound === '1') return;
+                rating.dataset.bound = '1';
+                const field = rating.dataset.field;
+                if (!field) return;
+
+                rating.querySelectorAll('.other-star-btn').forEach((btn) => {
+                    btn.addEventListener('click', () => {
+                        const value = Number(btn.dataset.value);
+                        setOtherRatingValue(field, value, true);
+                        queueSymptomAutosave();
+                    });
+                });
+            });
+        }
+
         function resetTrackerInputsToDefaults() {
             if (typeof window.setSleepData === 'function') {
                 window.setSleepData([]);
@@ -3912,15 +4170,14 @@
 
             ['energyHighest', 'energyLowest', 'moodHighest', 'moodLowest', 'anxiety', 'irritability']
                 .forEach((sliderId) => setTrackerSliderValue(sliderId, null, false));
+            ['productivity', 'satisfaction', 'socialActivity']
+                .forEach((field) => setOtherRatingValue(field, null, false));
 
             document.querySelectorAll('#activitiesTagContainer .tag, #peopleTagContainer .tag')
                 .forEach((tag) => tag.classList.remove('selected'));
 
             const noteText = document.getElementById('noteText');
             if (noteText) noteText.value = '';
-            const noteImage = document.getElementById('noteImage');
-            if (noteImage) noteImage.value = '';
-            latestUploadedSymptomImage = null;
         }
 
         function applyTrackerDataToInputs(data) {
@@ -3946,6 +4203,9 @@
             setTrackerSliderValue('moodLowest', mood.lowest, mood.lowest != null);
             setTrackerSliderValue('anxiety', data.anxiety, data.anxiety != null);
             setTrackerSliderValue('irritability', data.irritability, data.irritability != null);
+            setOtherRatingValue('productivity', data.productivity, data.productivity != null);
+            setOtherRatingValue('satisfaction', data.satisfaction, data.satisfaction != null);
+            setOtherRatingValue('socialActivity', data.socialActivity, data.socialActivity != null);
 
             const activities = Array.isArray(data.activities) ? data.activities : [];
             const people = Array.isArray(data.people) ? data.people : [];
@@ -3958,9 +4218,6 @@
 
             const noteText = document.getElementById('noteText');
             if (noteText) noteText.value = typeof data.note === 'string' ? data.note : '';
-            latestUploadedSymptomImage = data.imageUrl
-                ? { url: data.imageUrl, metadata: data.imageMetadata || null }
-                : null;
         }
 
         async function loadTrackerDataForDate(dateStr, options) {
@@ -4584,11 +4841,12 @@
                 },
                 anxiety: getSliderValue('anxiety'),
                 irritability: getSliderValue('irritability'),
+                productivity: getOtherRatingValue('productivity'),
+                satisfaction: getOtherRatingValue('satisfaction'),
+                socialActivity: getOtherRatingValue('socialActivity'),
                 activities: getSelectedTagValues('activitiesTagContainer'),
                 people: getSelectedTagValues('peopleTagContainer'),
-                note: document.getElementById('noteText') ? document.getElementById('noteText').value : '',
-                imageUrl: latestUploadedSymptomImage ? latestUploadedSymptomImage.url : null,
-                imageMetadata: latestUploadedSymptomImage ? latestUploadedSymptomImage.metadata : null
+                note: document.getElementById('noteText') ? document.getElementById('noteText').value : ''
             };
         }
 
@@ -4611,11 +4869,12 @@
                 mood: data.mood,
                 anxiety: data.anxiety,
                 irritability: data.irritability,
+                productivity: data.productivity,
+                satisfaction: data.satisfaction,
+                socialActivity: data.socialActivity,
                 activities: data.activities,
                 people: data.people,
-                note: data.note,
-                imageUrl: data.imageUrl || null,
-                imageMetadata: data.imageMetadata || null
+                note: data.note
             };
 
             const ref = window.firebaseDoc(window.firebaseDb, 'users', currentUser.uid, 'entriesSymptoms', data.date);
@@ -4639,37 +4898,6 @@
         }
         window.queueSymptomAutosave = queueSymptomAutosave;
 
-        async function uploadSymptomImageAndSave(file) {
-            if (!file) return;
-            currentUser = currentUser || window.currentUser;
-            const dateEl = document.getElementById('date');
-            const dateValue = dateEl ? dateEl.value : '';
-            if (!currentUser || !window.firebaseStorage || !window.firebaseRef || !window.firebaseUploadBytes || !window.firebaseGetDownloadURL || !dateValue) {
-                return;
-            }
-
-            try {
-                setSymptomAutosaveStatus('Uploading image...', 'saving');
-                const imageFileName = `${currentUser.uid}/${dateValue}_${Date.now()}_${file.name}`;
-                const imageRef = window.firebaseRef(window.firebaseStorage, `entries/${imageFileName}`);
-                const uploadResult = await window.firebaseUploadBytes(imageRef, file);
-                const imageUrl = await window.firebaseGetDownloadURL(uploadResult.ref || uploadResult);
-                latestUploadedSymptomImage = {
-                    url: imageUrl,
-                    metadata: {
-                        name: file.name,
-                        size: file.size,
-                        type: file.type,
-                        uploadedAt: new Date().toISOString()
-                    }
-                };
-                queueSymptomAutosave();
-            } catch (err) {
-                console.error('Image upload failed:', err);
-                setSymptomAutosaveStatus('Image upload failed', 'error');
-            }
-        }
-
         function switchSymptomTab(tab) {
             currentSymptomTab = tab;
             document.querySelectorAll('.symptom-tab-btn').forEach(btn => {
@@ -4683,6 +4911,7 @@
                 sleep: 'symptomPanelSleep',
                 caffeine: 'symptomPanelCaffeine',
                 states: 'symptomPanelStates',
+                other: 'symptomPanelOther',
                 tags: 'symptomPanelTags',
                 note: 'symptomPanelNote'
             };
@@ -4692,6 +4921,7 @@
 
             if (tab === 'sleep') initSleepTracker();
             if (tab === 'states') initializeSliders();
+            if (tab === 'other') initializeOtherRatings();
             if (tab === 'tags') initializeTags();
         }
 
@@ -4742,8 +4972,6 @@
             if (!options.suppressBurst && previousState !== nextState && nextState === 'manic') {
                 spawnStateBurst(nextState);
             }
-
-            restartGhostFloatAnimation();
         }
 
         function restartGhostFloatAnimation() {
@@ -4953,6 +5181,7 @@
             initGhostFriend();
             initializeSliders();
             initializeTags();
+            initializeOtherRatings();
             switchSymptomTab('sleep');
 
             const noteInput = document.getElementById('noteText');
@@ -4966,14 +5195,6 @@
                     updateTrackerDateButtons();
                     loadTrackerDataForDate(this.value);
                 }, { passive: true });
-            }
-
-            const imageInput = document.getElementById('noteImage');
-            if (imageInput) {
-                imageInput.addEventListener('change', function() {
-                    const file = this.files && this.files[0] ? this.files[0] : null;
-                    if (file) uploadSymptomImageAndSave(file);
-                });
             }
 
             hideAppLoadingScreen();
@@ -5039,38 +5260,17 @@
                 },
                 anxiety: getSliderValue('anxiety'),
                 irritability: getSliderValue('irritability'),
+                productivity: getOtherRatingValue('productivity'),
+                satisfaction: getOtherRatingValue('satisfaction'),
+                socialActivity: getOtherRatingValue('socialActivity'),
                 activities: selectedActivities,
                 people: selectedPeople,
-                note: document.getElementById('noteText').value,
-                image: document.getElementById('noteImage').files[0] || null
+                note: document.getElementById('noteText').value
             };
 
             console.log('Form Data:', formData);
 
             try {
-                // Upload image to Firebase Storage if present
-                let imageUrl = null;
-                let imageMetadata = null;
-
-                if (formData.image) {
-                    const imageFile = formData.image;
-                    const imageFileName = `${currentUser.uid}/${formData.date}_${Date.now()}_${imageFile.name}`;
-                    const imageRef = window.firebaseRef(window.firebaseStorage, `entries/${imageFileName}`);
-
-                    console.log('Uploading image...');
-                    const uploadResult = await window.firebaseUploadBytes(imageRef, imageFile);
-                    imageUrl = await window.firebaseGetDownloadURL(uploadResult.ref);
-
-                    imageMetadata = {
-                        name: imageFile.name,
-                        size: imageFile.size,
-                        type: imageFile.type,
-                        uploadedAt: new Date().toISOString()
-                    };
-
-                    console.log('Image uploaded:', imageUrl);
-                }
-
                 // Create entry document
                 const entry = {
                     userId: currentUser.uid,
@@ -5083,11 +5283,12 @@
                     mood: formData.mood,
                     anxiety: formData.anxiety,
                     irritability: formData.irritability,
+                    productivity: formData.productivity,
+                    satisfaction: formData.satisfaction,
+                    socialActivity: formData.socialActivity,
                     activities: formData.activities,
                     people: formData.people,
-                    note: formData.note,
-                    imageUrl: imageUrl,
-                    imageMetadata: imageMetadata
+                    note: formData.note
                 };
 
                 // Save to Firestore under users/{uid}/entriesSymptoms/{date}
