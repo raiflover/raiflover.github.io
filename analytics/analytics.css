@@ -68,9 +68,9 @@
     transform: translateY(-1px);
 }
 
-.tab-btn.active {
+#page7 .tab-btn.active {
     background: rgba(183, 190, 250, 0.15);
-    border: 1px solid rgba(183, 190, 250, 0.35);
+    border-color: rgba(183, 190, 250, 0.35);
     color: #B7BEFA;
     box-shadow: 0 0 8px rgba(183, 190, 250, 0.18);
 }
@@ -111,9 +111,9 @@
     transform: translateY(-1px);
 }
 
-.period-btn.active {
+#page7 .period-btn.active {
     background: rgba(237,191,231,0.16);
-    border: 1px solid rgba(237,191,231,0.38);
+    border-color: rgba(237,191,231,0.38);
     color: #EDBFE7;
     opacity: 1;
     box-shadow: 0 0 8px rgba(237,191,231,0.22);
