@@ -564,11 +564,26 @@
             }
 
             #page9.active {
+                overflow-y: visible;
+                -webkit-overflow-scrolling: auto;
+                touch-action: pan-y;
+                overscroll-behavior-y: contain;
+                min-height: auto;
+                animation: none;
+                contain: layout paint style;
+            }
+
+            #page9.simple-page {
+                overflow-y: visible;
+                -webkit-overflow-scrolling: auto;
+            }
+
+            .container:has(#page9.active) {
                 overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
-                touch-action: pan-y;
-                min-height: 100%;
-                animation: none;
+                overscroll-behavior-y: contain;
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
             }
 
             #page7,
@@ -1926,7 +1941,7 @@
             color: #EDBFE7;
             border-radius: 24px;
             font-size: 0.9em;
-            font-weight: 600;
+            font-weight: 400;
             cursor: pointer;
             transition: all 0.2s ease;
             box-shadow:
@@ -1939,7 +1954,7 @@
             border-color: rgba(183,190,250,0.48);
             color: #B7BEFA;
             box-shadow: none;
-            font-weight: 500;
+            font-weight: 400;
         }
 
         .simple-tag:hover {
@@ -2852,7 +2867,7 @@
         .tag-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
             margin-top: 12px;
         }
 
@@ -2863,12 +2878,15 @@
             color: #EDBFE7;
             border-radius: 24px;
             font-size: 0.9em;
+            font-weight: 400;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.2s ease;
             user-select: none;
             -webkit-user-select: none;
             -webkit-tap-highlight-color: transparent;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.07),
+                0 1px 4px rgba(0,0,0,0.22);
         }
 
         .tag:hover {
@@ -2877,27 +2895,20 @@
         }
 
         .tag.selected {
-            background: linear-gradient(180deg, rgba(237, 191, 231, 0.25), rgba(180,200,255,0.15));
-            border-color: rgba(237, 191, 231, 0.6);
-            color: #F4E3B3;
-            box-shadow:
-                inset 0 1px 0 rgba(255,255,255,0.1),
-                0 0 12px rgba(237, 191, 231, 0.4),
-                0 2px 8px rgba(0,0,0,0.3);
-            transform: scale(1.05);
+            background: rgba(183,190,250,0.22);
+            border-color: rgba(183,190,250,0.48);
+            color: #B7BEFA;
+            box-shadow: none;
+            font-weight: 400;
         }
 
         .tag.selected:hover {
-            transform: translateY(-2px) scale(1.08);
+            transform: translateY(-2px) scale(1.05);
         }
 
         @media (max-width: 480px) {
             .tag-container {
                 gap: 8px;
-            }
-            .tag {
-                padding: 6px 12px;
-                font-size: 0.85em;
             }
         }
 
@@ -2924,11 +2935,11 @@
         }
 
         #symptomPanelStates .states-mobile-star-btn {
-            --states-star-size: 28px;
-            --states-star-glow-size: 36px;
-            width: 38px;
-            height: 38px;
-            min-height: 38px;
+            --states-star-size: 32px;
+            --states-star-glow-size: 40px;
+            width: 40px;
+            height: 40px;
+            min-height: 40px;
             border: none;
             background: transparent;
             border-radius: 999px;
@@ -2941,8 +2952,15 @@
             align-items: center;
             justify-content: center;
             padding: 0;
-            box-shadow: none;
+            box-shadow: none !important;
             outline: none;
+            line-height: 0;
+            border: 0 !important;
+            border-top: 0 !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            overflow: visible;
+            isolation: isolate;
         }
 
         #symptomPanelStates .states-mobile-star-btn::before {
@@ -2961,8 +2979,10 @@
         #symptomPanelStates .states-mobile-star-btn.active::before {
             background: url('star2.svg') center / var(--states-star-size) var(--states-star-size) no-repeat transparent;
             opacity: 1;
-            -webkit-filter: none;
-            filter: none;
+            -webkit-mask: none;
+            mask: none;
+            -webkit-filter: brightness(1.08) saturate(1.04);
+            filter: brightness(1.08) saturate(1.04);
         }
 
         #symptomPanelStates .states-mobile-star-btn.active::after {
@@ -3020,10 +3040,20 @@
             #symptomPanelStates .states-mobile-rating {
                 display: flex;
                 align-items: center;
+                flex-wrap: nowrap;
                 justify-content: space-between;
-                gap: 2px;
+                gap: 6px;
                 width: 100%;
                 padding: 2px 0;
+            }
+
+            #symptomPanelStates .states-mobile-star-btn {
+                --states-star-size: 34px;
+                --states-star-glow-size: 42px;
+                width: 44px;
+                height: 44px;
+                min-height: 44px;
+                flex: 0 1 auto;
             }
         }
 
@@ -3459,6 +3489,9 @@
 
             #page9 {
                 padding-bottom: calc(74px + env(safe-area-inset-bottom));
+                overflow-y: visible;
+                -webkit-overflow-scrolling: auto;
+                touch-action: pan-y;
             }
 
             #page9 .simple-section,
