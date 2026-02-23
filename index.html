@@ -608,6 +608,11 @@
                 padding-bottom: calc(138px + env(safe-area-inset-bottom));
             }
 
+            /* Give room below analytics content so bottom nav doesn't block access */
+            #page7 {
+                padding-bottom: calc(122px + env(safe-area-inset-bottom));
+            }
+
             /* Remove glass overlay edge on full-screen tracker page (mobile) */
             .container:has(#page2.active)::before,
             .container:has(#page2.active)::after,
@@ -3210,7 +3215,6 @@
                 justify-content: stretch;
                 gap: 8px;
                 width: 100%;
-                padding: 0;
             }
 
             #symptomPanelStates .states-mobile-star-btn {
@@ -3223,29 +3227,27 @@
                 background: rgba(255,255,255,0.04);
                 color: #DFE4EB;
                 font-size: 0.82em;
+                font-weight: 400;
+                font-family: inherit;
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
                 padding: 0;
                 line-height: 1;
-                box-shadow: none !important;
-                outline: none;
-                border-top: 1px solid rgba(223,228,235,0.22) !important;
+                -webkit-tap-highlight-color: transparent;
             }
 
             #symptomPanelStates .states-mobile-star-btn::before {
                 content: attr(data-value);
-                position: static;
-                inset: auto;
-                margin: 0;
-                width: auto;
-                height: auto;
+                display: block;
                 background: none !important;
                 color: inherit;
                 -webkit-mask: none !important;
                 mask: none !important;
                 opacity: 1;
-                font: inherit;
+                font-size: inherit;
+                font-weight: inherit;
+                line-height: 1;
             }
 
             #symptomPanelStates .states-mobile-star-btn.active {
@@ -3298,6 +3300,10 @@
                 bottom: calc(14px + env(safe-area-inset-bottom));
                 border-radius: 24px;
             }
+
+            #page7 {
+                padding-bottom: calc(122px + env(safe-area-inset-bottom));
+            }
         }
 
         /* iOS-specific fixes */
@@ -3322,6 +3328,8 @@
             }
 
             /* Prevent iOS zoom on number input focus */
+            #page2 .tracker-date-input,
+            #page2 input[type="date"],
             #page9 .simple-row input[type="time"],
             #page9 .simple-note,
             #page8 .diary-search-input {
@@ -3404,29 +3412,7 @@
                 <div class="ghost-tap-counter" id="ghostTapCounter">Tap counter: --</div>
                 <div class="ghost-friend-wrap" id="ghostFriendWrap" data-state="unhappy" role="button" tabindex="0" aria-label="Ghost friend">
                     <div class="ghost-blob" id="ghostBlob"></div>
-                    <div class="ghost-ambient" aria-hidden="true">
-                        <span class="ghost-dot d1"></span>
-                        <span class="ghost-dot d2"></span>
-                        <span class="ghost-dot d3"></span>
-                        <span class="ghost-dot d4"></span>
-                        <span class="ghost-dot d5"></span>
-                        <span class="ghost-dot d6"></span>
-                        <span class="ghost-dot d7"></span>
-                        <span class="ghost-dot d8"></span>
-                        <span class="ghost-dot d9"></span>
-                        <span class="ghost-dot d10"></span>
-                    </div>
                     <img id="ghostFriendImageUnhappy" class="ghost-friend-img active" data-ghost-state="unhappy" src="bastard.svg" alt="Companion friend">
-                    <img id="ghostFriendImageHappy" class="ghost-friend-img" data-ghost-state="happy" src="bastard2.svg" alt="Companion friend">
-                    <img id="ghostFriendImageManic" class="ghost-friend-img" data-ghost-state="manic" src="bastard3.svg" alt="Companion friend">
-                    <div class="ghost-stars" id="ghostHappyStars" aria-hidden="true">
-                        <span class="ghost-star s1"></span>
-                        <span class="ghost-star s2"></span>
-                        <span class="ghost-star s3"></span>
-                        <span class="ghost-star s4"></span>
-                        <span class="ghost-star s5"></span>
-                    </div>
-                    <div class="ghost-burst" id="ghostManicBurst" aria-hidden="true"></div>
                 </div>
             </div>
 
@@ -3795,11 +3781,9 @@
         let selectedNoteTags = [];
         let noteTagOwnerKey = null;
 
-        const GHOST_STATES = ['unhappy', 'happy', 'manic'];
+        const GHOST_STATES = ['unhappy'];
         const GHOST_STATE_ASSETS = {
-            happy: 'bastard2.svg',
-            unhappy: 'bastard.svg',
-            manic: 'bastard3.svg'
+            unhappy: 'bastard.svg'
         };
         const GHOST_BURST_COLORS = {
             happy: [
@@ -4799,9 +4783,9 @@
                 window.speedUpAndFadeWords();
                 fadeOverlay.style.opacity = '1';
 
-                // Navigate to menu page after short delay
+                // Navigate to tracker sleep page after short delay
                 setTimeout(() => {
-                    goToPage(1); // Menu page
+                    goToPage(2); // Tracker page (Sleep tab default)
                 }, 100);
 
             } catch (error) {
@@ -5158,9 +5142,7 @@
             ghostTapCount += 1;
             saveGhostTapCounter();
             renderGhostTapCounter();
-            const currentIndex = GHOST_STATES.indexOf(currentGhostState);
-            const nextIndex = currentIndex >= 0 ? ((currentIndex + 1) % GHOST_STATES.length) : 0;
-            setGhostState(GHOST_STATES[nextIndex]);
+            setGhostState('unhappy');
         }
 
         function initGhostFriend() {
@@ -5545,7 +5527,7 @@
                 }
                 var page0 = document.getElementById('page0');
                 if (page0 && page0.classList.contains('active') && window.goToPage) {
-                    window.goToPage(1);
+                    window.goToPage(2);
                 }
             } else {
                 console.log('User is signed out');
@@ -5673,7 +5655,7 @@
                     }
                     var page0 = document.getElementById('page0');
                     if (page0 && page0.classList.contains('active') && window.goToPage) {
-                        window.goToPage(1);
+                        window.goToPage(2);
                     }
                 } else {
                     console.log('User is signed out');
