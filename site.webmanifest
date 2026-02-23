@@ -1,6 +1,6 @@
 {
-  "name": "tracker",
-  "short_name": "tracker",
+  "name": "Everything Tracker",
+  "short_name": "Everything Tracker",
   "description": "Track mood, sleep, energy, habits, and analytics.",
   "start_url": ".",
   "display": "standalone",
@@ -8,9 +8,9 @@
   "theme_color": "#0d101a",
   "icons": [
     {
-      "src": "icon-bigger.png",
-      "sizes": "198x198",
-      "type": "image/png",
+      "src": "bastard.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     }
   ]

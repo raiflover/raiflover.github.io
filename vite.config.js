@@ -16,7 +16,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: [
-        'icon-bigger.png',
+        'bastard.svg',
         'flower-new.svg',
         'notebook-nav.svg',
         'analytics.svg',
@@ -32,14 +32,14 @@ export default defineConfig({
         start_url: '/',
         icons: [
           {
-            src: '/icon-bigger.png',
-            sizes: '198x198',
-            type: 'image/png',
+            src: '/bastard.svg',
+            sizes: 'any',
+            type: 'image/svg+xml',
           },
           {
-            src: '/icon-bigger.png',
-            sizes: '198x198',
-            type: 'image/png',
+            src: '/bastard.svg',
+            sizes: 'any',
+            type: 'image/svg+xml',
             purpose: 'maskable',
           },
         ],

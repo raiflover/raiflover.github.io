@@ -1,15 +1,14 @@
-const CACHE_NAME = 'tracker-v2-static-v1';
+const CACHE_NAME = 'tracker-v2-static-v2';
 const APP_SHELL = [
   './',
   'index.html',
   'site.webmanifest',
-  'icon-bigger.png',
+  'bastard.svg',
   'analytics.svg',
   'cat.svg',
   'notebook-nav.svg',
   'heart.svg',
   'flower-new.svg',
-  'bastard.svg',
   'bastard2.svg',
   'bastard3.svg',
   'star1.svg',

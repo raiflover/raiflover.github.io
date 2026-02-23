@@ -6,11 +6,11 @@
     <meta name="theme-color" content="#0d101a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="tracker">
-    <title>tracker</title>
+    <meta name="apple-mobile-web-app-title" content="Everything Tracker">
+    <title>Everything Tracker</title>
     <link rel="manifest" href="site.webmanifest">
-    <link rel="icon" href="icon-bigger.png" type="image/png" sizes="198x198">
-    <link rel="apple-touch-icon" href="icon-bigger.png">
+    <link rel="icon" href="bastard.svg" type="image/svg+xml" sizes="any">
+    <link rel="apple-touch-icon" href="bastard.svg">
     <link rel="stylesheet" href="background/styles2.css">
     <link rel="stylesheet" href="trackers/sleep.css">
     <link rel="stylesheet" href="analytics/analytics.css">
@@ -3198,35 +3198,35 @@
 
             #symptomPanelStates .slider-row {
                 display: grid;
-                grid-template-columns: 126px minmax(0, 1fr);
-                align-items: center;
-                gap: 8px;
-                margin-bottom: 8px;
+                grid-template-columns: 1fr;
+                gap: 6px;
+                margin-bottom: 12px;
             }
 
             #symptomPanelStates .slider-label {
                 color: #DFE4EB;
                 font-size: 0.86em;
+                padding-left: 2px;
             }
 
             #symptomPanelStates .states-mobile-rating {
                 display: grid;
                 grid-template-columns: repeat(7, minmax(0, 1fr));
                 justify-content: stretch;
-                gap: 8px;
+                gap: 7px;
                 width: 100%;
             }
 
             #symptomPanelStates .states-mobile-star-btn {
                 width: 100%;
                 min-width: 0;
-                height: 36px;
-                min-height: 36px;
+                height: 40px;
+                min-height: 40px;
                 border-radius: 999px;
                 border: 1px solid rgba(223,228,235,0.22);
                 background: rgba(255,255,255,0.04);
                 color: #DFE4EB;
-                font-size: 0.82em;
+                font-size: 0.9em;
                 font-weight: 400;
                 font-family: inherit;
                 display: inline-flex;
@@ -3505,7 +3505,7 @@
                 </div>
 
                 <div class="symptom-panel" id="symptomPanelStates">
-                    <div class="form-content" style="padding: 20px;">
+                    <div class="form-content">
                         <div class="tracker-section">
                             <h2>Energy</h2>
                             <div class="slider-group">
