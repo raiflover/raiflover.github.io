@@ -2172,9 +2172,12 @@
         }
 
         .ghost-friend-img {
-            width: 78%;
+            width: 76%;
             max-width: 260px;
-            height: auto;
+            height: 76%;
+            max-height: 260px;
+            aspect-ratio: 1 / 1;
+            object-fit: contain;
             position: absolute;
             left: 50%;
             top: 50%;
@@ -3255,7 +3258,7 @@
                 width: 100%;
                 text-align: center;
                 position: relative;
-                top: 2px;
+                top: 4px;
                 background: none !important;
                 color: inherit;
                 -webkit-mask: none !important;
@@ -3432,7 +3435,7 @@
                 <div class="ghost-tap-counter" id="ghostTapCounter">Tap counter: --</div>
                 <div class="ghost-friend-wrap" id="ghostFriendWrap" data-state="unhappy" role="button" tabindex="0" aria-label="Ghost friend">
                     <div class="ghost-blob" id="ghostBlob"></div>
-                    <img id="ghostFriendImageUnhappy" class="ghost-friend-img active" data-ghost-state="unhappy" src="bastard.svg" alt="Companion friend">
+                    <img id="ghostFriendImageUnhappy" class="ghost-friend-img active" data-ghost-state="unhappy" src="icon.svg" alt="Companion friend">
                 </div>
             </div>
 
@@ -3809,7 +3812,7 @@
 
         const GHOST_STATES = ['unhappy'];
         const GHOST_STATE_ASSETS = {
-            unhappy: 'bastard.svg'
+            unhappy: 'icon.svg'
         };
         const GHOST_BURST_COLORS = {
             happy: [
