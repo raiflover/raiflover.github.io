@@ -394,8 +394,43 @@ function renderPrintTab(container) {
 }
 
 function getPrintI18n(lang) {
-    if (lang === 'ru') {
-        return {
+    var PDF_I18N = {
+        en: {
+            printReportTitle: 'Print Report',
+            printReportHint: 'Choose PDF language and month. The report includes weekly averages and monthly charts.',
+            languageLabel: 'PDF language',
+            monthLabel: 'Month',
+            generateButton: 'Generate PDF',
+            reportTitle: 'Analytics Report',
+            generatedAt: 'Generated',
+            monthHeading: 'Month',
+            weeklyAverages: 'Weekly Averages',
+            week: 'Week',
+            weekRange: 'Range',
+            avgEnergyHigh: 'High Energy',
+            avgEnergyLow: 'Low Energy',
+            avgMoodHigh: 'High Mood',
+            avgMoodLow: 'Low Mood',
+            avgSleep: 'Sleep (h)',
+            avgAnxiety: 'Anxiety',
+            avgIrritability: 'Irritability',
+            monthlyCharts: 'Monthly Charts',
+            energyChart: 'Energy Range',
+            moodChart: 'Mood Range',
+            anxietyChart: 'Anxiety',
+            irritabilityChart: 'Irritability',
+            sectionsLabel: 'Report blocks',
+            includeWeeklyAverages: 'Weekly averages',
+            includeEnergyChart: 'Energy chart',
+            includeMoodChart: 'Mood chart',
+            includeAnxietyChart: 'Anxiety chart',
+            includeIrritabilityChart: 'Irritability chart',
+            noData: 'No data for selected month.',
+            selectMonthAlert: 'Please select a month.',
+            popupBlockedAlert: 'Please allow popups to print.',
+            selectAtLeastOneBlock: 'Select at least one report block.'
+        },
+        ru: {
             printReportTitle: 'Печать отчета',
             printReportHint: 'Выберите месяц и язык PDF. Отчет включает недельные средние и графики за месяц.',
             languageLabel: 'Язык PDF',
@@ -406,16 +441,16 @@ function getPrintI18n(lang) {
             monthHeading: 'Месяц',
             weeklyAverages: 'Недельные средние',
             week: 'Неделя',
-            weekRange: 'Диапазон',
-            avgEnergyHigh: 'Средняя высокая энергия',
-            avgEnergyLow: 'Средняя низкая энергия',
-            avgMoodHigh: 'Среднее высокое настроение',
-            avgMoodLow: 'Среднее низкое настроение',
-            avgSleep: 'Средний сон (ч)',
-            avgAnxiety: 'Средняя тревожность',
-            avgIrritability: 'Средняя раздражительность',
+            weekRange: 'Даты',
+            avgEnergyHigh: 'Max. энергичность',
+            avgEnergyLow: 'Min. энергичность',
+            avgMoodHigh: 'Max. настроение',
+            avgMoodLow: 'Min. настроения',
+            avgSleep: 'Сон (часы)',
+            avgAnxiety: 'Тревожность',
+            avgIrritability: 'Раздражительность',
             monthlyCharts: 'Графики за месяц',
-            energyChart: 'Диапазон энергии',
+            energyChart: 'Диапазон энергичности',
             moodChart: 'Диапазон настроения',
             anxietyChart: 'Тревожность',
             irritabilityChart: 'Раздражительность',
@@ -429,43 +464,10 @@ function getPrintI18n(lang) {
             selectMonthAlert: 'Пожалуйста, выберите месяц.',
             popupBlockedAlert: 'Разрешите всплывающие окна для печати.',
             selectAtLeastOneBlock: 'Выберите хотя бы один блок отчета.'
-        };
-    }
-    return {
-        printReportTitle: 'Print Report',
-        printReportHint: 'Choose PDF language and month. The report includes weekly averages and monthly charts.',
-        languageLabel: 'PDF language',
-        monthLabel: 'Month',
-        generateButton: 'Generate PDF',
-        reportTitle: 'Analytics Report',
-        generatedAt: 'Generated',
-        monthHeading: 'Month',
-        weeklyAverages: 'Weekly Averages',
-        week: 'Week',
-        weekRange: 'Range',
-        avgEnergyHigh: 'Avg High Energy',
-        avgEnergyLow: 'Avg Low Energy',
-        avgMoodHigh: 'Avg High Mood',
-        avgMoodLow: 'Avg Low Mood',
-        avgSleep: 'Avg Sleep (h)',
-        avgAnxiety: 'Avg Anxiety',
-        avgIrritability: 'Avg Irritability',
-        monthlyCharts: 'Monthly Charts',
-        energyChart: 'Energy Range',
-        moodChart: 'Mood Range',
-        anxietyChart: 'Anxiety',
-        irritabilityChart: 'Irritability',
-        sectionsLabel: 'Report blocks',
-        includeWeeklyAverages: 'Weekly averages',
-        includeEnergyChart: 'Energy chart',
-        includeMoodChart: 'Mood chart',
-        includeAnxietyChart: 'Anxiety chart',
-        includeIrritabilityChart: 'Irritability chart',
-        noData: 'No data for selected month.',
-        selectMonthAlert: 'Please select a month.',
-        popupBlockedAlert: 'Please allow popups to print.',
-        selectAtLeastOneBlock: 'Select at least one report block.'
+        }
     };
+    window.PDF_I18N = PDF_I18N;
+    return PDF_I18N[lang] || PDF_I18N.en;
 }
 
 function getMonthRangeFromInput(monthValue) {
@@ -750,43 +752,52 @@ function generateAnalyticsMonthlyPdf() {
     }
     var chartSectionHtml = chartBlocks.length ? ('<h3>' + t.monthlyCharts + '</h3>' + chartBlocks.join('')) : '';
 
-    var popup = window.open('', '_blank');
-    if (!popup) {
-        alert(t.popupBlockedAlert);
-        return;
-    }
-
-    popup.document.write(
+    var reportHtml =
         '<!doctype html><html><head><meta charset="UTF-8"><title>' + t.reportTitle + '</title>' +
         '<style>' +
-        'body{font-family:Arial,sans-serif;color:#1f2430;padding:22px;background:#fff;}' +
+        'body{font-family:Arial,sans-serif;color:#1f2430;padding:12px;background:#f7f9ff;line-height:1.35;}' +
         'h1,h2,h3{margin:0 0 10px;color:#1d2230;}' +
-        '.meta{margin:0 0 16px;color:#4d556f;font-size:13px;}' +
-        'table{width:100%;border-collapse:collapse;margin:8px 0 20px;page-break-inside:auto;}' +
+        'h1{font-size:24px;letter-spacing:0.2px;}' +
+        'h2{font-size:16px;margin-top:2px;}' +
+        'h3{font-size:14px;}' +
+        '.meta{margin:0 0 12px;color:#4d556f;font-size:12px;}' +
+        'table{width:100%;border-collapse:separate;border-spacing:0;margin:8px 0 20px;page-break-inside:auto;background:#fff;border:1px solid #dbe2f2;border-radius:12px;overflow:hidden;}' +
         'tr{page-break-inside:avoid;break-inside:avoid;}' +
-        'th,td{border:1px solid #d7dcea;padding:7px 8px;font-size:12px;text-align:left;}' +
-        'th{background:#f5f7fc;}' +
-        '.chart-block{margin:0 0 18px;padding:10px;border:1px solid #d7dcea;border-radius:8px;page-break-inside:avoid;break-inside:avoid;}' +
-        '.chart-title{font-weight:700;margin:0 0 8px;}' +
+        'th,td{padding:8px 10px;font-size:12px;text-align:left;border-right:1px solid #e4e9f5;border-bottom:1px solid #e4e9f5;}' +
+        'th:last-child,td:last-child{border-right:none;}' +
+        'tbody tr:last-child td{border-bottom:none;}' +
+        'th{background:#eef2fb;color:#263052;font-weight:700;}' +
+        '.chart-block{margin:0 0 18px;padding:14px;border:1px solid #dbe2f2;border-radius:14px;background:#fff;box-shadow:0 3px 10px rgba(26,42,84,0.08);page-break-inside:avoid;break-inside:avoid;}' +
+        '.chart-title{font-weight:700;margin:0 0 10px;color:#2a3357;}' +
         '.chart-block svg{width:100%;height:auto;display:block;}' +
-        '.chart-block svg .chart-bar,.chart-block svg .chart-sleep-bar{fill:#8d95b7 !important;stroke:#a2a9c8 !important;opacity:1 !important;filter:none !important;}' +
+        '.chart-block svg .chart-bar,.chart-block svg .chart-sleep-bar{fill:#8d95b7 !important;stroke:none !important;opacity:1 !important;filter:none !important;}' +
         '.chart-block svg .chart-line{stroke:#5f6688 !important;stroke-width:2.2 !important;opacity:1 !important;filter:none !important;}' +
         '.chart-block svg .chart-point{fill:#5f6688 !important;stroke:#e5e8f2 !important;stroke-width:1.1 !important;opacity:1 !important;}' +
         '.chart-block svg text{fill:#6e7697 !important;opacity:1 !important;}' +
         '.chart-block svg line{stroke:#d0d5e5 !important;opacity:1 !important;}' +
         '.chart-block svg .baseline-line{stroke:#9aa2bf !important;opacity:1 !important;}' +
         '.chart-block svg path[fill^=\"url(\"]{fill:#cfd4e6 !important;opacity:0.2 !important;}' +
-        '@page{size:A4 portrait;margin:12mm;}' +
+        '@page{size:A4 portrait;margin:8mm;}' +
         '</style></head><body>' +
         '<h1>' + t.reportTitle + '</h1>' +
         '<p class="meta">' + t.generatedAt + ': ' + new Date().toLocaleString(lang === 'ru' ? 'ru-RU' : 'en-US') + '</p>' +
         '<h2>' + t.monthHeading + ': ' + customMonthName + '</h2>' +
         weeklySectionHtml +
         chartSectionHtml +
-        '<script>window.onload=function(){setTimeout(function(){window.print();},120);};<\/script>' +
-        '</body></html>'
-    );
-    popup.document.close();
+        '<script>window.onload=function(){if(window.history&&window.history.replaceState){try{window.history.replaceState({},document.title,\"/analytics-report\");}catch(e){}}setTimeout(function(){window.print();},120);};<\/script>' +
+        '</body></html>';
+
+    var reportBlob = new Blob([reportHtml], { type: 'text/html' });
+    var reportUrl = URL.createObjectURL(reportBlob);
+    var popup = window.open(reportUrl, '_blank');
+    if (!popup) {
+        URL.revokeObjectURL(reportUrl);
+        alert(t.popupBlockedAlert);
+        return;
+    }
+    setTimeout(function() {
+        URL.revokeObjectURL(reportUrl);
+    }, 30000);
 }
 
 window.generateAnalyticsMonthlyPdf = generateAnalyticsMonthlyPdf;

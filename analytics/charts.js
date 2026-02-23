@@ -344,37 +344,23 @@ function renderBarChart(containerId, data, options = {}) {
         }
         chartDefs.appendChild(gradient);
 
-        // Two-layer bar: outer outline + inner translucent fill (true inside-outline look)
+        // Single-layer bar (no secondary outline bar)
         const outerX = x - barGroupWidth / 2 + barGroupWidth * barGapFrac / 2;
         const outerY = barY;
         const outerW = Math.max(barGroupWidth * (1 - barGapFrac), 2);
         const outerH = Math.max(barHeight, 3);
-        const inset = entry.isMissing ? 1.2 : 2.4;
 
-        const barOutline = createSVGElement('rect', {
+        const bar = createSVGElement('rect', {
             x: outerX,
             y: outerY,
             width: outerW,
             height: outerH,
-            fill: 'none',
-            stroke: entry.isMissing ? 'rgba(255,255,255,0.2)' : outlineColor,
-            'stroke-width': entry.isMissing ? 1 : 2.4,
+            fill: 'url(#' + gradientId + ')',
+            stroke: entry.isMissing ? 'rgba(255,255,255,0.2)' : 'none',
+            'stroke-width': entry.isMissing ? 1 : 0,
             'stroke-dasharray': entry.isMissing ? '3,3' : 'none',
             rx: barRx,
             ry: barRx,
-            class: 'chart-bar',
-            style: 'pointer-events: none; opacity: 0; -webkit-animation-delay: ' + (index * staggerDelay) + 's; animation-delay: ' + (index * staggerDelay) + 's;'
-        });
-
-        const bar = createSVGElement('rect', {
-            x: outerX + inset,
-            y: outerY + inset,
-            width: Math.max(outerW - inset * 2, 2),
-            height: Math.max(outerH - inset * 2, 3),
-            fill: 'url(#' + gradientId + ')',
-            stroke: 'none',
-            rx: Math.max(barRx - 2, 2),
-            ry: Math.max(barRx - 2, 2),
             class: 'chart-bar',
             style: 'cursor: pointer; filter: url(#glow-' + containerId + ') drop-shadow(0 0 10px rgba(237,191,231,0.35)) drop-shadow(0 2px 4px rgba(0,0,0,0.2)); opacity: 0; -webkit-animation-delay: ' + (index * staggerDelay) + 's; animation-delay: ' + (index * staggerDelay) + 's;'
         });
@@ -384,7 +370,6 @@ function renderBarChart(containerId, data, options = {}) {
         });
         bar.addEventListener('mouseleave', hideTooltip);
 
-        barGroup.appendChild(barOutline);
         barGroup.appendChild(bar);
         chartGroup.appendChild(barGroup);
 
@@ -588,9 +573,9 @@ function renderLineChart(containerId, data, options = {}) {
             cy: point.y,
             r: point.isMissing ? 4 : 7,
             fill: point.isMissing ? 'rgba(255,255,255,0.3)' : color,
-            stroke: point.isMissing ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.5)',
-            'stroke-width': point.isMissing ? 1 : 3,
-            filter: point.isMissing ? 'none' : `url(#glow-line-${containerId})`,
+            stroke: point.isMissing ? 'rgba(255,255,255,0.45)' : 'rgba(255,255,255,0.28)',
+            'stroke-width': point.isMissing ? 1 : 1.4,
+            filter: 'none',
             class: 'chart-point',
             style: 'cursor: pointer; opacity: 0; -webkit-animation-delay: ' + (index * staggerDelay) + 's; animation-delay: ' + (index * staggerDelay) + 's;'
         });
