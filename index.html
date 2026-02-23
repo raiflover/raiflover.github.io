@@ -3229,8 +3229,8 @@
                 height: 40px;
                 min-height: 40px;
                 border-radius: 999px;
-                border: 1px solid rgba(223,228,235,0.22) !important;
-                border-top: 1px solid rgba(223,228,235,0.22) !important;
+                border: 1.5px solid rgba(223,228,235,0.22) !important;
+                border-top: 1.5px solid rgba(223,228,235,0.22) !important;
                 background:
                     linear-gradient(180deg, rgba(220,235,255,0.13), rgba(220,235,255,0.03)),
                     linear-gradient(130deg, rgba(70,104,172,0.22), rgba(14,22,40,0.46));
@@ -3254,6 +3254,8 @@
                 display: block;
                 width: 100%;
                 text-align: center;
+                position: relative;
+                top: 2px;
                 background: none !important;
                 color: inherit;
                 -webkit-mask: none !important;
@@ -3525,43 +3527,9 @@
                 <div class="symptom-panel" id="symptomPanelStates">
                     <div class="form-content">
                         <div class="tracker-section">
-                            <h2>Energy</h2>
+                            <h2>Mood Highest</h2>
                             <div class="slider-group">
                                 <div class="slider-row">
-                                    <label class="slider-label">Highest</label>
-                                    <input type="range" class="slider-input" id="energyHighest" min="1" max="7" value="4" data-default="4">
-                                    <div class="slider-marks"><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div></div>
-                                    <div class="states-mobile-rating" data-slider="energyHighest" data-value="4">
-                                        <button type="button" class="states-mobile-star-btn" data-value="1" aria-label="Energy highest 1"></button>
-                                        <button type="button" class="states-mobile-star-btn" data-value="2" aria-label="Energy highest 2"></button>
-                                        <button type="button" class="states-mobile-star-btn" data-value="3" aria-label="Energy highest 3"></button>
-                                        <button type="button" class="states-mobile-star-btn" data-value="4" aria-label="Energy highest 4"></button>
-                                        <button type="button" class="states-mobile-star-btn" data-value="5" aria-label="Energy highest 5"></button>
-                                        <button type="button" class="states-mobile-star-btn" data-value="6" aria-label="Energy highest 6"></button>
-                                        <button type="button" class="states-mobile-star-btn" data-value="7" aria-label="Energy highest 7"></button>
-                                    </div>
-                                </div>
-                                <div class="slider-row">
-                                    <label class="slider-label">Lowest</label>
-                                    <input type="range" class="slider-input" id="energyLowest" min="1" max="7" value="4" data-default="4">
-                                    <div class="slider-marks"><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div></div>
-                                    <div class="states-mobile-rating" data-slider="energyLowest" data-value="4">
-                                        <button type="button" class="states-mobile-star-btn" data-value="1" aria-label="Energy lowest 1"></button>
-                                        <button type="button" class="states-mobile-star-btn" data-value="2" aria-label="Energy lowest 2"></button>
-                                        <button type="button" class="states-mobile-star-btn" data-value="3" aria-label="Energy lowest 3"></button>
-                                        <button type="button" class="states-mobile-star-btn" data-value="4" aria-label="Energy lowest 4"></button>
-                                        <button type="button" class="states-mobile-star-btn" data-value="5" aria-label="Energy lowest 5"></button>
-                                        <button type="button" class="states-mobile-star-btn" data-value="6" aria-label="Energy lowest 6"></button>
-                                        <button type="button" class="states-mobile-star-btn" data-value="7" aria-label="Energy lowest 7"></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tracker-section">
-                            <h2>Mood</h2>
-                            <div class="slider-group">
-                                <div class="slider-row">
-                                    <label class="slider-label">Highest</label>
                                     <input type="range" class="slider-input" id="moodHighest" min="1" max="7" value="4" data-default="4">
                                     <div class="slider-marks"><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div></div>
                                     <div class="states-mobile-rating" data-slider="moodHighest" data-value="4">
@@ -3574,8 +3542,12 @@
                                         <button type="button" class="states-mobile-star-btn" data-value="7" aria-label="Mood highest 7"></button>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="tracker-section">
+                            <h2>Mood Lowest</h2>
+                            <div class="slider-group">
                                 <div class="slider-row">
-                                    <label class="slider-label">Lowest</label>
                                     <input type="range" class="slider-input" id="moodLowest" min="1" max="7" value="4" data-default="4">
                                     <div class="slider-marks"><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div></div>
                                     <div class="states-mobile-rating" data-slider="moodLowest" data-value="4">
@@ -3586,6 +3558,42 @@
                                         <button type="button" class="states-mobile-star-btn" data-value="5" aria-label="Mood lowest 5"></button>
                                         <button type="button" class="states-mobile-star-btn" data-value="6" aria-label="Mood lowest 6"></button>
                                         <button type="button" class="states-mobile-star-btn" data-value="7" aria-label="Mood lowest 7"></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tracker-section">
+                            <h2>Energy Highest</h2>
+                            <div class="slider-group">
+                                <div class="slider-row">
+                                    <input type="range" class="slider-input" id="energyHighest" min="1" max="7" value="4" data-default="4">
+                                    <div class="slider-marks"><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div></div>
+                                    <div class="states-mobile-rating" data-slider="energyHighest" data-value="4">
+                                        <button type="button" class="states-mobile-star-btn" data-value="1" aria-label="Energy highest 1"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="2" aria-label="Energy highest 2"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="3" aria-label="Energy highest 3"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="4" aria-label="Energy highest 4"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="5" aria-label="Energy highest 5"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="6" aria-label="Energy highest 6"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="7" aria-label="Energy highest 7"></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tracker-section">
+                            <h2>Energy Lowest</h2>
+                            <div class="slider-group">
+                                <div class="slider-row">
+                                    <input type="range" class="slider-input" id="energyLowest" min="1" max="7" value="4" data-default="4">
+                                    <div class="slider-marks"><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div><div class="slider-mark"></div></div>
+                                    <div class="states-mobile-rating" data-slider="energyLowest" data-value="4">
+                                        <button type="button" class="states-mobile-star-btn" data-value="1" aria-label="Energy lowest 1"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="2" aria-label="Energy lowest 2"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="3" aria-label="Energy lowest 3"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="4" aria-label="Energy lowest 4"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="5" aria-label="Energy lowest 5"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="6" aria-label="Energy lowest 6"></button>
+                                        <button type="button" class="states-mobile-star-btn" data-value="7" aria-label="Energy lowest 7"></button>
                                     </div>
                                 </div>
                             </div>
