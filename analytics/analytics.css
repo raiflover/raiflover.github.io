@@ -1,0 +1,1770 @@
+﻿/* Analytics Styling */
+/* Glassmorphism design matching the main app aesthetic */
+:root {
+    --analytics-glass-1: rgba(14, 24, 46, 0.68);
+    --analytics-glass-2: rgba(8, 14, 30, 0.74);
+    --analytics-stroke: rgba(210,226,255,0.12);
+    --analytics-stroke-soft: rgba(210,226,255,0.07);
+    --analytics-shadow: rgba(2, 7, 20, 0.66);
+    --analytics-frost-1: rgba(220,235,255,0.06);
+    --analytics-frost-2: rgba(220,235,255,0.01);
+}
+
+/* Page-7 glass stabilization */
+#page7 {
+    isolation: isolate;
+}
+
+#page7 .tab-btn,
+#page7 .period-btn,
+#page7 .insight-btn,
+#page7 .period-nav-btn,
+#page7 .notes-toggle-btn,
+#page7 .chart-wrapper,
+#page7 .ha-section {
+    background:
+        linear-gradient(165deg, var(--analytics-frost-1), var(--analytics-frost-2)),
+        linear-gradient(140deg, var(--analytics-glass-1), var(--analytics-glass-2));
+    border: 1px solid var(--analytics-stroke-soft);
+    box-shadow:
+        0 10px 24px var(--analytics-shadow),
+        inset 0 1px 0 rgba(220,235,255,0.12);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+}
+
+/* Tab Navigation */
+.analytics-tabs {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    -webkit-appearance: none;
+    appearance: none;
+    min-height: 40px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 22px;
+    color: #DFE4EB;
+    font-size: 0.88em;
+    font-weight: 400;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    font-family: inherit;
+}
+
+.print-panel {
+    padding: 16px 14px;
+    border-radius: 12px;
+    border: none;
+    background: transparent;
+}
+
+.print-panel h3 {
+    margin: 0 0 10px;
+    color: #EDBFE7;
+    text-align: left;
+}
+
+.print-panel-note {
+    margin: 0 0 16px;
+    color: #DFE4EB;
+    font-size: 0.92em;
+    line-height: 1.5;
+}
+
+.print-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.print-form-field label {
+    display: block;
+    margin-bottom: 6px;
+    color: #EDBFE7;
+    font-size: 0.9em;
+}
+
+.print-form-field select,
+.print-form-field input[type="month"] {
+    width: 100%;
+    min-height: 42px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.04);
+    color: #DFE4EB;
+    padding: 8px 10px;
+}
+
+.print-generate-btn {
+    width: 100%;
+    min-height: 42px;
+    border-radius: 12px;
+    border: 1px solid rgba(183,190,250,0.42);
+    background: rgba(183,190,250,0.18);
+    color: #B7BEFA;
+    font-weight: 600;
+}
+
+.print-sections-wrap {
+    margin: 8px 0 12px;
+    padding: 0;
+    border: none;
+    background: transparent;
+}
+
+.print-sections-title {
+    margin-bottom: 8px;
+    color: #EDBFE7;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.print-sections-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 12px;
+}
+
+.print-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 30px;
+    padding: 2px 0;
+    border: none;
+    background: transparent;
+    color: #DFE4EB;
+    font-size: 0.88em;
+    cursor: pointer;
+    transition: color 0.18s ease, transform 0.18s ease;
+}
+
+.print-check:hover {
+    color: #B7BEFA;
+    transform: translateY(-1px);
+}
+
+.print-check input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(183,190,250,0.48);
+    background: rgba(255,255,255,0.04);
+    position: relative;
+    flex-shrink: 0;
+    outline: none;
+    transition: border-color 0.24s ease, background-color 0.24s ease, box-shadow 0.24s ease, transform 0.24s ease;
+}
+
+.print-check input[type="checkbox"]:checked {
+    background: rgba(183,190,250,0.22);
+    border-color: rgba(183,190,250,0.72);
+    box-shadow: 0 0 0 3px rgba(183,190,250,0.18);
+    animation: printCheckPop 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.print-check input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 9px;
+    border: solid #B7BEFA;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.print-check input[type="checkbox"]:focus-visible {
+    box-shadow: 0 0 0 3px rgba(183,190,250,0.22);
+}
+
+.print-check:has(input[type="checkbox"]:checked) {
+    color: #B7BEFA;
+}
+
+@keyframes printCheckPop {
+    0% {
+        transform: scale(0.88);
+        box-shadow: 0 0 0 0 rgba(183,190,250,0.28);
+    }
+    60% {
+        transform: scale(1.08);
+        box-shadow: 0 0 0 4px rgba(183,190,250,0.2);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 3px rgba(183,190,250,0.18);
+    }
+}
+
+.print-generate-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+#page7.print-tab-active .time-period-selector,
+#page7.print-tab-active .period-navigator {
+    display: none;
+}
+
+#page7.print-tab-active .chart-wrapper {
+    transform: translate3d(0, 24px, 0);
+}
+
+#page7.print-tab-active .print-panel h3,
+#page7.print-tab-active .print-panel-note,
+#page7.print-tab-active .print-form-field label,
+#page7.print-tab-active .print-sections-title,
+#page7.print-tab-active .print-check,
+#page7.print-tab-active .print-generate-btn {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+    animation: printTextRise 720ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+#page7.print-tab-active .print-panel h3 { animation-delay: 80ms; }
+#page7.print-tab-active .print-panel-note { animation-delay: 140ms; }
+#page7.print-tab-active .print-form-field label { animation-delay: 190ms; }
+#page7.print-tab-active .print-sections-title { animation-delay: 250ms; }
+#page7.print-tab-active .print-check:nth-of-type(1) { animation-delay: 290ms; }
+#page7.print-tab-active .print-check:nth-of-type(2) { animation-delay: 330ms; }
+#page7.print-tab-active .print-check:nth-of-type(3) { animation-delay: 370ms; }
+#page7.print-tab-active .print-check:nth-of-type(4) { animation-delay: 410ms; }
+#page7.print-tab-active .print-check:nth-of-type(5) { animation-delay: 450ms; }
+#page7.print-tab-active .print-generate-btn { animation-delay: 500ms; }
+
+@media (max-width: 560px) {
+    .print-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .print-sections-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.tab-btn:hover {
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(255,255,255,0.12);
+    transform: translateY(-1px);
+}
+
+#page7 .tab-btn.active {
+    background: rgba(183, 190, 250, 0.15);
+    border-color: rgba(183, 190, 250, 0.35);
+    color: #B7BEFA;
+    box-shadow: 0 0 8px rgba(183, 190, 250, 0.18);
+}
+
+/* Time Period Selector */
+.time-period-selector {
+    display: flex;
+    gap: 8px;
+    margin: 15px 0 20px 0;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.period-btn {
+    -webkit-appearance: none;
+    appearance: none;
+    min-height: 40px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 22px;
+    color: #DFE4EB;
+    font-size: 0.88em;
+    font-weight: 400;
+    cursor: pointer;
+    transition: background-color 0.24s, border-color 0.24s, transform 0.24s, opacity 0.24s;
+    font-family: inherit;
+    opacity: 1;
+}
+
+.period-btn:hover {
+    opacity: 1;
+    border-color: rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.07);
+    transform: translateY(-1px);
+}
+
+#page7 .period-btn.active {
+    background: rgba(237,191,231,0.16);
+    border-color: rgba(237,191,231,0.38);
+    color: #EDBFE7;
+    opacity: 1;
+    box-shadow: 0 0 8px rgba(237,191,231,0.22);
+}
+
+/* Insights Toggle Section */
+.insights-toggle {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.insight-btn {
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 22px;
+    color: #DFE4EB;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.24s, border-color 0.24s, transform 0.24s;
+    font-family: inherit;
+}
+
+.insight-btn:hover {
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(255,255,255,0.12);
+    transform: translateY(-1px);
+}
+
+.insight-btn.active {
+    background: linear-gradient(135deg, rgba(237,191,231,0.2), rgba(244,227,179,0.15));
+    border: 1px solid rgba(237,191,231,0.3);
+    color: #EDBFE7;
+    box-shadow: 0 0 8px rgba(237,191,231,0.2);
+}
+
+/* Insights Display */
+#insightsContainer {
+    margin: 20px 0;
+}
+
+.insights-section {
+    border-top: none;
+    padding-top: 12px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.insights-section .insights-title {
+    color: #EDBFE7;
+    font-size: 1.02em;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    text-align: center;
+    margin: 0 0 10px;
+}
+
+.insights-title {
+    color: #EDBFE7;
+    font-size: 1.1em;
+    margin: 0 0 12px 0;
+    font-weight: 600;
+    text-align: center;
+}
+
+.insights-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.insight-item {
+    color: rgba(200,216,236,0.9);
+    font-size: 0.84em;
+    line-height: 1.38;
+    font-style: normal;
+    margin: 2px 0 0;
+}
+
+.insight-item strong {
+    color: rgba(223,228,235,0.96);
+    font-weight: 600;
+}
+
+/* Charts Container */
+#chartsContainer {
+    margin: 20px 0;
+}
+
+/* Break charts out of .form-content horizontal padding so they use full container width */
+#page7 .chart-wrapper { margin-left: 0; margin-right: 0; }
+
+/* Compensate chart-wrapper negative margin вЂ” indent from container edge */
+#page7 .chart-wrapper h3 { padding-left: 0; padding-right: 0; text-align: center; }
+
+#page7 .insights-section { padding-left: 0; padding-right: 0; }
+
+#page7 #caffeineInsights .insights-section,
+#page7 #sleepInsights .insights-section {
+    padding-top: 8px;
+    margin-top: 0;
+}
+
+#page7 #caffeineInsights .insights-title,
+#page7 #sleepInsights .insights-title {
+    margin: 0 0 8px;
+}
+
+/* Strong page-scoped overrides so insight text rhythm is consistent on mobile/PWA. */
+#page7 #analyticsContent .insights-section {
+    padding-top: 10px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+#page7 #analyticsContent .insights-title {
+    margin: 0 0 8px;
+    line-height: 1.25;
+}
+
+#page7 #analyticsContent .insights-list {
+    gap: 5px;
+}
+
+#page7 #analyticsContent .insight-item {
+    font-size: 0.86em;
+    line-height: 1.32;
+    margin: 1px 0 0;
+}
+
+#page7 .notes-collapsible { padding-left: 0; padding-right: 0; }
+
+.chart-wrapper {
+    background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.006));
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 18px;
+    box-shadow: 0 10px 24px var(--analytics-shadow), inset 0 1px 0 rgba(220,235,255,0.12);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    padding: 14px 14px 12px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    background-clip: padding-box;
+}
+
+.chart-wrapper h3 {
+    color: #EDBFE7;
+    font-size: 1.1em;
+    margin: 0 0 6px 0;
+    font-weight: 600;
+    text-align: center;
+}
+
+.chart-container {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 8px 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.chart-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Pie chart slice styling - glassmorphism effect */
+.chart-pie-slice {
+    transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.chart-pie-slice:hover {
+    filter: brightness(1.2) drop-shadow(0 4px 12px rgba(255,255,255,0.3)) !important;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(237,191,231,0.2);
+    border-top-color: #EDBFE7;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .analytics-tabs {
+        gap: 8px;
+    }
+
+    .tab-btn {
+        padding: 8px 14px;
+        font-size: 0.88em;
+    }
+
+    .insight-btn {
+        padding: 6px 12px;
+        font-size: 0.85em;
+    }
+
+    .chart-container {
+        padding: 8px 0;
+        overflow: visible;
+    }
+
+    .chart-svg {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+    }
+
+    .chart-wrapper h3 {
+        font-size: 1em;
+        margin-bottom: 12px;
+    }
+
+    .insights-title {
+        font-size: 1em;
+        margin-bottom: 12px;
+    }
+
+    .insight-item {
+        font-size: 0.9em;
+    }
+}
+
+@media (max-width: 480px) {
+    #page7 .chart-wrapper {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    #page7 .chart-wrapper h3 {
+        padding-left: 0;
+        padding-right: 0;
+        text-align: center;
+    }
+
+    #page7 .insights-section {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    #page7 .insights-section .insights-title {
+        text-align: center;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    #page7 .notes-collapsible {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .analytics-tabs {
+        gap: 6px;
+    }
+
+    .tab-btn {
+        flex: 1;
+        text-align: center;
+        padding: 8px 4px;
+    }
+
+    .insights-toggle {
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
+    }
+
+    .insight-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Compress charts to fit mobile screens - Safari optimized */
+    .chart-container {
+        padding: 6px 0;
+        overflow: visible;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+    }
+
+    .chart-svg {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        min-width: unset;
+    }
+
+    .chart-wrapper {
+        margin: 12px 0;
+    }
+
+    /* Keep bar intensity/glow on mobile aligned with desktop */
+    #page7 .chart-svg .chart-bar {
+        opacity: 1;
+        filter: drop-shadow(0 0 10px rgba(237,191,231,0.35)) drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    }
+
+    #page7 .chart-svg .chart-sleep-bar {
+        opacity: 1;
+        filter: drop-shadow(0 0 10px rgba(168,230,217,0.32)) drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+
+
+    .tab-btn,
+    .period-btn {
+        font-size: 0.88em;
+    }
+
+    #chartsContainer {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Chart Animations */
+@keyframes chartFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes chartBarFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@-webkit-keyframes chartBarFadeIn {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(20px);
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+    }
+}
+
+@keyframes chartLineFadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes chartLineFadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes insightTypeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@-webkit-keyframes insightTypeIn {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(10px);
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInFromLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@-webkit-keyframes fadeInFromLeft {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateX(-30px);
+        transform: translateX(-30px);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+    }
+}
+
+/* Radial wipe animation for pie charts */
+@keyframes chartPieFadeIn {
+    0% {
+        opacity: 0;
+        clip-path: circle(0% at 50% 50%);
+    }
+    100% {
+        opacity: 1;
+        clip-path: circle(150% at 50% 50%);
+    }
+}
+
+@-webkit-keyframes chartPieFadeIn {
+    0% {
+        opacity: 0;
+        -webkit-clip-path: circle(0% at 50% 50%);
+    }
+    100% {
+        opacity: 1;
+        -webkit-clip-path: circle(150% at 50% 50%);
+    }
+}
+
+/* Chart container - no auto animation, scroll-triggered instead */
+.chart-container {
+    will-change: opacity, transform;
+}
+
+/* Trigger animations when chart scrolls into view */
+/* Removed !important to allow animations to control opacity naturally */
+
+.chart-container.animate-in .chart-bar {
+    -webkit-animation: chartBarFadeIn 1.15s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: chartBarFadeIn 1.15s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.chart-container.animate-in .chart-line {
+    -webkit-animation: chartLineFadeIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: chartLineFadeIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.chart-container.animate-in .chart-point {
+    -webkit-animation: fadeInUp 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: fadeInUp 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.chart-container.animate-in .chart-pie-slice {
+    -webkit-animation: chartPieFadeIn 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: chartPieFadeIn 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.chart-container.animate-in .chart-sleep-bar {
+    -webkit-animation: fadeInFromLeft 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.55s forwards;
+    animation: fadeInFromLeft 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.55s forwards;
+}
+
+.chart-container.animate-in .jar-star {
+    -webkit-animation: jarStarFall 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: jarStarFall 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.chart-wrapper {
+    opacity: 1;
+    transform: translate3d(0, 24px, 0);
+    -webkit-transition: -webkit-transform 780ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 780ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.chart-wrapper.animate-in {
+    transform: translate3d(0, 0, 0);
+}
+
+/* Typing effect for insights */
+.insights-section {
+    opacity: 1;
+    transform: translate3d(0, 14px, 0);
+    -webkit-transition: -webkit-transform 740ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 740ms cubic-bezier(0.22, 1, 0.36, 1);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.insights-section.animate-in {
+    transform: translate3d(0, 0, 0);
+}
+
+.insight-item {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+    -webkit-transition: opacity 620ms cubic-bezier(0.22, 1, 0.36, 1), -webkit-transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: opacity 620ms cubic-bezier(0.22, 1, 0.36, 1), transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.insight-item.typing {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+}
+
+.insight-item.typing:nth-child(1) { transition-delay: 0.22s; }
+.insight-item.typing:nth-child(2) { transition-delay: 0.34s; }
+.insight-item.typing:nth-child(3) { transition-delay: 0.46s; }
+.insight-item.typing:nth-child(4) { transition-delay: 0.58s; }
+.insight-item.typing:nth-child(5) { transition-delay: 0.70s; }
+.insight-item.typing:nth-child(6) { transition-delay: 0.82s; }
+
+@keyframes printTextRise {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, 12px, 0);
+    }
+    100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+/* Chart Tooltip (already defined in charts.js, but adding backup styles) */
+#chart-tooltip {
+    position: fixed;
+    background: linear-gradient(165deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06) 58%, rgba(255,255,255,0.02)), linear-gradient(135deg, rgba(16,23,40,0.9), rgba(10,16,30,0.92));
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 16px;
+    padding: 11px 15px;
+    color: #DFE4EB;
+    font-size: 13px;
+    pointer-events: none;
+    z-index: 10000;
+    box-shadow: 0 14px 28px rgba(5, 12, 28, 0.42), inset 0 1px 0 rgba(255,255,255,0.28);
+}
+
+/* Scrollbar styling for chart containers */
+.chart-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.chart-container::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.02);
+    border-radius: 4px;
+}
+
+.chart-container::-webkit-scrollbar-thumb {
+    background: rgba(237,191,231,0.3);
+    border-radius: 4px;
+}
+
+.chart-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(237,191,231,0.5);
+}
+
+/* Smooth transitions */
+.chart-container {
+    transition: none;
+}
+
+/* Notes collapsible button вЂ” matches period-btn pill style */
+.notes-toggle-btn {
+    -webkit-appearance: none;
+    appearance: none;
+    font-family: inherit;
+    outline: none;
+    padding: 6px 14px;
+    background: linear-gradient(165deg, rgba(255,255,255,0.15), rgba(255,255,255,0.03)), linear-gradient(135deg, var(--analytics-glass-1), var(--analytics-glass-2));
+    border: 1px solid var(--analytics-stroke);
+    border-radius: 14px;
+    color: #EDBFE7;
+    font-size: 0.85em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+    transition: all 0.25s;
+}
+
+.notes-toggle-btn:hover {
+    background: linear-gradient(165deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05)), linear-gradient(135deg, var(--analytics-glass-1), var(--analytics-glass-2));
+    border-color: rgba(237,191,231,0.35);
+    box-shadow: 0 0 8px rgba(237,191,231,0.15);
+}
+
+.notes-toggle-btn:active {
+    transform: scale(0.97);
+}
+
+.notes-toggle-arrow {
+    display: inline-block;
+    font-size: 1.1em;
+    transition: transform 0.25s ease;
+}
+
+.notes-toggle-arrow.open {
+    transform: rotate(90deg);
+}
+
+/* iOS-specific improvements */
+@supports (-webkit-touch-callout: none) {
+    /* Smooth scrolling for iOS */
+    .chart-container {
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Prevent tap highlight on buttons */
+    .tab-btn,
+    .insight-btn,
+    .period-btn,
+    .period-nav-btn,
+    .notes-toggle-btn,
+    button {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Prevent text selection on buttons */
+    .tab-btn,
+    .insight-btn,
+    .period-btn,
+    .period-nav-btn,
+    .notes-toggle-btn {
+        -webkit-user-select: none;
+        user-select: none;
+    }
+
+    /* Keep tracker/habits-scale typography on iOS */
+    .tab-btn,
+    .period-btn {
+        font-size: 0.88em;
+    }
+
+    .notes-toggle-btn {
+        font-size: 0.85em;
+    }
+}
+
+/* Accessibility: Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .chart-container,
+    .chart-wrapper,
+    .insights-section,
+    .insight-item,
+    .chart-bar,
+    .chart-line,
+    .chart-point,
+    .chart-pie-slice,
+    .chart-sleep-bar,
+    .jar-star,
+    .jar-shaker {
+        opacity: 1 !important;
+        animation: none !important;
+    }
+}
+
+/* Safari-specific fixes */
+@supports (-webkit-appearance: none) {
+    /* Ensure animations work in Safari */
+    .chart-svg * {
+        -webkit-animation-fill-mode: forwards;
+        animation-fill-mode: forwards;
+    }
+
+    /* Fix Safari SVG animation issues */
+    svg {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+
+    /* Improve Safari rendering performance */
+    .chart-container,
+    .chart-wrapper {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+    }
+
+    /* Fix Safari animation timing */
+    @media screen and (-webkit-min-device-pixel-ratio: 0) {
+        .chart-svg path,
+        .chart-svg rect,
+        .chart-svg circle {
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+        }
+    }
+}
+
+/* Cross-browser animation support */
+@-webkit-keyframes chartFadeIn {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(20px) scale(0.95);
+        transform: translateY(20px) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: translateY(0) scale(1);
+        transform: translateY(0) scale(1);
+    }
+}
+
+@-webkit-keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(30px);
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+    }
+}
+
+/* в”Ђв”Ђ Magical glassmorphism jar в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
+
+/* Stars: no pointer events, positioned by physics sim */
+.jar-star {
+    pointer-events: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* Outer wrapper вЂ” flex column, shake pivot at base */
+.jar-shaker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transform-origin: center 96%;
+    filter: drop-shadow(0 10px 28px rgba(0,0,0,0.55));
+    transition: filter 0.3s ease;
+}
+
+.jar-shaker:hover {
+    filter: drop-shadow(0 10px 28px rgba(0,0,0,0.55))
+            drop-shadow(0 0 26px rgba(237,191,231,0.38));
+}
+
+/* Tap feedback вЂ” plays once on click via JS classList toggle */
+.jar-shaker.shaking {
+    -webkit-animation: jarShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    animation: jarShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* Glass lid */
+.jar-lid {
+    width: 100px;
+    height: 14px;
+    background: linear-gradient(180deg,
+        rgba(255,255,255,0.16) 0%,
+        rgba(255,255,255,0.07) 100%
+    );
+    border: 1.5px solid rgba(255,255,255,0.24);
+    border-radius: 6px 6px 3px 3px;
+    position: relative;
+    z-index: 1;
+    box-shadow:
+        0 0 12px rgba(237,191,231,0.2),
+        inset 0 1px 0 rgba(255,255,255,0.25),
+        inset 0 -1px 0 rgba(0,0,0,0.12);
+}
+
+/* Glass jar body вЂ” 130 Г— 140px, must match JAR_BODY_W/H in charts.js */
+.jar-body {
+    width: 130px;
+    height: 140px;
+    position: relative;
+    overflow: hidden;
+    /* Safari mobile: overflow:hidden + border-radius doesn't clip transformed children
+       unless the element is in its own composited layer. translateZ(0) forces that. */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    border: 1.5px solid rgba(255,255,255,0.15);
+    border-top: none;
+    border-radius: 20px 20px 24px 24px;
+    background: linear-gradient(
+        158deg,
+        rgba(255,255,255,0.08) 0%,
+        rgba(255,255,255,0.01) 48%,
+        rgba(255,255,255,0.06) 100%
+    );
+    box-shadow:
+        inset  4px 0 14px rgba(255,255,255,0.03),
+        inset -4px 0 14px rgba(255,255,255,0.03),
+        inset  0 -6px 22px rgba(0,0,0,0.12),
+        0 14px 36px rgba(0,0,0,0.55),
+        0 0 0 0.5px rgba(255,255,255,0.07);
+}
+
+/* Left-side glass highlight */
+.jar-body::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 16%;
+    height: 88%;
+    background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent);
+    border-radius: 16px 0 0 16px;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Magical bottom glow вЂ” pulses gently */
+.jar-body::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(0deg,
+        rgba(237,191,231,0.11) 0%,
+        rgba(244,227,179,0.05) 60%,
+        transparent 100%
+    );
+    pointer-events: none;
+    z-index: 10;
+    -webkit-animation: jarGlow 3.2s ease-in-out infinite;
+    animation: jarGlow 3.2s ease-in-out infinite;
+}
+
+@keyframes jarGlow {
+    0%, 100% { opacity: 0.45; }
+    50%       { opacity: 1;    }
+}
+
+@-webkit-keyframes jarGlow {
+    0%, 100% { opacity: 0.45; }
+    50%       { opacity: 1;    }
+}
+
+/* Stars fall from above the jar top into their gravity-packed positions */
+@keyframes jarStarFall {
+    0% {
+        opacity: 0;
+        transform: translateY(-160px) scale(0.3) rotate(var(--startRot, -20deg));
+    }
+    55% { opacity: 1; }
+    80% { transform: translateY(5px) scale(1.12) rotate(3deg); }
+    92% { transform: translateY(-2px) scale(0.96) rotate(-1deg); }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(0deg);
+    }
+}
+
+@-webkit-keyframes jarStarFall {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(-160px) scale(0.3) rotate(var(--startRot, -20deg));
+        transform: translateY(-160px) scale(0.3) rotate(var(--startRot, -20deg));
+    }
+    55% { opacity: 1; }
+    80% {
+        -webkit-transform: translateY(5px) scale(1.12) rotate(3deg);
+        transform: translateY(5px) scale(1.12) rotate(3deg);
+    }
+    92% {
+        -webkit-transform: translateY(-2px) scale(0.96) rotate(-1deg);
+        transform: translateY(-2px) scale(0.96) rotate(-1deg);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: translateY(0) scale(1) rotate(0deg);
+        transform: translateY(0) scale(1) rotate(0deg);
+    }
+}
+
+/* Jar shake on hover */
+@keyframes jarShake {
+    0%,  100% { transform: rotate(0deg)  translateY(0);    }
+    10%        { transform: rotate(-6deg) translateY(-2px); }
+    20%        { transform: rotate(6deg)  translateY(-3px); }
+    30%        { transform: rotate(-5deg) translateY(-2px); }
+    50%        { transform: rotate(4deg)  translateY(-2px); }
+    70%        { transform: rotate(-2deg) translateY(-1px); }
+    90%        { transform: rotate(1deg)  translateY(0);    }
+}
+
+@-webkit-keyframes jarShake {
+    0%,  100% { -webkit-transform: rotate(0deg)  translateY(0);    transform: rotate(0deg)  translateY(0);    }
+    10%        { -webkit-transform: rotate(-6deg) translateY(-2px); transform: rotate(-6deg) translateY(-2px); }
+    20%        { -webkit-transform: rotate(6deg)  translateY(-3px); transform: rotate(6deg)  translateY(-3px); }
+    30%        { -webkit-transform: rotate(-5deg) translateY(-2px); transform: rotate(-5deg) translateY(-2px); }
+    50%        { -webkit-transform: rotate(4deg)  translateY(-2px); transform: rotate(4deg)  translateY(-2px); }
+    70%        { -webkit-transform: rotate(-2deg) translateY(-1px); transform: rotate(-2deg) translateY(-1px); }
+    90%        { -webkit-transform: rotate(1deg)  translateY(0);    transform: rotate(1deg)  translateY(0);    }
+}
+
+/* Tag legend */
+.jar-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px 10px;
+    justify-content: center;
+    max-width: 240px;
+}
+
+.jar-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8em;
+    color: #DFE4EB;
+    opacity: 0.9;
+}
+
+/* Period calendar navigator */
+.period-navigator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin: 6px 0 14px;
+}
+
+.period-nav-btn {
+    /* Safari Mobile: appearance + box-sizing required for flex inside <button> */
+    -webkit-appearance: none;
+    appearance: none;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    background: linear-gradient(165deg, rgba(255,255,255,0.14), rgba(255,255,255,0.03)), linear-gradient(135deg, var(--analytics-glass-1), var(--analytics-glass-2));
+    border: 1px solid var(--analytics-stroke);
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    color: #DFE4EB;
+    font-size: 1.45em;
+    line-height: 34px; /* fallback for browsers that ignore flex centering on buttons */
+    text-align: center;
+    cursor: pointer;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    padding: 0;
+    transition: background-color 0.22s, border-color 0.22s, transform 0.22s;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.period-nav-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(237, 191, 231, 0.45);
+}
+
+.period-nav-btn:disabled {
+    opacity: 0.28;
+    cursor: default;
+}
+
+.period-nav-label {
+    color: #DFE4EB;
+    font-size: 13.8px;
+    min-width: 150px;
+    text-align: center;
+    letter-spacing: 0.01em;
+}
+
+/* в”Ђв”Ђ Habits Analytics в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
+
+.ha-section {
+    background: linear-gradient(165deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02)), linear-gradient(140deg, var(--analytics-glass-1), var(--analytics-glass-2));
+    border: 1px solid var(--analytics-stroke-soft);
+    box-shadow: 0 10px 24px var(--analytics-shadow), inset 0 1px 0 rgba(255,255,255,0.2);
+    border-radius: 18px;
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+
+@media (max-width: 480px) {
+    .period-nav-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 1.35em;
+        line-height: 32px;
+    }
+}
+
+.ha-section-cleaning        { border-color: rgba(168,230,217,0.18); }
+.ha-section-exercise        { border-color: rgba(197,230,168,0.18); }
+.ha-section-reading         { border-color: rgba(244,227,179,0.18); }
+.ha-section-writing         { border-color: rgba(237,182,140,0.18); }
+.ha-section-second-language { border-color: rgba(237,191,231,0.18); }
+
+.ha-toggle {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    padding: 14px 18px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1em;
+    font-weight: 500;
+    text-align: left;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.ha-name {
+    font-size: 1.1em;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+.ha-arrow {
+    display: inline-block;
+    font-size: 1.2em;
+    color: rgba(196,212,233,0.62);
+    transition: transform 0.25s ease;
+    transform: rotate(0deg);
+}
+
+.ha-toggle-open .ha-arrow {
+    transform: rotate(90deg);
+}
+
+.ha-body {
+    padding: 10px 18px 18px;
+}
+
+.ha-body.ha-closed {
+    display: none;
+}
+
+/* в”Ђв”Ђ Week calendar в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
+
+.ha-week-cal {
+    display: -webkit-flex;
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.ha-day-box {
+    -webkit-flex: 1 1 0;
+    flex: 1 1 0;
+    min-width: 40px;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: center;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 6px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.05);
+    background: rgba(255,255,255,0.02);
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.ha-day-box.ha-done {
+    background: var(--hc, rgba(255,255,255,0.08));
+    border-color: rgba(255,255,255,0.1);
+}
+
+.ha-day-lbl {
+    font-size: 0.66em;
+    color: rgba(196,212,233,0.72);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.ha-day-val {
+    font-size: 0.76em;
+    color: #DFE4EB;
+    font-weight: 500;
+    text-align: center;
+}
+
+.ha-day-tags {
+    font-size: 0.59em;
+    color: rgba(196,212,233,0.68);
+    text-align: center;
+    line-height: 1.3;
+    word-break: break-word;
+}
+
+/* в”Ђв”Ђ Month star grid в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
+
+.ha-month-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 34px);
+    justify-content: center;
+    gap: 1px;
+    margin-bottom: 16px;
+}
+
+.ha-month-hdr {
+    font-size: 0.64em;
+    color: rgba(196,212,233,0.64);
+    text-align: center;
+    padding: 2px 0 4px;
+    letter-spacing: 0.03em;
+}
+
+.ha-month-cell {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+}
+
+.ha-star {
+    width: 32px;
+    height: 32px;
+    display: block;
+    border-radius: 2px;
+}
+
+.ha-star-done {
+    -webkit-mask: url(../star3.svg) center / contain no-repeat;
+    mask: url(../star3.svg) center / contain no-repeat;
+}
+
+.ha-star-empty {
+    -webkit-mask: url(../star1.svg) center / contain no-repeat;
+    mask: url(../star1.svg) center / contain no-repeat;
+}
+
+/* в”Ђв”Ђ Block grids в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
+
+.ha-block-grid {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 16px;
+}
+
+.ha-block {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    transition: transform 0.15s;
+}
+
+.ha-block:hover {
+    transform: scale(1.2);
+}
+
+.ha-mblock {
+    width: 56px;
+    height: 28px;
+    border-radius: 6px;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    font-size: 0.62em;
+    color: rgba(255,255,255,0.72);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    cursor: default;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* в”Ђв”Ђ Bar chart в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
+
+.ha-chart-wrap {
+    margin-bottom: 14px;
+    border-top: none;
+    padding-top: 12px;
+}
+
+.ha-bar-chart {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ha-bar-row {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.ha-bar-lbl {
+    font-size: 0.74em;
+    color: rgba(196,212,233,0.8);
+    min-width: 80px;
+    text-align: right;
+}
+
+.ha-bar-track {
+    -webkit-flex: 1;
+    flex: 1;
+    height: 8px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.ha-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+    box-shadow: 0 0 10px rgba(237,191,231,0.28);
+}
+
+.ha-bar-val {
+    font-size: 0.74em;
+    color: rgba(196,212,233,0.74);
+    min-width: 44px;
+}
+
+/* в”Ђв”Ђ Insights в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
+
+.ha-insights {
+    border-top: none;
+    padding-top: 12px;
+    margin-top: 4px;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ha-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 0;
+}
+
+.ha-stats-sm {
+    margin-top: 4px;
+    margin-bottom: 0;
+}
+
+.ha-stat {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    align-items: flex-start;
+    gap: 2px;
+    min-height: 52px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.02);
+}
+
+.ha-stat-val {
+    font-size: 1.05em;
+    font-weight: 600;
+}
+
+.ha-stat-lbl {
+    font-size: 0.67em;
+    color: rgba(196,212,233,0.78);
+    letter-spacing: 0.02em;
+}
+
+.ha-trend {
+    font-size: 0.88em;
+    font-weight: 500;
+}
+
+.ha-up      { color: #8ee8c0; }
+.ha-down    { color: #e8a89e; }
+.ha-neutral { color: rgba(196,212,233,0.62); }
+
+.ha-cats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px 12px;
+    margin-bottom: 0;
+}
+
+.ha-cat {
+    font-size: 0.76em;
+    color: rgba(200,216,236,0.86);
+}
+
+.ha-cat strong {
+    color: rgba(223,228,235,0.95);
+}
+
+.ha-msg {
+    font-size: 0.84em;
+    color: rgba(200,216,236,0.88);
+    margin: 0;
+    font-style: normal;
+    line-height: 1.5;
+}
+
+.ha-msg-extra {
+    font-size: 0.76em;
+    color: rgba(196,212,233,0.8);
+    margin-top: 0;
+}
+
+.ha-bar-row {
+    display: grid;
+    grid-template-columns: 88px minmax(0, 1fr) 56px;
+    align-items: center;
+    gap: 8px;
+}
+
+/* в”Ђв”Ђ Habits analytics mobile в”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђв”Ђ */
+
+@media (max-width: 600px) {
+    .ha-toggle {
+        padding: 12px 14px;
+        font-size: 0.95em;
+    }
+
+    .ha-body {
+        padding: 8px 14px 14px;
+    }
+
+    .ha-day-box {
+        padding: 8px 4px;
+        min-width: 0;
+    }
+
+    .ha-day-val {
+        font-size: 0.68em;
+    }
+
+    .ha-day-tags {
+        font-size: 0.54em;
+    }
+
+    .ha-star {
+        width: 26px;
+        height: 26px;
+    }
+
+    .ha-block {
+        width: 16px;
+        height: 16px;
+    }
+
+    .ha-mblock {
+        width: 44px;
+        height: 24px;
+        font-size: 0.58em;
+    }
+
+    .ha-bar-lbl {
+        min-width: 0;
+        font-size: 0.68em;
+    }
+
+    .ha-bar-row {
+        grid-template-columns: 68px minmax(0, 1fr) 46px;
+        gap: 6px;
+    }
+
+    .ha-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ha-stat {
+        min-height: 48px;
+        padding: 7px 8px;
+    }
+
+    .ha-stat-val {
+        font-size: 0.95em;
+    }
+
+    .ha-cats {
+        grid-template-columns: 1fr;
+    }
+}
+
