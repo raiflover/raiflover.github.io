@@ -3,7 +3,7 @@ const APP_SHELL = [
   './',
   'index.html',
   'site.webmanifest',
-  'bastard.svg',
+  'icon.svg',
   'analytics.svg',
   'cat.svg',
   'notebook-nav.svg',
