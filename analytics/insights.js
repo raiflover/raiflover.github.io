@@ -795,10 +795,6 @@ function calculateSleepInsights(data) {
     var bedtimes = [];
     var wakeTimes = [];
     var durations = [];
-    var totalNaps = 0;
-    var totalNapDuration = 0;
-    var daysWithNaps = 0;
-
     validData.forEach(function(entry) {
         var analysis = analyzeSleepData(entry.sleep);
 
@@ -810,12 +806,6 @@ function calculateSleepInsights(data) {
             }
             if (analysis.wakeTime) {
                 wakeTimes.push(analysis.wakeTime);
-            }
-
-            if (analysis.hasNaps) {
-                totalNaps += analysis.napCount;
-                totalNapDuration += analysis.totalNapDuration;
-                daysWithNaps++;
             }
         }
     });
@@ -859,17 +849,10 @@ function calculateSleepInsights(data) {
         insights.push('Average wake time: <strong>' + String(wakeHours).padStart(2, '0') + ':' + String(wakeMins).padStart(2, '0') + '</strong>');
     }
 
-    // Nap statistics (only if there were naps)
-    if (totalNaps > 0) {
-        insights.push('Total naps: <strong>' + totalNaps + '</strong> across <strong>' + daysWithNaps + '</strong> days');
-        var avgNapDuration = totalNapDuration / totalNaps;
-        insights.push('Average nap duration: <strong>' + avgNapDuration.toFixed(1) + ' hours</strong>');
-    }
-
     // Format as HTML
     var html = '<div class="insights-list">' +
         insights.map(function(insight) { return '<div class="insight-item">&bull; ' + insight + '</div>'; }).join('') +
         '</div>';
 
-    return { html: html, insights: insights, hasNaps: totalNaps > 0 };
+    return { html: html, insights: insights };
 }

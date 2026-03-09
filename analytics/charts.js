@@ -71,7 +71,7 @@ function _aggregateSleepRaw(data, chunkSize) {
             var e = chunk[j];
             if (!e.isMissing && e.sleep && Array.isArray(e.sleep)) {
                 var an = analyzeSleepData(e.sleep);
-                if (an.duration > 0) entries.push({ dur: an.duration, bed: tMin(an.bedtime), wake: tMin(an.wakeTime), hasNaps: an.hasNaps, napCount: an.napCount || 0 });
+                if (an.duration > 0) entries.push({ dur: an.duration, bed: tMin(an.bedtime), wake: tMin(an.wakeTime) });
             }
         }
         if (!entries.length) continue;
@@ -82,8 +82,6 @@ function _aggregateSleepRaw(data, chunkSize) {
         var avgWake = entries.reduce(function(s,e){return s+e.wake;},0) / entries.length;
         result.push({ date: chunk[0].date, duration: avgDur,
             bedtime: tStr(avgBed), wakeTime: tStr(avgWake),
-            hasNaps: entries.some(function(e){return e.hasNaps;}),
-            napCount: entries.reduce(function(s,e){return s+e.napCount;},0),
             bedtimeMinutes: avgBed % 1440, wakeTimeMinutes: avgWake });
     }
     return result;
@@ -155,7 +153,7 @@ function _aggregateSleepByMonth(data) {
             var e = chunk[j];
             if (!e.isMissing && e.sleep && Array.isArray(e.sleep)) {
                 var an = analyzeSleepData(e.sleep);
-                if (an.duration > 0) entries.push({ dur: an.duration, bed: tMin(an.bedtime), wake: tMin(an.wakeTime), hasNaps: an.hasNaps, napCount: an.napCount || 0 });
+                if (an.duration > 0) entries.push({ dur: an.duration, bed: tMin(an.bedtime), wake: tMin(an.wakeTime) });
             }
         }
         if (!entries.length) continue;
@@ -165,8 +163,6 @@ function _aggregateSleepByMonth(data) {
         var avgWake = entries.reduce(function(s,e){return s+e.wake;},0) / entries.length;
         result.push({ date: key + '-01', duration: avgDur,
             bedtime: tStr(avgBed), wakeTime: tStr(avgWake),
-            hasNaps: entries.some(function(e){return e.hasNaps;}),
-            napCount: entries.reduce(function(s,e){return s+e.napCount;},0),
             bedtimeMinutes: avgBed % 1440, wakeTimeMinutes: avgWake });
     }
     return result;
@@ -313,8 +309,11 @@ function renderBarChart(containerId, data, options = {}) {
         const unitHeight = chartHeight / 6;
         const lowestY = chartHeight - ((lowest - 1) / 6) * chartHeight;
         const highestY = chartHeight - ((highest - 1) / 6) * chartHeight;
-        const barHeight = Math.abs(lowestY - highestY);
-        const barY = Math.min(lowestY, highestY);
+        const rawBarHeight = Math.abs(lowestY - highestY);
+        const minPointThickness = (metric === 'energy' || metric === 'mood') ? 8 : 3;
+        const visualBarHeight = Math.max(rawBarHeight, minPointThickness);
+        const rawBarY = Math.min(lowestY, highestY) - (visualBarHeight - rawBarHeight) / 2;
+        const barY = Math.max(0, Math.min(rawBarY, chartHeight - visualBarHeight));
 
         // Determine color based on average position relative to baseline
         const average = (highest + lowest) / 2;
@@ -344,23 +343,37 @@ function renderBarChart(containerId, data, options = {}) {
         }
         chartDefs.appendChild(gradient);
 
-        // Single-layer bar (no secondary outline bar)
+        // Two-layer bar to match sleep-chart style: outer outline + inset fill.
         const outerX = x - barGroupWidth / 2 + barGroupWidth * barGapFrac / 2;
         const outerY = barY;
         const outerW = Math.max(barGroupWidth * (1 - barGapFrac), 2);
-        const outerH = Math.max(barHeight, 3);
+        const outerH = visualBarHeight;
+        const inset = 2.6;
 
-        const bar = createSVGElement('rect', {
+        const barOutline = createSVGElement('rect', {
             x: outerX,
             y: outerY,
             width: outerW,
             height: outerH,
-            fill: 'url(#' + gradientId + ')',
-            stroke: entry.isMissing ? 'rgba(255,255,255,0.2)' : 'none',
-            'stroke-width': entry.isMissing ? 1 : 0,
+            fill: 'none',
+            stroke: entry.isMissing ? 'rgba(255,255,255,0.2)' : outlineColor,
+            'stroke-width': entry.isMissing ? 1 : 2.2,
             'stroke-dasharray': entry.isMissing ? '3,3' : 'none',
             rx: barRx,
             ry: barRx,
+            class: 'chart-bar',
+            style: 'pointer-events: none; opacity: 0; -webkit-animation-delay: ' + (index * staggerDelay) + 's; animation-delay: ' + (index * staggerDelay) + 's;'
+        });
+
+        const bar = createSVGElement('rect', {
+            x: outerX + inset,
+            y: outerY + inset,
+            width: Math.max(outerW - inset * 2, 2),
+            height: Math.max(outerH - inset * 2, 4),
+            fill: 'url(#' + gradientId + ')',
+            stroke: 'none',
+            rx: Math.max(barRx - 3, 4),
+            ry: Math.max(barRx - 3, 4),
             class: 'chart-bar',
             style: 'cursor: pointer; filter: url(#glow-' + containerId + ') drop-shadow(0 0 10px rgba(237,191,231,0.35)) drop-shadow(0 2px 4px rgba(0,0,0,0.2)); opacity: 0; -webkit-animation-delay: ' + (index * staggerDelay) + 's; animation-delay: ' + (index * staggerDelay) + 's;'
         });
@@ -370,6 +383,7 @@ function renderBarChart(containerId, data, options = {}) {
         });
         bar.addEventListener('mouseleave', hideTooltip);
 
+        barGroup.appendChild(barOutline);
         barGroup.appendChild(bar);
         chartGroup.appendChild(barGroup);
 
@@ -1196,20 +1210,11 @@ function renderSleepBarChart(containerId, data) {
             if (!entry.isMissing && entry.sleep && Array.isArray(entry.sleep)) {
                 var analysis = analyzeSleepData(entry.sleep);
                 if (analysis.duration > 0) {
-                    var napSegments = (analysis.naps || []).map(function(nap) {
-                        return {
-                            startMinutes: nap.start * 30,
-                            endMinutes: (nap.end + 1) * 30
-                        };
-                    });
                     sleepDataProcessed.push({
                         date: entry.date,
                         duration: analysis.duration,
                         bedtime: analysis.bedtime,
                         wakeTime: analysis.wakeTime,
-                        hasNaps: analysis.hasNaps,
-                        napCount: analysis.napCount,
-                        naps: napSegments,
                         bedtimeMinutes: timeToMinutes(analysis.bedtime),
                         wakeTimeMinutes: timeToMinutes(analysis.wakeTime)
                     });
@@ -1309,11 +1314,16 @@ function renderSleepBarChart(containerId, data) {
         }
 
         // Sleep bar: outer outline + inset translucent fill
+        var minSleepBarWidth = 12;
         var sleepOuterX = barX;
         var sleepOuterY = y + 2;
-        var sleepOuterW = Math.max(barWidth, 5);
+        var sleepOuterW = Math.max(barWidth, minSleepBarWidth);
         var sleepOuterH = barHeight - 4;
         var sleepInset = 2.6;
+        if (sleepOuterW > barWidth) {
+            sleepOuterX = barX - (sleepOuterW - barWidth) / 2;
+            sleepOuterX = Math.max(0, Math.min(sleepOuterX, chartWidth - sleepOuterW));
+        }
 
         var sleepBarOutline = createSVGElement('rect', {
             x: sleepOuterX,
@@ -1332,7 +1342,7 @@ function renderSleepBarChart(containerId, data) {
         var sleepBar = createSVGElement('rect', {
             x: sleepOuterX + sleepInset,
             y: sleepOuterY + sleepInset,
-            width: Math.max(sleepOuterW - sleepInset * 2, 5),
+            width: Math.max(sleepOuterW - sleepInset * 2, 7),
             height: Math.max(sleepOuterH - sleepInset * 2, 4),
             fill: 'url(#sleepGradient-' + containerId + ')',
             stroke: 'none',
@@ -1348,20 +1358,6 @@ function renderSleepBarChart(containerId, data) {
                                  'Sleep: ' + itemData.duration.toFixed(1) + ' hours<br>' +
                                  'Bedtime: ' + itemData.bedtime + '<br>' +
                                  'Wake: ' + itemData.wakeTime;
-                if (itemData.hasNaps) {
-                    tooltipText += '<br>Naps: ' + itemData.napCount;
-                    if (itemData.naps && itemData.naps.length) {
-                        var napTimes = itemData.naps.map(function(nap) {
-                            var startH = Math.floor((nap.startMinutes % 1440) / 60);
-                            var startM = nap.startMinutes % 60;
-                            var endH = Math.floor((nap.endMinutes % 1440) / 60);
-                            var endM = nap.endMinutes % 60;
-                            return String(startH).padStart(2, '0') + ':' + String(startM).padStart(2, '0') +
-                                '-' + String(endH).padStart(2, '0') + ':' + String(endM).padStart(2, '0');
-                        });
-                        tooltipText += '<br>Nap times: ' + napTimes.join(', ');
-                    }
-                }
                 showSleepTooltip(e, tooltipText);
             });
             sleepBar.addEventListener('mouseleave', hideTooltip);
@@ -1392,34 +1388,6 @@ function renderSleepBarChart(containerId, data) {
         durationLabel.textContent = item.duration.toFixed(1) + 'h';
         chartGroup.appendChild(durationLabel);
 
-        // Nap bars on the timeline (week/month raw data where nap segments are available).
-        if (item.naps && item.naps.length) {
-            for (var n = 0; n < item.naps.length; n++) {
-                var nap = item.naps[n];
-                var napStart = nap.startMinutes;
-                var napEnd = nap.endMinutes;
-                var napX = (napStart / (hoursInDay * 60)) * chartWidth;
-                var napWidth = ((napEnd - napStart) / (hoursInDay * 60)) * chartWidth;
-                if (napEnd <= napStart) {
-                    napWidth = (((hoursInDay * 60) - napStart + napEnd) / (hoursInDay * 60)) * chartWidth;
-                }
-
-                var napBar = createSVGElement('rect', {
-                    x: napX,
-                    y: y + barHeight - 13,
-                    width: Math.max(napWidth, 4),
-                    height: 7,
-                    rx: 3.5,
-                    ry: 3.5,
-                    fill: 'rgba(244,227,179,0.9)',
-                    stroke: 'rgba(255,255,255,0.38)',
-                    'stroke-width': 1.2,
-                    class: 'chart-sleep-bar',
-                    style: 'pointer-events: none; opacity: 0; -webkit-animation-delay: ' + (j * sleepStaggerDelay) + 's; animation-delay: ' + (j * sleepStaggerDelay) + 's;'
-                });
-                chartGroup.appendChild(napBar);
-            }
-        }
     }
 
     // X-axis (time scale - every 3 hours)
