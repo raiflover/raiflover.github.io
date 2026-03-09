@@ -590,8 +590,14 @@
                 -webkit-backdrop-filter: none;
             }
 
+            #page2,
+            #page7,
+            #page8 {
+                padding-top: 2px;
+            }
+
             #page7 {
-                padding-top: 6px;
+                padding-top: 8px;
             }
 
             #page7 h1 {
@@ -660,7 +666,10 @@
 
             #page2,
             #page7,
-            #page8,
+            #page8 {
+                padding-top: calc(14px + env(safe-area-inset-top));
+            }
+
             #page9 {
                 padding-top: calc(12px + env(safe-area-inset-top));
             }
