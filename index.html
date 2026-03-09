@@ -625,14 +625,44 @@
 
         @media (display-mode: standalone) and (max-width: 430px) {
             body:has(.container #page0.active),
-            body:has(.container #page1.active),
+            body:has(.container #page1.active) {
+                align-items: center;
+                justify-content: center;
+                padding-top: max(12px, env(safe-area-inset-top));
+            }
+
             body:has(.container #page2.active),
             body:has(.container #page7.active),
             body:has(.container #page8.active),
             body:has(.container #page9.active) {
-                align-items: center;
-                justify-content: center;
-                padding-top: max(12px, env(safe-area-inset-top));
+                align-items: stretch;
+                justify-content: stretch;
+                padding: 0;
+            }
+
+            .container:has(#page2.active),
+            .container:has(#page7.active),
+            .container:has(#page8.active),
+            .container:has(#page9.active) {
+                width: 100vw;
+                min-width: 100vw;
+                max-width: 100vw;
+                height: 100vh;
+                height: 100svh;
+                height: 100dvh;
+                max-height: 100vh;
+                max-height: 100svh;
+                max-height: 100dvh;
+                margin: 0;
+                border-radius: 0;
+                border: 0;
+            }
+
+            #page2,
+            #page7,
+            #page8,
+            #page9 {
+                padding-top: calc(12px + env(safe-area-inset-top));
             }
 
             .container:has(#page0.active) {
@@ -1434,6 +1464,10 @@
             padding: 4px 12px;
             font-size: 0.86em;
             font-family: inherit;
+        }
+
+        #page2 .tracker-date-input {
+            font-size: 16px;
         }
 
         .bottom-nav {
@@ -2406,7 +2440,7 @@
                 min-width: 132px;
                 max-width: 170px;
                 height: 30px;
-                font-size: 0.8em;
+                font-size: 16px;
                 padding: 3px 10px;
             }
 
