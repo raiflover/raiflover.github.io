@@ -621,12 +621,12 @@
     /* Keep bar intensity/glow on mobile aligned with desktop */
     #page7 .chart-svg .chart-bar {
         opacity: 1;
-        filter: drop-shadow(0 0 10px rgba(237,191,231,0.35)) drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        filter: drop-shadow(0 0 10px rgba(237,191,231,0.35));
     }
 
     #page7 .chart-svg .chart-sleep-bar {
         opacity: 1;
-        filter: drop-shadow(0 0 10px rgba(168,230,217,0.32)) drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        filter: drop-shadow(0 0 10px rgba(168,230,217,0.32));
     }
 
 

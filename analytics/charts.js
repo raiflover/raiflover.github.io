@@ -375,7 +375,7 @@ function renderBarChart(containerId, data, options = {}) {
             rx: Math.max(barRx - 3, 4),
             ry: Math.max(barRx - 3, 4),
             class: 'chart-bar',
-            style: 'cursor: pointer; filter: url(#glow-' + containerId + ') drop-shadow(0 0 10px rgba(237,191,231,0.35)) drop-shadow(0 2px 4px rgba(0,0,0,0.2)); opacity: 0; -webkit-animation-delay: ' + (index * staggerDelay) + 's; animation-delay: ' + (index * staggerDelay) + 's;'
+            style: 'cursor: pointer; filter: url(#glow-' + containerId + ') drop-shadow(0 0 10px rgba(237,191,231,0.35)); opacity: 0; -webkit-animation-delay: ' + (index * staggerDelay) + 's; animation-delay: ' + (index * staggerDelay) + 's;'
         });
 
         bar.addEventListener('mouseenter', (e) => {
@@ -1349,7 +1349,7 @@ function renderSleepBarChart(containerId, data) {
             rx: 15,
             ry: 15,
             class: 'chart-sleep-bar',
-            style: 'cursor: pointer; filter: url(#glow-sleep-' + containerId + ') drop-shadow(0 0 10px rgba(168,230,217,0.32)) drop-shadow(0 2px 4px rgba(0,0,0,0.3)); opacity: 0; -webkit-animation-delay: ' + (j * sleepStaggerDelay) + 's; animation-delay: ' + (j * sleepStaggerDelay) + 's;'
+            style: 'cursor: pointer; filter: url(#glow-sleep-' + containerId + ') drop-shadow(0 0 10px rgba(168,230,217,0.32)); opacity: 0; -webkit-animation-delay: ' + (j * sleepStaggerDelay) + 's; animation-delay: ' + (j * sleepStaggerDelay) + 's;'
         });
 
         (function(itemData) {
