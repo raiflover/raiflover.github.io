@@ -348,14 +348,14 @@ function renderBarChart(containerId, data, options = {}) {
         const outerY = barY;
         const outerW = Math.max(barGroupWidth * (1 - barGapFrac), 2);
         const outerH = visualBarHeight;
-        const inset = 1.8;
+        const inset = 0.9;
 
         const barOutline = createSVGElement('rect', {
             x: outerX,
             y: outerY,
             width: outerW,
             height: outerH,
-            fill: entry.isMissing ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.24)',
+            fill: entry.isMissing ? 'rgba(255,255,255,0.26)' : 'rgba(255,255,255,0.38)',
             stroke: 'none',
             'stroke-width': 0,
             'stroke-dasharray': 'none',
@@ -1321,7 +1321,7 @@ function renderSleepBarChart(containerId, data) {
         var minSleepBarWidth = 12;
         var sleepOuterY = y + 2;
         var sleepOuterH = barHeight - 4;
-        var sleepInset = 1.8;
+        var sleepInset = 0.9;
         var dayMinutes = hoursInDay * 60;
         var rawSegments = Array.isArray(item.segments) && item.segments.length
             ? item.segments
@@ -1357,7 +1357,7 @@ function renderSleepBarChart(containerId, data) {
                 y: sleepOuterY,
                 width: sleepOuterW,
                 height: sleepOuterH,
-                fill: 'rgba(168,230,217,0.32)',
+                fill: 'rgba(168,230,217,0.46)',
                 stroke: 'none',
                 'stroke-width': 0,
                 rx: 18,
