@@ -1197,6 +1197,13 @@ function renderSleepBarChart(containerId, data) {
     }
 
     // Process sleep data — aggregate for longer periods
+    function formatMinutesToTime(totalMinutes) {
+        var m = ((Math.round(totalMinutes) % 1440) + 1440) % 1440;
+        var hh = Math.floor(m / 60);
+        var mm = m % 60;
+        return String(hh).padStart(2, '0') + ':' + String(mm).padStart(2, '0');
+    }
+
     var _slPeriod = (typeof AnalyticsState !== 'undefined') ? AnalyticsState.currentPeriod : 'week';
     var sleepDataProcessed;
     if (_slPeriod === 'year') {
@@ -1210,11 +1217,24 @@ function renderSleepBarChart(containerId, data) {
             if (!entry.isMissing && entry.sleep && Array.isArray(entry.sleep)) {
                 var analysis = analyzeSleepData(entry.sleep);
                 if (analysis.duration > 0) {
+                    var segments = Array.isArray(analysis.periods)
+                        ? analysis.periods.map(function(period) {
+                            return {
+                                startMinutes: period.start * 30,
+                                endMinutes: (period.end + 1) * 30
+                            };
+                        })
+                        : [];
+                    var segmentRanges = segments.map(function(seg) {
+                        return formatMinutesToTime(seg.startMinutes) + '-' + formatMinutesToTime(seg.endMinutes);
+                    });
                     sleepDataProcessed.push({
                         date: entry.date,
                         duration: analysis.duration,
                         bedtime: analysis.bedtime,
                         wakeTime: analysis.wakeTime,
+                        segments: segments,
+                        segmentRanges: segmentRanges,
                         bedtimeMinutes: timeToMinutes(analysis.bedtime),
                         wakeTimeMinutes: timeToMinutes(analysis.wakeTime)
                     });
@@ -1297,74 +1317,85 @@ function renderSleepBarChart(containerId, data) {
         });
         chartGroup.appendChild(bgBar);
 
-        // Calculate bar position and width based on bedtime and wake time
-        var bedMinutes = item.bedtimeMinutes;
-        var wakeMinutes = item.wakeTimeMinutes;
-
-        // Handle sleep that crosses midnight
-        var barX, barWidth;
-        if (bedMinutes > wakeMinutes) {
-            // Sleep crosses midnight (e.g., 22:00 to 07:00)
-            barX = (bedMinutes / (hoursInDay * 60)) * chartWidth;
-            barWidth = ((hoursInDay * 60 - bedMinutes + wakeMinutes) / (hoursInDay * 60)) * chartWidth;
-        } else {
-            // Sleep within same day (e.g., nap from 13:00 to 15:00)
-            barX = (bedMinutes / (hoursInDay * 60)) * chartWidth;
-            barWidth = ((wakeMinutes - bedMinutes) / (hoursInDay * 60)) * chartWidth;
-        }
-
-        // Sleep bar: outer outline + inset translucent fill
+        // Sleep bars: draw all fragmented segments, not only the longest block.
         var minSleepBarWidth = 12;
-        var sleepOuterX = barX;
         var sleepOuterY = y + 2;
-        var sleepOuterW = Math.max(barWidth, minSleepBarWidth);
         var sleepOuterH = barHeight - 4;
         var sleepInset = 2.6;
-        if (sleepOuterW > barWidth) {
-            sleepOuterX = barX - (sleepOuterW - barWidth) / 2;
-            sleepOuterX = Math.max(0, Math.min(sleepOuterX, chartWidth - sleepOuterW));
+        var dayMinutes = hoursInDay * 60;
+        var rawSegments = Array.isArray(item.segments) && item.segments.length
+            ? item.segments
+            : [{ startMinutes: item.bedtimeMinutes, endMinutes: item.wakeTimeMinutes }];
+        var drawSegments = [];
+
+        for (var s = 0; s < rawSegments.length; s++) {
+            var seg = rawSegments[s];
+            var segStart = Number(seg.startMinutes);
+            var segEnd = Number(seg.endMinutes);
+            if (!Number.isFinite(segStart) || !Number.isFinite(segEnd)) continue;
+            if (segEnd > segStart) {
+                drawSegments.push({ startMinutes: segStart, endMinutes: segEnd });
+            } else if (segEnd < segStart) {
+                drawSegments.push({ startMinutes: segStart, endMinutes: dayMinutes });
+                drawSegments.push({ startMinutes: 0, endMinutes: segEnd });
+            }
         }
 
-        var sleepBarOutline = createSVGElement('rect', {
-            x: sleepOuterX,
-            y: sleepOuterY,
-            width: sleepOuterW,
-            height: sleepOuterH,
-            fill: 'none',
-            stroke: 'rgba(168,230,217,0.38)',
-            'stroke-width': 3,
-            rx: 18,
-            ry: 18,
-            class: 'chart-sleep-bar',
-            style: 'pointer-events: none; opacity: 0; -webkit-animation-delay: ' + (j * sleepStaggerDelay) + 's; animation-delay: ' + (j * sleepStaggerDelay) + 's;'
-        });
+        for (var ds = 0; ds < drawSegments.length; ds++) {
+            var drawSeg = drawSegments[ds];
+            var barX = (drawSeg.startMinutes / dayMinutes) * chartWidth;
+            var barWidth = ((drawSeg.endMinutes - drawSeg.startMinutes) / dayMinutes) * chartWidth;
+            var sleepOuterX = barX;
+            var sleepOuterW = Math.max(barWidth, minSleepBarWidth);
+            if (sleepOuterW > barWidth) {
+                sleepOuterX = barX - (sleepOuterW - barWidth) / 2;
+                sleepOuterX = Math.max(0, Math.min(sleepOuterX, chartWidth - sleepOuterW));
+            }
 
-        var sleepBar = createSVGElement('rect', {
-            x: sleepOuterX + sleepInset,
-            y: sleepOuterY + sleepInset,
-            width: Math.max(sleepOuterW - sleepInset * 2, 7),
-            height: Math.max(sleepOuterH - sleepInset * 2, 4),
-            fill: 'url(#sleepGradient-' + containerId + ')',
-            stroke: 'none',
-            rx: 15,
-            ry: 15,
-            class: 'chart-sleep-bar',
-            style: 'cursor: pointer; filter: url(#glow-sleep-' + containerId + ') drop-shadow(0 0 10px rgba(168,230,217,0.32)); opacity: 0; -webkit-animation-delay: ' + (j * sleepStaggerDelay) + 's; animation-delay: ' + (j * sleepStaggerDelay) + 's;'
-        });
-
-        (function(itemData) {
-            sleepBar.addEventListener('mouseenter', function(e) {
-                var tooltipText = itemData.date + '<br>' +
-                                 'Sleep: ' + itemData.duration.toFixed(1) + ' hours<br>' +
-                                 'Bedtime: ' + itemData.bedtime + '<br>' +
-                                 'Wake: ' + itemData.wakeTime;
-                showSleepTooltip(e, tooltipText);
+            var sleepBarOutline = createSVGElement('rect', {
+                x: sleepOuterX,
+                y: sleepOuterY,
+                width: sleepOuterW,
+                height: sleepOuterH,
+                fill: 'none',
+                stroke: 'rgba(168,230,217,0.38)',
+                'stroke-width': 3,
+                rx: 18,
+                ry: 18,
+                class: 'chart-sleep-bar',
+                style: 'pointer-events: none; opacity: 0; -webkit-animation-delay: ' + (j * sleepStaggerDelay) + 's; animation-delay: ' + (j * sleepStaggerDelay) + 's;'
             });
-            sleepBar.addEventListener('mouseleave', hideTooltip);
-        })(item);
 
-        chartGroup.appendChild(sleepBarOutline);
-        chartGroup.appendChild(sleepBar);
+            var sleepBar = createSVGElement('rect', {
+                x: sleepOuterX + sleepInset,
+                y: sleepOuterY + sleepInset,
+                width: Math.max(sleepOuterW - sleepInset * 2, 7),
+                height: Math.max(sleepOuterH - sleepInset * 2, 4),
+                fill: 'url(#sleepGradient-' + containerId + ')',
+                stroke: 'none',
+                rx: 15,
+                ry: 15,
+                class: 'chart-sleep-bar',
+                style: 'cursor: pointer; filter: url(#glow-sleep-' + containerId + ') drop-shadow(0 0 10px rgba(168,230,217,0.32)); opacity: 0; -webkit-animation-delay: ' + (j * sleepStaggerDelay) + 's; animation-delay: ' + (j * sleepStaggerDelay) + 's;'
+            });
+
+            (function(itemData) {
+                sleepBar.addEventListener('mouseenter', function(e) {
+                    var tooltipText = itemData.date + '<br>' +
+                                     'Sleep: ' + itemData.duration.toFixed(1) + ' hours';
+                    if (Array.isArray(itemData.segmentRanges) && itemData.segmentRanges.length > 1) {
+                        tooltipText += '<br>Sleep blocks: ' + itemData.segmentRanges.join(', ');
+                    } else {
+                        tooltipText += '<br>Bedtime: ' + itemData.bedtime + '<br>Wake: ' + itemData.wakeTime;
+                    }
+                    showSleepTooltip(e, tooltipText);
+                });
+                sleepBar.addEventListener('mouseleave', hideTooltip);
+            })(item);
+
+            chartGroup.appendChild(sleepBarOutline);
+            chartGroup.appendChild(sleepBar);
+        }
 
         // Date label (left side)
         var dateLabel = createSVGElement('text', {
