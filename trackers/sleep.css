@@ -53,7 +53,7 @@
   justify-content: center;
   position: relative;
   padding: 2px;
-  touch-action: pan-y;
+  touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
@@ -112,7 +112,7 @@
   }
   .sleep-slot {
     min-width: 28px;
-    touch-action: pan-y;
+    touch-action: manipulation;
   }
   .sleep-slot-time {
     font-size: 0.62em;
