@@ -3372,6 +3372,14 @@
             }
         }
 
+        @media (display-mode: standalone) and (min-width: 431px) {
+            #page2,
+            #page7,
+            #page8 {
+                padding-top: calc(2px + env(safe-area-inset-top));
+            }
+        }
+
         /* iOS-specific fixes */
         @supports (-webkit-touch-callout: none) {
             /* Smooth momentum scrolling */
