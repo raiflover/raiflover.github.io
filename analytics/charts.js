@@ -293,6 +293,33 @@ function renderBarChart(containerId, data, options = {}) {
     // Ensure minimum delay of 0.01s to prevent animation issues
     const staggerDelay = Math.max(calculatedDelay, 0.01);
 
+    function withAlpha(color, alpha) {
+        var rgbaMatch = color && color.match(/^rgba?\(([^)]+)\)$/i);
+        if (rgbaMatch) {
+            var parts = rgbaMatch[1].split(',').map(function(part) { return part.trim(); });
+            if (parts.length >= 3) {
+                return 'rgba(' + parts[0] + ',' + parts[1] + ',' + parts[2] + ',' + alpha + ')';
+            }
+        }
+
+        var hexMatch = color && color.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+        if (hexMatch) {
+            var hex = hexMatch[1];
+            if (hex.length === 3) {
+                var r3 = parseInt(hex[0] + hex[0], 16);
+                var g3 = parseInt(hex[1] + hex[1], 16);
+                var b3 = parseInt(hex[2] + hex[2], 16);
+                return 'rgba(' + r3 + ',' + g3 + ',' + b3 + ',' + alpha + ')';
+            }
+            var r6 = parseInt(hex.slice(0, 2), 16);
+            var g6 = parseInt(hex.slice(2, 4), 16);
+            var b6 = parseInt(hex.slice(4, 6), 16);
+            return 'rgba(' + r6 + ',' + g6 + ',' + b6 + ',' + alpha + ')';
+        }
+
+        return outlineColor;
+    }
+
     // Draw bars for each data point
     data.forEach((entry, index) => {
         const x = (index / data.length) * chartWidth + barGroupWidth / 2;
@@ -343,39 +370,46 @@ function renderBarChart(containerId, data, options = {}) {
         }
         chartDefs.appendChild(gradient);
 
-        // Two-layer bar to match sleep-chart style: outer outline + inset fill.
+        // Draw a non-overlapping outline: stroke sits on a larger rect outside the main bar.
         const outerX = x - barGroupWidth / 2 + barGroupWidth * barGapFrac / 2;
         const outerY = barY;
         const outerW = Math.max(barGroupWidth * (1 - barGapFrac), 2);
         const outerH = visualBarHeight;
-        const inset = 0.9;
+        const outlineSpread = entry.isMissing ? 2.0 : 2.8;
+        const outlineStrokeWidth = entry.isMissing ? 2.8 : 3.8;
+        const outlineStrokeColor = entry.isMissing
+            ? withAlpha(barBottomColor, 0.28)
+            : withAlpha(barTopColor, 0.38);
+        const barGlowColor = entry.isMissing
+            ? withAlpha(barBottomColor, 0.30)
+            : withAlpha(barTopColor, 0.42);
 
         const barOutline = createSVGElement('rect', {
-            x: outerX,
-            y: outerY,
-            width: outerW,
-            height: outerH,
-            fill: entry.isMissing ? 'rgba(255,255,255,0.28)' : 'rgba(255,255,255,0.44)',
-            stroke: entry.isMissing ? 'rgba(255,255,255,0.34)' : 'rgba(255,255,255,0.56)',
-            'stroke-width': entry.isMissing ? 1.4 : 2.2,
+            x: outerX - outlineSpread,
+            y: outerY - outlineSpread,
+            width: outerW + outlineSpread * 2,
+            height: outerH + outlineSpread * 2,
+            fill: 'none',
+            stroke: outlineStrokeColor,
+            'stroke-width': outlineStrokeWidth,
             'stroke-dasharray': 'none',
-            rx: barRx,
-            ry: barRx,
+            rx: barRx + outlineSpread,
+            ry: barRx + outlineSpread,
             class: 'chart-bar',
             style: 'pointer-events: none; opacity: 0; -webkit-animation-delay: ' + (index * staggerDelay) + 's; animation-delay: ' + (index * staggerDelay) + 's;'
         });
 
         const bar = createSVGElement('rect', {
-            x: outerX + inset,
-            y: outerY + inset,
-            width: Math.max(outerW - inset * 2, 2),
-            height: Math.max(outerH - inset * 2, 4),
+            x: outerX,
+            y: outerY,
+            width: outerW,
+            height: outerH,
             fill: 'url(#' + gradientId + ')',
             stroke: 'none',
-            rx: Math.max(barRx - 3, 4),
-            ry: Math.max(barRx - 3, 4),
+            rx: barRx,
+            ry: barRx,
             class: 'chart-bar',
-            style: 'cursor: pointer; filter: url(#glow-' + containerId + ') drop-shadow(0 0 10px rgba(237,191,231,0.35)); opacity: 0; -webkit-animation-delay: ' + (index * staggerDelay) + 's; animation-delay: ' + (index * staggerDelay) + 's;'
+            style: 'cursor: pointer; filter: url(#glow-' + containerId + ') drop-shadow(0 0 10px ' + barGlowColor + '); opacity: 0; -webkit-animation-delay: ' + (index * staggerDelay) + 's; animation-delay: ' + (index * staggerDelay) + 's;'
         });
 
         bar.addEventListener('mouseenter', (e) => {
