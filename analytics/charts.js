@@ -195,13 +195,13 @@ function renderBarChart(containerId, data, options = {}) {
     // Period-aware bar styling (4 tiers)
     var barGapFrac, barRx;
     // bars-week
-    if (_period === 'week')         { barGapFrac = 0.28; barRx = 18; }
+    if (_period === 'week')         { barGapFrac = 0.28; barRx = 24; }
     // bars-3months
-    else if (_period === '3months') { barGapFrac = 0.12; barRx = 12; }
+    else if (_period === '3months') { barGapFrac = 0.12; barRx = 18; }
     // bars-month
     else if (_period === 'month')   { barGapFrac = 0.22; barRx = 16; }
     // bars-year
-    else                            { barGapFrac = 0.22; barRx = 14; }
+    else                            { barGapFrac = 0.22; barRx = 20; }
 
     // Clear container
     container.innerHTML = '';
@@ -370,35 +370,13 @@ function renderBarChart(containerId, data, options = {}) {
         }
         chartDefs.appendChild(gradient);
 
-        // Draw a non-overlapping outline: stroke sits on a larger rect outside the main bar.
-        const barWidthInset = 1.2;
-        const outerX = x - barGroupWidth / 2 + barGroupWidth * barGapFrac / 2 + barWidthInset;
+        const outerX = x - barGroupWidth / 2 + barGroupWidth * barGapFrac / 2;
         const outerY = barY;
-        const outerW = Math.max(barGroupWidth * (1 - barGapFrac) - barWidthInset * 2, 2);
+        const outerW = Math.max(barGroupWidth * (1 - barGapFrac), 2);
         const outerH = visualBarHeight;
-        const outlineSpread = entry.isMissing ? 1.5 : 2.1;
-        const outlineStrokeWidth = entry.isMissing ? 2.4 : 3.0;
-        const outlineStrokeColor = entry.isMissing
-            ? withAlpha(barBottomColor, 0.18)
-            : withAlpha(barTopColor, 0.25);
         const barGlowColor = entry.isMissing
             ? withAlpha(barBottomColor, 0.30)
             : withAlpha(barTopColor, 0.42);
-
-        const barOutline = createSVGElement('rect', {
-            x: outerX - outlineSpread,
-            y: outerY - outlineSpread,
-            width: outerW + outlineSpread * 2,
-            height: outerH + outlineSpread * 2,
-            fill: 'none',
-            stroke: outlineStrokeColor,
-            'stroke-width': outlineStrokeWidth,
-            'stroke-dasharray': 'none',
-            rx: barRx + outlineSpread,
-            ry: barRx + outlineSpread,
-            class: 'chart-bar',
-            style: 'pointer-events: none; opacity: 0; -webkit-animation-delay: ' + (index * staggerDelay) + 's; animation-delay: ' + (index * staggerDelay) + 's;'
-        });
 
         const bar = createSVGElement('rect', {
             x: outerX,
@@ -410,7 +388,7 @@ function renderBarChart(containerId, data, options = {}) {
             rx: barRx,
             ry: barRx,
             class: 'chart-bar',
-            style: 'cursor: pointer; filter: url(#glow-' + containerId + ') drop-shadow(0 0 10px ' + barGlowColor + '); opacity: 0; -webkit-animation-delay: ' + (index * staggerDelay) + 's; animation-delay: ' + (index * staggerDelay) + 's;'
+            style: 'cursor: pointer; filter: url(#glow-' + containerId + ') drop-shadow(0 0 14px ' + barGlowColor + '); opacity: 0; -webkit-animation-delay: ' + (index * staggerDelay) + 's; animation-delay: ' + (index * staggerDelay) + 's;'
         });
 
         bar.addEventListener('mouseenter', (e) => {
@@ -418,7 +396,6 @@ function renderBarChart(containerId, data, options = {}) {
         });
         bar.addEventListener('mouseleave', hideTooltip);
 
-        barGroup.appendChild(barOutline);
         barGroup.appendChild(bar);
         chartGroup.appendChild(barGroup);
 
@@ -1353,13 +1330,10 @@ function renderSleepBarChart(containerId, data) {
         chartGroup.appendChild(bgBar);
 
         // Sleep bars: draw all fragmented segments, not only the longest block.
-        var minSleepBarWidth = 10;
+        var minSleepBarWidth = 12;
         var sleepOuterY = y + 2;
         var sleepOuterH = barHeight - 4;
-        var sleepBarWidthInset = 1.2;
-        var sleepOutlineSpread = 1.8;
-        var sleepOutlineStrokeWidth = 2.8;
-        var sleepOutlineColor = 'rgba(168,230,217,0.24)';
+        var sleepBarRx = 22;
         var dayMinutes = hoursInDay * 60;
         var rawSegments = Array.isArray(item.segments) && item.segments.length
             ? item.segments
@@ -1383,26 +1357,12 @@ function renderSleepBarChart(containerId, data) {
             var drawSeg = drawSegments[ds];
             var barX = (drawSeg.startMinutes / dayMinutes) * chartWidth;
             var barWidth = ((drawSeg.endMinutes - drawSeg.startMinutes) / dayMinutes) * chartWidth;
-            var sleepOuterX = barX + sleepBarWidthInset;
-            var sleepOuterW = Math.max(barWidth - sleepBarWidthInset * 2, minSleepBarWidth);
+            var sleepOuterX = barX;
+            var sleepOuterW = Math.max(barWidth, minSleepBarWidth);
             if (sleepOuterW > barWidth) {
                 sleepOuterX = barX - (sleepOuterW - barWidth) / 2;
                 sleepOuterX = Math.max(0, Math.min(sleepOuterX, chartWidth - sleepOuterW));
             }
-
-            var sleepBarOutline = createSVGElement('rect', {
-                x: sleepOuterX - sleepOutlineSpread,
-                y: sleepOuterY - sleepOutlineSpread,
-                width: sleepOuterW + sleepOutlineSpread * 2,
-                height: sleepOuterH + sleepOutlineSpread * 2,
-                fill: 'none',
-                stroke: sleepOutlineColor,
-                'stroke-width': sleepOutlineStrokeWidth,
-                rx: 18 + sleepOutlineSpread,
-                ry: 18 + sleepOutlineSpread,
-                class: 'chart-sleep-bar',
-                style: 'pointer-events: none; opacity: 0; -webkit-animation-delay: ' + (j * sleepStaggerDelay) + 's; animation-delay: ' + (j * sleepStaggerDelay) + 's;'
-            });
 
             var sleepBar = createSVGElement('rect', {
                 x: sleepOuterX,
@@ -1411,10 +1371,10 @@ function renderSleepBarChart(containerId, data) {
                 height: sleepOuterH,
                 fill: 'url(#sleepGradient-' + containerId + ')',
                 stroke: 'none',
-                rx: 18,
-                ry: 18,
+                rx: sleepBarRx,
+                ry: sleepBarRx,
                 class: 'chart-sleep-bar',
-                style: 'cursor: pointer; filter: url(#glow-sleep-' + containerId + ') drop-shadow(0 0 10px rgba(168,230,217,0.32)); opacity: 0; -webkit-animation-delay: ' + (j * sleepStaggerDelay) + 's; animation-delay: ' + (j * sleepStaggerDelay) + 's;'
+                style: 'cursor: pointer; filter: url(#glow-sleep-' + containerId + ') drop-shadow(0 0 14px rgba(168,230,217,0.38)); opacity: 0; -webkit-animation-delay: ' + (j * sleepStaggerDelay) + 's; animation-delay: ' + (j * sleepStaggerDelay) + 's;'
             });
 
             (function(itemData) {
@@ -1431,7 +1391,6 @@ function renderSleepBarChart(containerId, data) {
                 sleepBar.addEventListener('mouseleave', hideTooltip);
             })(item);
 
-            chartGroup.appendChild(sleepBarOutline);
             chartGroup.appendChild(sleepBar);
         }
 
