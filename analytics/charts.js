@@ -371,15 +371,16 @@ function renderBarChart(containerId, data, options = {}) {
         chartDefs.appendChild(gradient);
 
         // Draw a non-overlapping outline: stroke sits on a larger rect outside the main bar.
-        const outerX = x - barGroupWidth / 2 + barGroupWidth * barGapFrac / 2;
+        const barWidthInset = 1.2;
+        const outerX = x - barGroupWidth / 2 + barGroupWidth * barGapFrac / 2 + barWidthInset;
         const outerY = barY;
-        const outerW = Math.max(barGroupWidth * (1 - barGapFrac), 2);
+        const outerW = Math.max(barGroupWidth * (1 - barGapFrac) - barWidthInset * 2, 2);
         const outerH = visualBarHeight;
-        const outlineSpread = entry.isMissing ? 2.0 : 2.8;
-        const outlineStrokeWidth = entry.isMissing ? 2.8 : 3.8;
+        const outlineSpread = entry.isMissing ? 1.5 : 2.1;
+        const outlineStrokeWidth = entry.isMissing ? 2.4 : 3.0;
         const outlineStrokeColor = entry.isMissing
-            ? withAlpha(barBottomColor, 0.28)
-            : withAlpha(barTopColor, 0.38);
+            ? withAlpha(barBottomColor, 0.18)
+            : withAlpha(barTopColor, 0.25);
         const barGlowColor = entry.isMissing
             ? withAlpha(barBottomColor, 0.30)
             : withAlpha(barTopColor, 0.42);
@@ -1352,10 +1353,13 @@ function renderSleepBarChart(containerId, data) {
         chartGroup.appendChild(bgBar);
 
         // Sleep bars: draw all fragmented segments, not only the longest block.
-        var minSleepBarWidth = 12;
+        var minSleepBarWidth = 10;
         var sleepOuterY = y + 2;
         var sleepOuterH = barHeight - 4;
-        var sleepInset = 0.9;
+        var sleepBarWidthInset = 1.2;
+        var sleepOutlineSpread = 1.8;
+        var sleepOutlineStrokeWidth = 2.8;
+        var sleepOutlineColor = 'rgba(168,230,217,0.24)';
         var dayMinutes = hoursInDay * 60;
         var rawSegments = Array.isArray(item.segments) && item.segments.length
             ? item.segments
@@ -1379,36 +1383,36 @@ function renderSleepBarChart(containerId, data) {
             var drawSeg = drawSegments[ds];
             var barX = (drawSeg.startMinutes / dayMinutes) * chartWidth;
             var barWidth = ((drawSeg.endMinutes - drawSeg.startMinutes) / dayMinutes) * chartWidth;
-            var sleepOuterX = barX;
-            var sleepOuterW = Math.max(barWidth, minSleepBarWidth);
+            var sleepOuterX = barX + sleepBarWidthInset;
+            var sleepOuterW = Math.max(barWidth - sleepBarWidthInset * 2, minSleepBarWidth);
             if (sleepOuterW > barWidth) {
                 sleepOuterX = barX - (sleepOuterW - barWidth) / 2;
                 sleepOuterX = Math.max(0, Math.min(sleepOuterX, chartWidth - sleepOuterW));
             }
 
             var sleepBarOutline = createSVGElement('rect', {
-                x: sleepOuterX,
-                y: sleepOuterY,
-                width: sleepOuterW,
-                height: sleepOuterH,
-                fill: 'rgba(168,230,217,0.54)',
-                stroke: 'rgba(168,230,217,0.62)',
-                'stroke-width': 2.4,
-                rx: 18,
-                ry: 18,
+                x: sleepOuterX - sleepOutlineSpread,
+                y: sleepOuterY - sleepOutlineSpread,
+                width: sleepOuterW + sleepOutlineSpread * 2,
+                height: sleepOuterH + sleepOutlineSpread * 2,
+                fill: 'none',
+                stroke: sleepOutlineColor,
+                'stroke-width': sleepOutlineStrokeWidth,
+                rx: 18 + sleepOutlineSpread,
+                ry: 18 + sleepOutlineSpread,
                 class: 'chart-sleep-bar',
                 style: 'pointer-events: none; opacity: 0; -webkit-animation-delay: ' + (j * sleepStaggerDelay) + 's; animation-delay: ' + (j * sleepStaggerDelay) + 's;'
             });
 
             var sleepBar = createSVGElement('rect', {
-                x: sleepOuterX + sleepInset,
-                y: sleepOuterY + sleepInset,
-                width: Math.max(sleepOuterW - sleepInset * 2, 7),
-                height: Math.max(sleepOuterH - sleepInset * 2, 4),
+                x: sleepOuterX,
+                y: sleepOuterY,
+                width: sleepOuterW,
+                height: sleepOuterH,
                 fill: 'url(#sleepGradient-' + containerId + ')',
                 stroke: 'none',
-                rx: 15,
-                ry: 15,
+                rx: 18,
+                ry: 18,
                 class: 'chart-sleep-bar',
                 style: 'cursor: pointer; filter: url(#glow-sleep-' + containerId + ') drop-shadow(0 0 10px rgba(168,230,217,0.32)); opacity: 0; -webkit-animation-delay: ' + (j * sleepStaggerDelay) + 's; animation-delay: ' + (j * sleepStaggerDelay) + 's;'
             });
